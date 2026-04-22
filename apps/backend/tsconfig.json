@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "ignoreDeprecations" : "6.0",
+    "baseUrl": ".", 
+    "paths": {
+      "@eventflux/config": ["../../packages/config/src/index.ts"],
+      "@eventflux/database": ["../../packages/database/src/index.ts"],
+      "@eventflux/logger": ["../../packages/logger/src/index.ts"],
+      "@eventflux/shared-types": ["../../packages/shared-types/src/index.ts"]
+    },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true
+  }
+}

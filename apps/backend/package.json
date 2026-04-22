@@ -4,14 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.18.2",
   "dependencies": {
+    "@eventflux/config": "workspace:*",
+    "@eventflux/database": "workspace:*",
+    "@eventflux/logger": "workspace:*",
     "@eventflux/shared-types": "workspace:*",
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0",
     "compression": "^1.8.1",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -22,6 +28,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.6.0",
     "ts-node-dev": "^2.0.0",
+    "tsx": "^4.21.0",
     "typescript": "^6.0.3"
   }
 }
