@@ -8,6 +8,7 @@
   "types": "./src/index.ts",
   "private": true,
   "dependencies": {
+    "@eventflux/config": "workspace:*",
     "@prisma/client": "^7.7.0",
     "dotenv": "^17.4.2"
   },
