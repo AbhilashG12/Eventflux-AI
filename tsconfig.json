@@ -3,20 +3,17 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "ignoreDeprecations": "5.0",
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true,
+    "baseUrl": ".",
     "paths": {
-      "@eventflux/config": ["./packages/config/src/index.ts"],
-      "@eventflux/database": ["./packages/database/src/index.ts"],
-      "@eventflux/logger": ["./packages/logger/src/index.ts"],
-      "@eventflux/shared-types": ["./packages/shared-types/src/index.ts"]
-    }
-  },
-  "exclude": ["node_modules", "dist"]
+      "@eventflux/config": ["packages/config/src/index.ts"],
+      "@eventflux/database": ["packages/database/src/index.ts"],
+      "@eventflux/logger": ["packages/logger/src/index.ts"],
+      "@eventflux/shared-types": ["packages/shared-types/src/index.ts"]
+    },
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "composite": true,
+    "ignoreDeprecations": "6.0"
+  }
 }

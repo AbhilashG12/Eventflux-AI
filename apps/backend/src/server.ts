@@ -1,7 +1,7 @@
 import express from 'express';
 import { config } from '@eventflux/config';
 import { logger } from '@eventflux/logger';
-import { tenantMiddleware } from './core/middleware/tenant';
+import { tenantMiddleware } from './core/middleware/tenant.js';
 import { db } from '@eventflux/database';
 
 const app = express();
