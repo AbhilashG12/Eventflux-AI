@@ -5,7 +5,14 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
+const envPath = path.resolve(__dirname, '../../../.env');
+dotenv.config({ path: envPath });
+
+if (!process.env.DATABASE_URL) {
+  console.error(`❌ FATAL: DATABASE_URL is missing!`);
+  console.error(`🔍 Looked for .env file at: ${envPath}`);
+  process.exit(1); 
+}
 
 export const config = {
   backend: {
