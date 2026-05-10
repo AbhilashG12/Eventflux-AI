@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum WorkflowStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model Tenant {
+  id        String     @id @default(uuid())
+  name      String
+  slug      String     @unique
+  apiKey    String     @unique @default(cuid())
+  users     User[]
+  workflows Workflow[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(MEMBER)
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+}
+
+model Workflow {
+  id          String            @id @default(uuid())
+  name        String
+  description String?
+  tenantId    String
+  tenant      Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  versions    WorkflowVersion[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([tenantId])
+}
+
+model WorkflowVersion {
+  id         String         @id @default(uuid())
+  workflowId String
+  workflow   Workflow       @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  version    Int
+  status     WorkflowStatus @default(DRAFT)
+  definition Json
+  executions Execution[]
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@unique([workflowId, version])
+  @@index([workflowId])
+}
+
+model Execution {
+  id                String          @id @default(uuid())
+  workflowVersionId String
+  workflowVersion   WorkflowVersion @relation(fields: [workflowVersionId], references: [id])
+  status            ExecutionStatus @default(PENDING)
+  logs              Json?
+  startedAt         DateTime?
+  completedAt       DateTime?
+  createdAt         DateTime        @default(now())
+
+  @@index([workflowVersionId])
+  @@index([status])
+}

@@ -4,6 +4,7 @@ import { logger } from '@eventflux/logger';
 import { requireAuth,requireRole } from './core/middleware/auth.middleware.js';
 import { db } from '@eventflux/database';
 import { authRoutes } from './modules/auth/interface/auth.routes.js';
+import { workflowRoutes } from './modules/workflow/interface/workflow.routes.js';
 
 const app = express();
 app.use(express.json());
@@ -26,6 +27,8 @@ app.get('/api/health', async (req, res) => {
 app.use('/auth', authRoutes);
 
 app.use('/api', requireAuth);
+
+app.use("/api/workflows",workflowRoutes);
 
 app.get('/api/me', (req, res) => {
   res.json({ message: 'You are authenticated', user: req.user });
