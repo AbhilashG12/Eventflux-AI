@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import { SaveDraftUseCase } from '../application/save.draft.js';
 import { PublishWorkflowUseCase } from '../application/publish.workflow.js';
 import { ExecuteWorkflowUseCase } from '../application/execute.workflow.js';
-import { error } from 'node:console';
+import {randomUUID} from 'crypto';
+import { publishEvent } from '@eventflux/kafka'
 
 export class WorkflowController {
   private saveDraftUseCase = new SaveDraftUseCase();
@@ -30,14 +31,23 @@ export class WorkflowController {
     }
   }
 
-  async trigger(req:Request,res:Response){
-    try{
-      const {workflowId} = req.params as {workflowId : string} ;
+  async trigger(req: Request, res: Response) {
+    try {
+      const { workflowId } = req.params;
       const payload = req.body;
-      const result = await this.executeUseCase.trigger(workflowId,payload);
-      res.status(202).json(result);
-    }catch(err:any){
-      res.status(400).json({error : err.message});
+      const eventId = randomUUID();
+      await publishEvent('workflow-events', eventId, {
+        workflowId,
+        tenantId: req.tenantId,
+        initialPayload: payload,
+      });
+
+      res.status(202).json({ 
+        message: "Workflow queued for execution", 
+        eventId 
+      });
+    } catch (err: any) {
+      res.status(400).json({ error: err.message });
     }
   }
 }

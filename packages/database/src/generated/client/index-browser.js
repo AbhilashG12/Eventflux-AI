@@ -179,6 +179,13 @@ exports.Prisma.ExecutionStepScalarFieldEnum = {
   completedAt: 'completedAt'
 };
 
+exports.Prisma.ProcessedEventScalarFieldEnum = {
+  eventId: 'eventId',
+  topic: 'topic',
+  status: 'status',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -232,7 +239,8 @@ exports.Prisma.ModelName = {
   Workflow: 'Workflow',
   WorkflowVersion: 'WorkflowVersion',
   Execution: 'Execution',
-  ExecutionStep: 'ExecutionStep'
+  ExecutionStep: 'ExecutionStep',
+  ProcessedEvent: 'ProcessedEvent'
 };
 
 /**

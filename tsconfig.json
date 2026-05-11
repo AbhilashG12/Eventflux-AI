@@ -7,7 +7,8 @@
       "@eventflux/config": ["./packages/config/src/index.ts"],
       "@eventflux/database": ["./packages/database/src/index.ts"],
       "@eventflux/logger": ["./packages/logger/src/index.ts"],
-      "@eventflux/shared-types": ["./packages/shared-types/src/index.ts"]
+      "@eventflux/shared-types": ["./packages/shared-types/src/index.ts"],
+      "@eventflux/kafka": ["./packages/kafka/src/index.ts"]
     },
     "strict": true,
     "esModuleInterop": true,

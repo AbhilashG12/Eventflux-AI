@@ -14,6 +14,7 @@
   "packageManager": "pnpm@10.18.2",
   "dependencies": {
     "@eventflux/config": "workspace:*",
+    "@eventflux/kafka": "workspace:*",
     "@eventflux/database": "workspace:*",
     "@eventflux/logger": "workspace:*",
     "@eventflux/shared-types": "workspace:*",
