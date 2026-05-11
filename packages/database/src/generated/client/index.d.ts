@@ -38,6 +38,11 @@ export type WorkflowVersion = $Result.DefaultSelection<Prisma.$WorkflowVersionPa
  * 
  */
 export type Execution = $Result.DefaultSelection<Prisma.$ExecutionPayload>
+/**
+ * Model ExecutionStep
+ * 
+ */
+export type ExecutionStep = $Result.DefaultSelection<Prisma.$ExecutionStepPayload>
 
 /**
  * Enums
@@ -253,6 +258,16 @@ export class PrismaClient<
     * ```
     */
   get execution(): Prisma.ExecutionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.executionStep`: Exposes CRUD operations for the **ExecutionStep** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExecutionSteps
+    * const executionSteps = await prisma.executionStep.findMany()
+    * ```
+    */
+  get executionStep(): Prisma.ExecutionStepDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -691,7 +706,8 @@ export namespace Prisma {
     User: 'User',
     Workflow: 'Workflow',
     WorkflowVersion: 'WorkflowVersion',
-    Execution: 'Execution'
+    Execution: 'Execution',
+    ExecutionStep: 'ExecutionStep'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -707,7 +723,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "tenant" | "user" | "workflow" | "workflowVersion" | "execution"
+      modelProps: "tenant" | "user" | "workflow" | "workflowVersion" | "execution" | "executionStep"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1081,6 +1097,80 @@ export namespace Prisma {
           }
         }
       }
+      ExecutionStep: {
+        payload: Prisma.$ExecutionStepPayload<ExtArgs>
+        fields: Prisma.ExecutionStepFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExecutionStepFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutionStepPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExecutionStepFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutionStepPayload>
+          }
+          findFirst: {
+            args: Prisma.ExecutionStepFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutionStepPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExecutionStepFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutionStepPayload>
+          }
+          findMany: {
+            args: Prisma.ExecutionStepFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutionStepPayload>[]
+          }
+          create: {
+            args: Prisma.ExecutionStepCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutionStepPayload>
+          }
+          createMany: {
+            args: Prisma.ExecutionStepCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ExecutionStepCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutionStepPayload>[]
+          }
+          delete: {
+            args: Prisma.ExecutionStepDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutionStepPayload>
+          }
+          update: {
+            args: Prisma.ExecutionStepUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutionStepPayload>
+          }
+          deleteMany: {
+            args: Prisma.ExecutionStepDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExecutionStepUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ExecutionStepUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutionStepPayload>[]
+          }
+          upsert: {
+            args: Prisma.ExecutionStepUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutionStepPayload>
+          }
+          aggregate: {
+            args: Prisma.ExecutionStepAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExecutionStep>
+          }
+          groupBy: {
+            args: Prisma.ExecutionStepGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExecutionStepGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExecutionStepCountArgs<ExtArgs>
+            result: $Utils.Optional<ExecutionStepCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1194,6 +1284,7 @@ export namespace Prisma {
     workflow?: WorkflowOmit
     workflowVersion?: WorkflowVersionOmit
     execution?: ExecutionOmit
+    executionStep?: ExecutionStepOmit
   }
 
   /* Types for Logging */
@@ -1368,6 +1459,37 @@ export namespace Prisma {
    */
   export type WorkflowVersionCountOutputTypeCountExecutionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExecutionWhereInput
+  }
+
+
+  /**
+   * Count Type ExecutionCountOutputType
+   */
+
+  export type ExecutionCountOutputType = {
+    steps: number
+  }
+
+  export type ExecutionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    steps?: boolean | ExecutionCountOutputTypeCountStepsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ExecutionCountOutputType without action
+   */
+  export type ExecutionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionCountOutputType
+     */
+    select?: ExecutionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ExecutionCountOutputType without action
+   */
+  export type ExecutionCountOutputTypeCountStepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExecutionStepWhereInput
   }
 
 
@@ -6012,6 +6134,8 @@ export namespace Prisma {
     completedAt?: boolean
     createdAt?: boolean
     workflowVersion?: boolean | WorkflowVersionDefaultArgs<ExtArgs>
+    steps?: boolean | Execution$stepsArgs<ExtArgs>
+    _count?: boolean | ExecutionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["execution"]>
 
   export type ExecutionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6049,6 +6173,8 @@ export namespace Prisma {
   export type ExecutionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workflowVersionId" | "status" | "logs" | "startedAt" | "completedAt" | "createdAt", ExtArgs["result"]["execution"]>
   export type ExecutionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workflowVersion?: boolean | WorkflowVersionDefaultArgs<ExtArgs>
+    steps?: boolean | Execution$stepsArgs<ExtArgs>
+    _count?: boolean | ExecutionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ExecutionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workflowVersion?: boolean | WorkflowVersionDefaultArgs<ExtArgs>
@@ -6061,6 +6187,7 @@ export namespace Prisma {
     name: "Execution"
     objects: {
       workflowVersion: Prisma.$WorkflowVersionPayload<ExtArgs>
+      steps: Prisma.$ExecutionStepPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6465,6 +6592,7 @@ export namespace Prisma {
   export interface Prisma__ExecutionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     workflowVersion<T extends WorkflowVersionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkflowVersionDefaultArgs<ExtArgs>>): Prisma__WorkflowVersionClient<$Result.GetResult<Prisma.$WorkflowVersionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    steps<T extends Execution$stepsArgs<ExtArgs> = {}>(args?: Subset<T, Execution$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6902,6 +7030,30 @@ export namespace Prisma {
   }
 
   /**
+   * Execution.steps
+   */
+  export type Execution$stepsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepInclude<ExtArgs> | null
+    where?: ExecutionStepWhereInput
+    orderBy?: ExecutionStepOrderByWithRelationInput | ExecutionStepOrderByWithRelationInput[]
+    cursor?: ExecutionStepWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ExecutionStepScalarFieldEnum | ExecutionStepScalarFieldEnum[]
+  }
+
+  /**
    * Execution without action
    */
   export type ExecutionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6917,6 +7069,1104 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ExecutionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExecutionStep
+   */
+
+  export type AggregateExecutionStep = {
+    _count: ExecutionStepCountAggregateOutputType | null
+    _min: ExecutionStepMinAggregateOutputType | null
+    _max: ExecutionStepMaxAggregateOutputType | null
+  }
+
+  export type ExecutionStepMinAggregateOutputType = {
+    id: string | null
+    executionId: string | null
+    nodeId: string | null
+    status: $Enums.ExecutionStatus | null
+    error: string | null
+    startedAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type ExecutionStepMaxAggregateOutputType = {
+    id: string | null
+    executionId: string | null
+    nodeId: string | null
+    status: $Enums.ExecutionStatus | null
+    error: string | null
+    startedAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type ExecutionStepCountAggregateOutputType = {
+    id: number
+    executionId: number
+    nodeId: number
+    status: number
+    output: number
+    error: number
+    startedAt: number
+    completedAt: number
+    _all: number
+  }
+
+
+  export type ExecutionStepMinAggregateInputType = {
+    id?: true
+    executionId?: true
+    nodeId?: true
+    status?: true
+    error?: true
+    startedAt?: true
+    completedAt?: true
+  }
+
+  export type ExecutionStepMaxAggregateInputType = {
+    id?: true
+    executionId?: true
+    nodeId?: true
+    status?: true
+    error?: true
+    startedAt?: true
+    completedAt?: true
+  }
+
+  export type ExecutionStepCountAggregateInputType = {
+    id?: true
+    executionId?: true
+    nodeId?: true
+    status?: true
+    output?: true
+    error?: true
+    startedAt?: true
+    completedAt?: true
+    _all?: true
+  }
+
+  export type ExecutionStepAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExecutionStep to aggregate.
+     */
+    where?: ExecutionStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExecutionSteps to fetch.
+     */
+    orderBy?: ExecutionStepOrderByWithRelationInput | ExecutionStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExecutionStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExecutionSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExecutionSteps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExecutionSteps
+    **/
+    _count?: true | ExecutionStepCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExecutionStepMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExecutionStepMaxAggregateInputType
+  }
+
+  export type GetExecutionStepAggregateType<T extends ExecutionStepAggregateArgs> = {
+        [P in keyof T & keyof AggregateExecutionStep]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExecutionStep[P]>
+      : GetScalarType<T[P], AggregateExecutionStep[P]>
+  }
+
+
+
+
+  export type ExecutionStepGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExecutionStepWhereInput
+    orderBy?: ExecutionStepOrderByWithAggregationInput | ExecutionStepOrderByWithAggregationInput[]
+    by: ExecutionStepScalarFieldEnum[] | ExecutionStepScalarFieldEnum
+    having?: ExecutionStepScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExecutionStepCountAggregateInputType | true
+    _min?: ExecutionStepMinAggregateInputType
+    _max?: ExecutionStepMaxAggregateInputType
+  }
+
+  export type ExecutionStepGroupByOutputType = {
+    id: string
+    executionId: string
+    nodeId: string
+    status: $Enums.ExecutionStatus
+    output: JsonValue | null
+    error: string | null
+    startedAt: Date | null
+    completedAt: Date | null
+    _count: ExecutionStepCountAggregateOutputType | null
+    _min: ExecutionStepMinAggregateOutputType | null
+    _max: ExecutionStepMaxAggregateOutputType | null
+  }
+
+  type GetExecutionStepGroupByPayload<T extends ExecutionStepGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExecutionStepGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExecutionStepGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExecutionStepGroupByOutputType[P]>
+            : GetScalarType<T[P], ExecutionStepGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExecutionStepSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    executionId?: boolean
+    nodeId?: boolean
+    status?: boolean
+    output?: boolean
+    error?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["executionStep"]>
+
+  export type ExecutionStepSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    executionId?: boolean
+    nodeId?: boolean
+    status?: boolean
+    output?: boolean
+    error?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["executionStep"]>
+
+  export type ExecutionStepSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    executionId?: boolean
+    nodeId?: boolean
+    status?: boolean
+    output?: boolean
+    error?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["executionStep"]>
+
+  export type ExecutionStepSelectScalar = {
+    id?: boolean
+    executionId?: boolean
+    nodeId?: boolean
+    status?: boolean
+    output?: boolean
+    error?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+  }
+
+  export type ExecutionStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "executionId" | "nodeId" | "status" | "output" | "error" | "startedAt" | "completedAt", ExtArgs["result"]["executionStep"]>
+  export type ExecutionStepInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }
+  export type ExecutionStepIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }
+  export type ExecutionStepIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }
+
+  export type $ExecutionStepPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExecutionStep"
+    objects: {
+      execution: Prisma.$ExecutionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      executionId: string
+      nodeId: string
+      status: $Enums.ExecutionStatus
+      output: Prisma.JsonValue | null
+      error: string | null
+      startedAt: Date | null
+      completedAt: Date | null
+    }, ExtArgs["result"]["executionStep"]>
+    composites: {}
+  }
+
+  type ExecutionStepGetPayload<S extends boolean | null | undefined | ExecutionStepDefaultArgs> = $Result.GetResult<Prisma.$ExecutionStepPayload, S>
+
+  type ExecutionStepCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExecutionStepFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExecutionStepCountAggregateInputType | true
+    }
+
+  export interface ExecutionStepDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExecutionStep'], meta: { name: 'ExecutionStep' } }
+    /**
+     * Find zero or one ExecutionStep that matches the filter.
+     * @param {ExecutionStepFindUniqueArgs} args - Arguments to find a ExecutionStep
+     * @example
+     * // Get one ExecutionStep
+     * const executionStep = await prisma.executionStep.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExecutionStepFindUniqueArgs>(args: SelectSubset<T, ExecutionStepFindUniqueArgs<ExtArgs>>): Prisma__ExecutionStepClient<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ExecutionStep that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExecutionStepFindUniqueOrThrowArgs} args - Arguments to find a ExecutionStep
+     * @example
+     * // Get one ExecutionStep
+     * const executionStep = await prisma.executionStep.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExecutionStepFindUniqueOrThrowArgs>(args: SelectSubset<T, ExecutionStepFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExecutionStepClient<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExecutionStep that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutionStepFindFirstArgs} args - Arguments to find a ExecutionStep
+     * @example
+     * // Get one ExecutionStep
+     * const executionStep = await prisma.executionStep.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExecutionStepFindFirstArgs>(args?: SelectSubset<T, ExecutionStepFindFirstArgs<ExtArgs>>): Prisma__ExecutionStepClient<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExecutionStep that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutionStepFindFirstOrThrowArgs} args - Arguments to find a ExecutionStep
+     * @example
+     * // Get one ExecutionStep
+     * const executionStep = await prisma.executionStep.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExecutionStepFindFirstOrThrowArgs>(args?: SelectSubset<T, ExecutionStepFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExecutionStepClient<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ExecutionSteps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutionStepFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExecutionSteps
+     * const executionSteps = await prisma.executionStep.findMany()
+     * 
+     * // Get first 10 ExecutionSteps
+     * const executionSteps = await prisma.executionStep.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const executionStepWithIdOnly = await prisma.executionStep.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ExecutionStepFindManyArgs>(args?: SelectSubset<T, ExecutionStepFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ExecutionStep.
+     * @param {ExecutionStepCreateArgs} args - Arguments to create a ExecutionStep.
+     * @example
+     * // Create one ExecutionStep
+     * const ExecutionStep = await prisma.executionStep.create({
+     *   data: {
+     *     // ... data to create a ExecutionStep
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExecutionStepCreateArgs>(args: SelectSubset<T, ExecutionStepCreateArgs<ExtArgs>>): Prisma__ExecutionStepClient<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ExecutionSteps.
+     * @param {ExecutionStepCreateManyArgs} args - Arguments to create many ExecutionSteps.
+     * @example
+     * // Create many ExecutionSteps
+     * const executionStep = await prisma.executionStep.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExecutionStepCreateManyArgs>(args?: SelectSubset<T, ExecutionStepCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ExecutionSteps and returns the data saved in the database.
+     * @param {ExecutionStepCreateManyAndReturnArgs} args - Arguments to create many ExecutionSteps.
+     * @example
+     * // Create many ExecutionSteps
+     * const executionStep = await prisma.executionStep.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ExecutionSteps and only return the `id`
+     * const executionStepWithIdOnly = await prisma.executionStep.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ExecutionStepCreateManyAndReturnArgs>(args?: SelectSubset<T, ExecutionStepCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ExecutionStep.
+     * @param {ExecutionStepDeleteArgs} args - Arguments to delete one ExecutionStep.
+     * @example
+     * // Delete one ExecutionStep
+     * const ExecutionStep = await prisma.executionStep.delete({
+     *   where: {
+     *     // ... filter to delete one ExecutionStep
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExecutionStepDeleteArgs>(args: SelectSubset<T, ExecutionStepDeleteArgs<ExtArgs>>): Prisma__ExecutionStepClient<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ExecutionStep.
+     * @param {ExecutionStepUpdateArgs} args - Arguments to update one ExecutionStep.
+     * @example
+     * // Update one ExecutionStep
+     * const executionStep = await prisma.executionStep.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExecutionStepUpdateArgs>(args: SelectSubset<T, ExecutionStepUpdateArgs<ExtArgs>>): Prisma__ExecutionStepClient<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ExecutionSteps.
+     * @param {ExecutionStepDeleteManyArgs} args - Arguments to filter ExecutionSteps to delete.
+     * @example
+     * // Delete a few ExecutionSteps
+     * const { count } = await prisma.executionStep.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExecutionStepDeleteManyArgs>(args?: SelectSubset<T, ExecutionStepDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExecutionSteps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutionStepUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExecutionSteps
+     * const executionStep = await prisma.executionStep.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExecutionStepUpdateManyArgs>(args: SelectSubset<T, ExecutionStepUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExecutionSteps and returns the data updated in the database.
+     * @param {ExecutionStepUpdateManyAndReturnArgs} args - Arguments to update many ExecutionSteps.
+     * @example
+     * // Update many ExecutionSteps
+     * const executionStep = await prisma.executionStep.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ExecutionSteps and only return the `id`
+     * const executionStepWithIdOnly = await prisma.executionStep.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ExecutionStepUpdateManyAndReturnArgs>(args: SelectSubset<T, ExecutionStepUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ExecutionStep.
+     * @param {ExecutionStepUpsertArgs} args - Arguments to update or create a ExecutionStep.
+     * @example
+     * // Update or create a ExecutionStep
+     * const executionStep = await prisma.executionStep.upsert({
+     *   create: {
+     *     // ... data to create a ExecutionStep
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExecutionStep we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExecutionStepUpsertArgs>(args: SelectSubset<T, ExecutionStepUpsertArgs<ExtArgs>>): Prisma__ExecutionStepClient<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ExecutionSteps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutionStepCountArgs} args - Arguments to filter ExecutionSteps to count.
+     * @example
+     * // Count the number of ExecutionSteps
+     * const count = await prisma.executionStep.count({
+     *   where: {
+     *     // ... the filter for the ExecutionSteps we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExecutionStepCountArgs>(
+      args?: Subset<T, ExecutionStepCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExecutionStepCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExecutionStep.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutionStepAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExecutionStepAggregateArgs>(args: Subset<T, ExecutionStepAggregateArgs>): Prisma.PrismaPromise<GetExecutionStepAggregateType<T>>
+
+    /**
+     * Group by ExecutionStep.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutionStepGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExecutionStepGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExecutionStepGroupByArgs['orderBy'] }
+        : { orderBy?: ExecutionStepGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExecutionStepGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExecutionStepGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExecutionStep model
+   */
+  readonly fields: ExecutionStepFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExecutionStep.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExecutionStepClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    execution<T extends ExecutionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExecutionDefaultArgs<ExtArgs>>): Prisma__ExecutionClient<$Result.GetResult<Prisma.$ExecutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExecutionStep model
+   */
+  interface ExecutionStepFieldRefs {
+    readonly id: FieldRef<"ExecutionStep", 'String'>
+    readonly executionId: FieldRef<"ExecutionStep", 'String'>
+    readonly nodeId: FieldRef<"ExecutionStep", 'String'>
+    readonly status: FieldRef<"ExecutionStep", 'ExecutionStatus'>
+    readonly output: FieldRef<"ExecutionStep", 'Json'>
+    readonly error: FieldRef<"ExecutionStep", 'String'>
+    readonly startedAt: FieldRef<"ExecutionStep", 'DateTime'>
+    readonly completedAt: FieldRef<"ExecutionStep", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExecutionStep findUnique
+   */
+  export type ExecutionStepFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepInclude<ExtArgs> | null
+    /**
+     * Filter, which ExecutionStep to fetch.
+     */
+    where: ExecutionStepWhereUniqueInput
+  }
+
+  /**
+   * ExecutionStep findUniqueOrThrow
+   */
+  export type ExecutionStepFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepInclude<ExtArgs> | null
+    /**
+     * Filter, which ExecutionStep to fetch.
+     */
+    where: ExecutionStepWhereUniqueInput
+  }
+
+  /**
+   * ExecutionStep findFirst
+   */
+  export type ExecutionStepFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepInclude<ExtArgs> | null
+    /**
+     * Filter, which ExecutionStep to fetch.
+     */
+    where?: ExecutionStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExecutionSteps to fetch.
+     */
+    orderBy?: ExecutionStepOrderByWithRelationInput | ExecutionStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExecutionSteps.
+     */
+    cursor?: ExecutionStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExecutionSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExecutionSteps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExecutionSteps.
+     */
+    distinct?: ExecutionStepScalarFieldEnum | ExecutionStepScalarFieldEnum[]
+  }
+
+  /**
+   * ExecutionStep findFirstOrThrow
+   */
+  export type ExecutionStepFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepInclude<ExtArgs> | null
+    /**
+     * Filter, which ExecutionStep to fetch.
+     */
+    where?: ExecutionStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExecutionSteps to fetch.
+     */
+    orderBy?: ExecutionStepOrderByWithRelationInput | ExecutionStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExecutionSteps.
+     */
+    cursor?: ExecutionStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExecutionSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExecutionSteps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExecutionSteps.
+     */
+    distinct?: ExecutionStepScalarFieldEnum | ExecutionStepScalarFieldEnum[]
+  }
+
+  /**
+   * ExecutionStep findMany
+   */
+  export type ExecutionStepFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepInclude<ExtArgs> | null
+    /**
+     * Filter, which ExecutionSteps to fetch.
+     */
+    where?: ExecutionStepWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExecutionSteps to fetch.
+     */
+    orderBy?: ExecutionStepOrderByWithRelationInput | ExecutionStepOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExecutionSteps.
+     */
+    cursor?: ExecutionStepWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExecutionSteps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExecutionSteps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExecutionSteps.
+     */
+    distinct?: ExecutionStepScalarFieldEnum | ExecutionStepScalarFieldEnum[]
+  }
+
+  /**
+   * ExecutionStep create
+   */
+  export type ExecutionStepCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ExecutionStep.
+     */
+    data: XOR<ExecutionStepCreateInput, ExecutionStepUncheckedCreateInput>
+  }
+
+  /**
+   * ExecutionStep createMany
+   */
+  export type ExecutionStepCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExecutionSteps.
+     */
+    data: ExecutionStepCreateManyInput | ExecutionStepCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ExecutionStep createManyAndReturn
+   */
+  export type ExecutionStepCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * The data used to create many ExecutionSteps.
+     */
+    data: ExecutionStepCreateManyInput | ExecutionStepCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExecutionStep update
+   */
+  export type ExecutionStepUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ExecutionStep.
+     */
+    data: XOR<ExecutionStepUpdateInput, ExecutionStepUncheckedUpdateInput>
+    /**
+     * Choose, which ExecutionStep to update.
+     */
+    where: ExecutionStepWhereUniqueInput
+  }
+
+  /**
+   * ExecutionStep updateMany
+   */
+  export type ExecutionStepUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExecutionSteps.
+     */
+    data: XOR<ExecutionStepUpdateManyMutationInput, ExecutionStepUncheckedUpdateManyInput>
+    /**
+     * Filter which ExecutionSteps to update
+     */
+    where?: ExecutionStepWhereInput
+    /**
+     * Limit how many ExecutionSteps to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExecutionStep updateManyAndReturn
+   */
+  export type ExecutionStepUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * The data used to update ExecutionSteps.
+     */
+    data: XOR<ExecutionStepUpdateManyMutationInput, ExecutionStepUncheckedUpdateManyInput>
+    /**
+     * Filter which ExecutionSteps to update
+     */
+    where?: ExecutionStepWhereInput
+    /**
+     * Limit how many ExecutionSteps to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ExecutionStep upsert
+   */
+  export type ExecutionStepUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ExecutionStep to update in case it exists.
+     */
+    where: ExecutionStepWhereUniqueInput
+    /**
+     * In case the ExecutionStep found by the `where` argument doesn't exist, create a new ExecutionStep with this data.
+     */
+    create: XOR<ExecutionStepCreateInput, ExecutionStepUncheckedCreateInput>
+    /**
+     * In case the ExecutionStep was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExecutionStepUpdateInput, ExecutionStepUncheckedUpdateInput>
+  }
+
+  /**
+   * ExecutionStep delete
+   */
+  export type ExecutionStepDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepInclude<ExtArgs> | null
+    /**
+     * Filter which ExecutionStep to delete.
+     */
+    where: ExecutionStepWhereUniqueInput
+  }
+
+  /**
+   * ExecutionStep deleteMany
+   */
+  export type ExecutionStepDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExecutionSteps to delete
+     */
+    where?: ExecutionStepWhereInput
+    /**
+     * Limit how many ExecutionSteps to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExecutionStep without action
+   */
+  export type ExecutionStepDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutionStep
+     */
+    select?: ExecutionStepSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExecutionStep
+     */
+    omit?: ExecutionStepOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExecutionStepInclude<ExtArgs> | null
   }
 
 
@@ -6995,6 +8245,20 @@ export namespace Prisma {
   };
 
   export type ExecutionScalarFieldEnum = (typeof ExecutionScalarFieldEnum)[keyof typeof ExecutionScalarFieldEnum]
+
+
+  export const ExecutionStepScalarFieldEnum: {
+    id: 'id',
+    executionId: 'executionId',
+    nodeId: 'nodeId',
+    status: 'status',
+    output: 'output',
+    error: 'error',
+    startedAt: 'startedAt',
+    completedAt: 'completedAt'
+  };
+
+  export type ExecutionStepScalarFieldEnum = (typeof ExecutionStepScalarFieldEnum)[keyof typeof ExecutionStepScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -7439,6 +8703,7 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"Execution"> | Date | string | null
     createdAt?: DateTimeFilter<"Execution"> | Date | string
     workflowVersion?: XOR<WorkflowVersionScalarRelationFilter, WorkflowVersionWhereInput>
+    steps?: ExecutionStepListRelationFilter
   }
 
   export type ExecutionOrderByWithRelationInput = {
@@ -7450,6 +8715,7 @@ export namespace Prisma {
     completedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     workflowVersion?: WorkflowVersionOrderByWithRelationInput
+    steps?: ExecutionStepOrderByRelationAggregateInput
   }
 
   export type ExecutionWhereUniqueInput = Prisma.AtLeast<{
@@ -7464,6 +8730,7 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"Execution"> | Date | string | null
     createdAt?: DateTimeFilter<"Execution"> | Date | string
     workflowVersion?: XOR<WorkflowVersionScalarRelationFilter, WorkflowVersionWhereInput>
+    steps?: ExecutionStepListRelationFilter
   }, "id">
 
   export type ExecutionOrderByWithAggregationInput = {
@@ -7490,6 +8757,77 @@ export namespace Prisma {
     startedAt?: DateTimeNullableWithAggregatesFilter<"Execution"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"Execution"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Execution"> | Date | string
+  }
+
+  export type ExecutionStepWhereInput = {
+    AND?: ExecutionStepWhereInput | ExecutionStepWhereInput[]
+    OR?: ExecutionStepWhereInput[]
+    NOT?: ExecutionStepWhereInput | ExecutionStepWhereInput[]
+    id?: StringFilter<"ExecutionStep"> | string
+    executionId?: StringFilter<"ExecutionStep"> | string
+    nodeId?: StringFilter<"ExecutionStep"> | string
+    status?: EnumExecutionStatusFilter<"ExecutionStep"> | $Enums.ExecutionStatus
+    output?: JsonNullableFilter<"ExecutionStep">
+    error?: StringNullableFilter<"ExecutionStep"> | string | null
+    startedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
+    execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
+  }
+
+  export type ExecutionStepOrderByWithRelationInput = {
+    id?: SortOrder
+    executionId?: SortOrder
+    nodeId?: SortOrder
+    status?: SortOrder
+    output?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    execution?: ExecutionOrderByWithRelationInput
+  }
+
+  export type ExecutionStepWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    executionId_nodeId?: ExecutionStepExecutionIdNodeIdCompoundUniqueInput
+    AND?: ExecutionStepWhereInput | ExecutionStepWhereInput[]
+    OR?: ExecutionStepWhereInput[]
+    NOT?: ExecutionStepWhereInput | ExecutionStepWhereInput[]
+    executionId?: StringFilter<"ExecutionStep"> | string
+    nodeId?: StringFilter<"ExecutionStep"> | string
+    status?: EnumExecutionStatusFilter<"ExecutionStep"> | $Enums.ExecutionStatus
+    output?: JsonNullableFilter<"ExecutionStep">
+    error?: StringNullableFilter<"ExecutionStep"> | string | null
+    startedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
+    execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
+  }, "id" | "executionId_nodeId">
+
+  export type ExecutionStepOrderByWithAggregationInput = {
+    id?: SortOrder
+    executionId?: SortOrder
+    nodeId?: SortOrder
+    status?: SortOrder
+    output?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    _count?: ExecutionStepCountOrderByAggregateInput
+    _max?: ExecutionStepMaxOrderByAggregateInput
+    _min?: ExecutionStepMinOrderByAggregateInput
+  }
+
+  export type ExecutionStepScalarWhereWithAggregatesInput = {
+    AND?: ExecutionStepScalarWhereWithAggregatesInput | ExecutionStepScalarWhereWithAggregatesInput[]
+    OR?: ExecutionStepScalarWhereWithAggregatesInput[]
+    NOT?: ExecutionStepScalarWhereWithAggregatesInput | ExecutionStepScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ExecutionStep"> | string
+    executionId?: StringWithAggregatesFilter<"ExecutionStep"> | string
+    nodeId?: StringWithAggregatesFilter<"ExecutionStep"> | string
+    status?: EnumExecutionStatusWithAggregatesFilter<"ExecutionStep"> | $Enums.ExecutionStatus
+    output?: JsonNullableWithAggregatesFilter<"ExecutionStep">
+    error?: StringNullableWithAggregatesFilter<"ExecutionStep"> | string | null
+    startedAt?: DateTimeNullableWithAggregatesFilter<"ExecutionStep"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"ExecutionStep"> | Date | string | null
   }
 
   export type TenantCreateInput = {
@@ -7779,6 +9117,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     workflowVersion: WorkflowVersionCreateNestedOneWithoutExecutionsInput
+    steps?: ExecutionStepCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUncheckedCreateInput = {
@@ -7789,6 +9128,7 @@ export namespace Prisma {
     startedAt?: Date | string | null
     completedAt?: Date | string | null
     createdAt?: Date | string
+    steps?: ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUpdateInput = {
@@ -7799,6 +9139,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflowVersion?: WorkflowVersionUpdateOneRequiredWithoutExecutionsNestedInput
+    steps?: ExecutionStepUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionUncheckedUpdateInput = {
@@ -7809,6 +9150,7 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    steps?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionCreateManyInput = {
@@ -7838,6 +9180,82 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExecutionStepCreateInput = {
+    id?: string
+    nodeId: string
+    status?: $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    execution: ExecutionCreateNestedOneWithoutStepsInput
+  }
+
+  export type ExecutionStepUncheckedCreateInput = {
+    id?: string
+    executionId: string
+    nodeId: string
+    status?: $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+  }
+
+  export type ExecutionStepUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    execution?: ExecutionUpdateOneRequiredWithoutStepsNestedInput
+  }
+
+  export type ExecutionStepUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    executionId?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ExecutionStepCreateManyInput = {
+    id?: string
+    executionId: string
+    nodeId: string
+    status?: $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+  }
+
+  export type ExecutionStepUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ExecutionStepUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    executionId?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -8267,6 +9685,16 @@ export namespace Prisma {
     isNot?: WorkflowVersionWhereInput
   }
 
+  export type ExecutionStepListRelationFilter = {
+    every?: ExecutionStepWhereInput
+    some?: ExecutionStepWhereInput
+    none?: ExecutionStepWhereInput
+  }
+
+  export type ExecutionStepOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ExecutionCountOrderByAggregateInput = {
     id?: SortOrder
     workflowVersionId?: SortOrder
@@ -8343,6 +9771,47 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type ExecutionScalarRelationFilter = {
+    is?: ExecutionWhereInput
+    isNot?: ExecutionWhereInput
+  }
+
+  export type ExecutionStepExecutionIdNodeIdCompoundUniqueInput = {
+    executionId: string
+    nodeId: string
+  }
+
+  export type ExecutionStepCountOrderByAggregateInput = {
+    id?: SortOrder
+    executionId?: SortOrder
+    nodeId?: SortOrder
+    status?: SortOrder
+    output?: SortOrder
+    error?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type ExecutionStepMaxOrderByAggregateInput = {
+    id?: SortOrder
+    executionId?: SortOrder
+    nodeId?: SortOrder
+    status?: SortOrder
+    error?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type ExecutionStepMinOrderByAggregateInput = {
+    id?: SortOrder
+    executionId?: SortOrder
+    nodeId?: SortOrder
+    status?: SortOrder
+    error?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
   }
 
   export type UserCreateNestedManyWithoutTenantInput = {
@@ -8589,6 +10058,20 @@ export namespace Prisma {
     connect?: WorkflowVersionWhereUniqueInput
   }
 
+  export type ExecutionStepCreateNestedManyWithoutExecutionInput = {
+    create?: XOR<ExecutionStepCreateWithoutExecutionInput, ExecutionStepUncheckedCreateWithoutExecutionInput> | ExecutionStepCreateWithoutExecutionInput[] | ExecutionStepUncheckedCreateWithoutExecutionInput[]
+    connectOrCreate?: ExecutionStepCreateOrConnectWithoutExecutionInput | ExecutionStepCreateOrConnectWithoutExecutionInput[]
+    createMany?: ExecutionStepCreateManyExecutionInputEnvelope
+    connect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
+  }
+
+  export type ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput = {
+    create?: XOR<ExecutionStepCreateWithoutExecutionInput, ExecutionStepUncheckedCreateWithoutExecutionInput> | ExecutionStepCreateWithoutExecutionInput[] | ExecutionStepUncheckedCreateWithoutExecutionInput[]
+    connectOrCreate?: ExecutionStepCreateOrConnectWithoutExecutionInput | ExecutionStepCreateOrConnectWithoutExecutionInput[]
+    createMany?: ExecutionStepCreateManyExecutionInputEnvelope
+    connect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
+  }
+
   export type EnumExecutionStatusFieldUpdateOperationsInput = {
     set?: $Enums.ExecutionStatus
   }
@@ -8603,6 +10086,48 @@ export namespace Prisma {
     upsert?: WorkflowVersionUpsertWithoutExecutionsInput
     connect?: WorkflowVersionWhereUniqueInput
     update?: XOR<XOR<WorkflowVersionUpdateToOneWithWhereWithoutExecutionsInput, WorkflowVersionUpdateWithoutExecutionsInput>, WorkflowVersionUncheckedUpdateWithoutExecutionsInput>
+  }
+
+  export type ExecutionStepUpdateManyWithoutExecutionNestedInput = {
+    create?: XOR<ExecutionStepCreateWithoutExecutionInput, ExecutionStepUncheckedCreateWithoutExecutionInput> | ExecutionStepCreateWithoutExecutionInput[] | ExecutionStepUncheckedCreateWithoutExecutionInput[]
+    connectOrCreate?: ExecutionStepCreateOrConnectWithoutExecutionInput | ExecutionStepCreateOrConnectWithoutExecutionInput[]
+    upsert?: ExecutionStepUpsertWithWhereUniqueWithoutExecutionInput | ExecutionStepUpsertWithWhereUniqueWithoutExecutionInput[]
+    createMany?: ExecutionStepCreateManyExecutionInputEnvelope
+    set?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
+    disconnect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
+    delete?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
+    connect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
+    update?: ExecutionStepUpdateWithWhereUniqueWithoutExecutionInput | ExecutionStepUpdateWithWhereUniqueWithoutExecutionInput[]
+    updateMany?: ExecutionStepUpdateManyWithWhereWithoutExecutionInput | ExecutionStepUpdateManyWithWhereWithoutExecutionInput[]
+    deleteMany?: ExecutionStepScalarWhereInput | ExecutionStepScalarWhereInput[]
+  }
+
+  export type ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput = {
+    create?: XOR<ExecutionStepCreateWithoutExecutionInput, ExecutionStepUncheckedCreateWithoutExecutionInput> | ExecutionStepCreateWithoutExecutionInput[] | ExecutionStepUncheckedCreateWithoutExecutionInput[]
+    connectOrCreate?: ExecutionStepCreateOrConnectWithoutExecutionInput | ExecutionStepCreateOrConnectWithoutExecutionInput[]
+    upsert?: ExecutionStepUpsertWithWhereUniqueWithoutExecutionInput | ExecutionStepUpsertWithWhereUniqueWithoutExecutionInput[]
+    createMany?: ExecutionStepCreateManyExecutionInputEnvelope
+    set?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
+    disconnect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
+    delete?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
+    connect?: ExecutionStepWhereUniqueInput | ExecutionStepWhereUniqueInput[]
+    update?: ExecutionStepUpdateWithWhereUniqueWithoutExecutionInput | ExecutionStepUpdateWithWhereUniqueWithoutExecutionInput[]
+    updateMany?: ExecutionStepUpdateManyWithWhereWithoutExecutionInput | ExecutionStepUpdateManyWithWhereWithoutExecutionInput[]
+    deleteMany?: ExecutionStepScalarWhereInput | ExecutionStepScalarWhereInput[]
+  }
+
+  export type ExecutionCreateNestedOneWithoutStepsInput = {
+    create?: XOR<ExecutionCreateWithoutStepsInput, ExecutionUncheckedCreateWithoutStepsInput>
+    connectOrCreate?: ExecutionCreateOrConnectWithoutStepsInput
+    connect?: ExecutionWhereUniqueInput
+  }
+
+  export type ExecutionUpdateOneRequiredWithoutStepsNestedInput = {
+    create?: XOR<ExecutionCreateWithoutStepsInput, ExecutionUncheckedCreateWithoutStepsInput>
+    connectOrCreate?: ExecutionCreateOrConnectWithoutStepsInput
+    upsert?: ExecutionUpsertWithoutStepsInput
+    connect?: ExecutionWhereUniqueInput
+    update?: XOR<XOR<ExecutionUpdateToOneWithWhereWithoutStepsInput, ExecutionUpdateWithoutStepsInput>, ExecutionUncheckedUpdateWithoutStepsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -9177,6 +10702,7 @@ export namespace Prisma {
     startedAt?: Date | string | null
     completedAt?: Date | string | null
     createdAt?: Date | string
+    steps?: ExecutionStepCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUncheckedCreateWithoutWorkflowVersionInput = {
@@ -9186,6 +10712,7 @@ export namespace Prisma {
     startedAt?: Date | string | null
     completedAt?: Date | string | null
     createdAt?: Date | string
+    steps?: ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionCreateOrConnectWithoutWorkflowVersionInput = {
@@ -9281,6 +10808,36 @@ export namespace Prisma {
     create: XOR<WorkflowVersionCreateWithoutExecutionsInput, WorkflowVersionUncheckedCreateWithoutExecutionsInput>
   }
 
+  export type ExecutionStepCreateWithoutExecutionInput = {
+    id?: string
+    nodeId: string
+    status?: $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+  }
+
+  export type ExecutionStepUncheckedCreateWithoutExecutionInput = {
+    id?: string
+    nodeId: string
+    status?: $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+  }
+
+  export type ExecutionStepCreateOrConnectWithoutExecutionInput = {
+    where: ExecutionStepWhereUniqueInput
+    create: XOR<ExecutionStepCreateWithoutExecutionInput, ExecutionStepUncheckedCreateWithoutExecutionInput>
+  }
+
+  export type ExecutionStepCreateManyExecutionInputEnvelope = {
+    data: ExecutionStepCreateManyExecutionInput | ExecutionStepCreateManyExecutionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkflowVersionUpsertWithoutExecutionsInput = {
     update: XOR<WorkflowVersionUpdateWithoutExecutionsInput, WorkflowVersionUncheckedUpdateWithoutExecutionsInput>
     create: XOR<WorkflowVersionCreateWithoutExecutionsInput, WorkflowVersionUncheckedCreateWithoutExecutionsInput>
@@ -9310,6 +10867,92 @@ export namespace Prisma {
     definition?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExecutionStepUpsertWithWhereUniqueWithoutExecutionInput = {
+    where: ExecutionStepWhereUniqueInput
+    update: XOR<ExecutionStepUpdateWithoutExecutionInput, ExecutionStepUncheckedUpdateWithoutExecutionInput>
+    create: XOR<ExecutionStepCreateWithoutExecutionInput, ExecutionStepUncheckedCreateWithoutExecutionInput>
+  }
+
+  export type ExecutionStepUpdateWithWhereUniqueWithoutExecutionInput = {
+    where: ExecutionStepWhereUniqueInput
+    data: XOR<ExecutionStepUpdateWithoutExecutionInput, ExecutionStepUncheckedUpdateWithoutExecutionInput>
+  }
+
+  export type ExecutionStepUpdateManyWithWhereWithoutExecutionInput = {
+    where: ExecutionStepScalarWhereInput
+    data: XOR<ExecutionStepUpdateManyMutationInput, ExecutionStepUncheckedUpdateManyWithoutExecutionInput>
+  }
+
+  export type ExecutionStepScalarWhereInput = {
+    AND?: ExecutionStepScalarWhereInput | ExecutionStepScalarWhereInput[]
+    OR?: ExecutionStepScalarWhereInput[]
+    NOT?: ExecutionStepScalarWhereInput | ExecutionStepScalarWhereInput[]
+    id?: StringFilter<"ExecutionStep"> | string
+    executionId?: StringFilter<"ExecutionStep"> | string
+    nodeId?: StringFilter<"ExecutionStep"> | string
+    status?: EnumExecutionStatusFilter<"ExecutionStep"> | $Enums.ExecutionStatus
+    output?: JsonNullableFilter<"ExecutionStep">
+    error?: StringNullableFilter<"ExecutionStep"> | string | null
+    startedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
+  }
+
+  export type ExecutionCreateWithoutStepsInput = {
+    id?: string
+    status?: $Enums.ExecutionStatus
+    logs?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    workflowVersion: WorkflowVersionCreateNestedOneWithoutExecutionsInput
+  }
+
+  export type ExecutionUncheckedCreateWithoutStepsInput = {
+    id?: string
+    workflowVersionId: string
+    status?: $Enums.ExecutionStatus
+    logs?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ExecutionCreateOrConnectWithoutStepsInput = {
+    where: ExecutionWhereUniqueInput
+    create: XOR<ExecutionCreateWithoutStepsInput, ExecutionUncheckedCreateWithoutStepsInput>
+  }
+
+  export type ExecutionUpsertWithoutStepsInput = {
+    update: XOR<ExecutionUpdateWithoutStepsInput, ExecutionUncheckedUpdateWithoutStepsInput>
+    create: XOR<ExecutionCreateWithoutStepsInput, ExecutionUncheckedCreateWithoutStepsInput>
+    where?: ExecutionWhereInput
+  }
+
+  export type ExecutionUpdateToOneWithWhereWithoutStepsInput = {
+    where?: ExecutionWhereInput
+    data: XOR<ExecutionUpdateWithoutStepsInput, ExecutionUncheckedUpdateWithoutStepsInput>
+  }
+
+  export type ExecutionUpdateWithoutStepsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
+    logs?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workflowVersion?: WorkflowVersionUpdateOneRequiredWithoutExecutionsNestedInput
+  }
+
+  export type ExecutionUncheckedUpdateWithoutStepsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workflowVersionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
+    logs?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateManyTenantInput = {
@@ -9436,6 +11079,7 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    steps?: ExecutionStepUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionUncheckedUpdateWithoutWorkflowVersionInput = {
@@ -9445,6 +11089,7 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    steps?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionUncheckedUpdateManyWithoutWorkflowVersionInput = {
@@ -9454,6 +11099,46 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExecutionStepCreateManyExecutionInput = {
+    id?: string
+    nodeId: string
+    status?: $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: string | null
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+  }
+
+  export type ExecutionStepUpdateWithoutExecutionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ExecutionStepUncheckedUpdateWithoutExecutionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ExecutionStepUncheckedUpdateManyWithoutExecutionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
+    output?: NullableJsonNullValueInput | InputJsonValue
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 

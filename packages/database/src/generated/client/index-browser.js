@@ -168,6 +168,17 @@ exports.Prisma.ExecutionScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ExecutionStepScalarFieldEnum = {
+  id: 'id',
+  executionId: 'executionId',
+  nodeId: 'nodeId',
+  status: 'status',
+  output: 'output',
+  error: 'error',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -220,7 +231,8 @@ exports.Prisma.ModelName = {
   User: 'User',
   Workflow: 'Workflow',
   WorkflowVersion: 'WorkflowVersion',
-  Execution: 'Execution'
+  Execution: 'Execution',
+  ExecutionStep: 'ExecutionStep'
 };
 
 /**

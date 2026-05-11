@@ -87,6 +87,7 @@ model Execution {
   workflowVersionId String
   workflowVersion   WorkflowVersion @relation(fields: [workflowVersionId], references: [id])
   status            ExecutionStatus @default(PENDING)
+  steps             ExecutionStep[]
   logs              Json?
   startedAt         DateTime?      
   completedAt       DateTime?
@@ -94,4 +95,19 @@ model Execution {
 
   @@index([workflowVersionId])
   @@index([status])
+}
+
+model ExecutionStep {
+  id          String          @id @default(uuid())
+  executionId String
+  execution   Execution       @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  nodeId      String          
+  status      ExecutionStatus @default(PENDING)
+  output      Json?          
+  error       String?        
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  @@unique([executionId, nodeId])
+  @@index([executionId])
 }
