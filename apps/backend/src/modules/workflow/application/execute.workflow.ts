@@ -1,17 +1,15 @@
 import { db } from '@eventflux/database';
 import { ActionRegistry } from '../domain/action.registry.js';
-import { DagDefinition } from '../domain/dag.validator.js'; 
+import { DagDefinition } from '../domain/dag.validator.js';
+import { publishEvent } from '@eventflux/kafka';
 
 export class ExecuteWorkflowUseCase {
-  
   async trigger(workflowId: string, initialPayload: any) {
-   
     const version = await db.workflowVersion.findFirst({
       where: { workflowId, status: 'PUBLISHED' }
     });
 
     if (!version) throw new Error("No published version found for this workflow.");
-
 
     const execution = await db.execution.create({
       data: {
@@ -21,7 +19,6 @@ export class ExecuteWorkflowUseCase {
       }
     });
 
-    
     this.runEngine(execution.id, version.definition as unknown as DagDefinition, initialPayload)
       .catch(err => console.error(`CRITICAL ENGINE FAILURE: ${err.message}`));
 
@@ -30,7 +27,6 @@ export class ExecuteWorkflowUseCase {
 
   private async runEngine(executionId: string, dag: DagDefinition, context: any) {
     try {
-
       const targetNodeIds = new Set(dag.edges.map(e => e.target));
       const startNodes = dag.nodes.filter(n => !targetNodeIds.has(n.id));
 
@@ -39,11 +35,11 @@ export class ExecuteWorkflowUseCase {
       for (const node of startNodes) {
         await this.executeNodeRecursive(executionId, node.id, dag, currentContext);
       }
+      
       await db.execution.update({
         where: { id: executionId },
         data: { status: 'COMPLETED', completedAt: new Date() }
       });
-
     } catch (error: any) {
       await db.execution.update({
         where: { id: executionId },
@@ -73,7 +69,7 @@ export class ExecuteWorkflowUseCase {
         if (result.success) break;
       }
       attempts++;
-      await new Promise(r => setTimeout(r, 1000 * attempts)); 
+      await new Promise(r => setTimeout(r, 1000 * attempts));
     }
 
     if (!result || !result.success) {
@@ -81,13 +77,31 @@ export class ExecuteWorkflowUseCase {
         where: { executionId_nodeId: { executionId, nodeId } },
         data: { status: 'FAILED', error: result?.error || 'Max retries exceeded', completedAt: new Date() }
       });
-      throw new Error(`Execution failed at node ${nodeId}: ${result?.error}`); // Stops the DAG traversal
+      
+      await publishEvent('execution-events', executionId, {
+        tenantId: context.tenantId,
+        executionId,
+        nodeId,
+        status: 'FAILED',
+        error: result?.error
+      });
+      
+      throw new Error(`Execution failed at node ${nodeId}: ${result?.error}`);
     }
 
     await db.executionStep.update({
       where: { executionId_nodeId: { executionId, nodeId } },
       data: { status: 'COMPLETED', output: result.data, completedAt: new Date() }
     });
+
+    await publishEvent('execution-events', executionId, {
+      tenantId: context.tenantId,
+      executionId,
+      nodeId,
+      status: 'COMPLETED',
+      output: result.data
+    });
+
     const newContext = { ...context, [nodeId]: result.data };
 
     const outgoingEdges = dag.edges.filter(e => e.source === nodeId);
