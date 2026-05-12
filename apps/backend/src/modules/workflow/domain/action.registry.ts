@@ -1,29 +1,35 @@
-import { logger } from "@eventflux/logger";
+import { IActionPlugin, ActionResult } from './plugin/plugin.interface.js';
+import { HttpPlugin } from './plugin/http.plugin.js';
+import { AiPlugin } from './plugin/ai.plugin.js';
+import { logger } from '@eventflux/logger';
 
-export interface ActionResult{
-    success : boolean;
-    data?:any;
-    error?:string;
-}
+class Registry {
+  private plugins = new Map<string, IActionPlugin>();
 
-export class ActionRegistry {
-  static async execute(actionType: string, payload: any): Promise<ActionResult> {
-    logger.info(`⚙️ Executing action: ${actionType}`, payload);
+  constructor() {
+    this.register(new HttpPlugin());
+    this.register(new AiPlugin());
+  }
 
-    try {
-      switch (actionType) {
-        case 'send_welcome_email':
-          await new Promise(resolve => setTimeout(resolve, 500)); 
-          return { success: true, data: { messageId: 'msg_' + Date.now(), recipient: payload.email } };
-        
-        case 'http_request':
-          return { success: true, data: { status: 200, body: "Mock HTTP Success" } };
-          
-        default:
-          throw new Error(`Unknown action type: ${actionType}`);
-      }
-    } catch (error: any) {
-      return { success: false, error: error.message };
+  register(plugin: IActionPlugin) {
+    this.plugins.set(plugin.id, plugin);
+  }
+
+  async execute(actionId: string, payload: any, config: any = {}): Promise<ActionResult> {
+    if (actionId === 'send_welcome_email') {
+      logger.info(`⚙️ Executing legacy action: ${actionId}`);
+      await new Promise(resolve => setTimeout(resolve, 500)); 
+      return { success: true, data: { messageId: 'msg_' + Date.now(), recipient: payload.email } };
     }
+    const plugin = this.plugins.get(actionId);
+    
+    if (!plugin) {
+      logger.error(`❌ Plugin not found: ${actionId}`);
+      return { success: false, error: `Unknown action type: ${actionId}` };
+    }
+    logger.info(`⚙️ Executing plugin action: ${actionId}`);
+    return await plugin.execute(payload, config);
   }
 }
+
+export const ActionRegistry = new Registry();

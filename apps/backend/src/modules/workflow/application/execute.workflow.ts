@@ -69,7 +69,7 @@ export class ExecuteWorkflowUseCase {
         result = { success: true, data: context };
         break;
       } else {
-        result = await ActionRegistry.execute(node.data.action, context);
+        result = await ActionRegistry.execute(node.data.action, context, node.data.config);
         if (result.success) break;
       }
       attempts++;
