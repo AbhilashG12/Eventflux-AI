@@ -4,11 +4,13 @@ import { LoginPage } from './modules/auth/pages/LoginPage';
 import { RegisterPage } from './modules/auth/pages/RegisterPage';
 import { MainWorkspace } from './modules/workspace/MainWorkspace';
 import { GlobalErrorCard } from './core/components/GlobalErrorCard';
+import { GlobalSuccessCard } from './core/components/GlobalSuccessCard';
 
 const App = () => {
   return (
     <>
       <GlobalErrorCard />
+      <GlobalSuccessCard />
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />

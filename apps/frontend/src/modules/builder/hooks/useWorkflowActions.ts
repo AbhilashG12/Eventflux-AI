@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import { apiClient } from '../../../core/api/client';
 import { useWorkflowStore } from '../../../core/store/workflow.store';
 import { useErrorStore } from '../../../core/store/error.store';
+import { useSuccessStore } from '../../../core/store/success.store';
 
 export const useWorkflowActions = () => {
   const [isSaving, setIsSaving] = useState(false);
   const { nodes, edges, workflowId, setWorkflowId, setNodes, setEdges } = useWorkflowStore();
+  
   const showError = useErrorStore((state) => state.showError);
+  const showSuccess = useSuccessStore((state) => state.showSuccess);
 
   useEffect(() => {
     const loadWorkflow = async () => {
@@ -38,12 +41,20 @@ export const useWorkflowActions = () => {
 
       if (workflowId) {
         await apiClient.put(`/workflows/${workflowId}`, payload);
+        showSuccess("Workflow updated successfully!");
       } else {
         const { data } = await apiClient.post('/workflows', payload);
-        setWorkflowId(data.id);
+        const newId = data.id || data.workflowId || data.workflow?.id; 
+        
+        if (newId) {
+          setWorkflowId(newId);
+          showSuccess("Workflow published successfully!");
+        } else {
+          console.error("Backend response missing ID:", data);
+          showError("Workflow saved, but backend didn't return an ID.");
+        }
       }
     } catch (error: any) {
-      // Trigger the global error card!
       showError(`Failed to save: ${error.response?.data?.error || error.message}`);
     } finally {
       setIsSaving(false);
@@ -59,10 +70,8 @@ export const useWorkflowActions = () => {
       await apiClient.post(`/workflows/${workflowId}/execute`, {
         payload: { source: "manual_frontend_test" }
       });
-      // Optionally, you could make a useSuccessStore for success messages, 
-      // but for now we just log it or handle UI state elsewhere.
+      showSuccess("Execution Queued! Switch to Telemetry.");
     } catch (error: any) {
-      // Trigger the global error card!
       showError(`Execution failed: ${error.response?.data?.error || error.message}`);
     }
   };

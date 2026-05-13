@@ -9,7 +9,11 @@ import { BuilderHeader } from '../components/BuilderHeader';
 import { useWorkflowActions } from '../hooks/useWorkflowActions';
 import { useWorkflowDragDrop } from '../hooks/useWorkflowDragDrop';
 
-const nodeTypes = { action: ActionNode };
+const nodeTypes = { 
+  ACTION: ActionNode,
+  TRIGGER: ActionNode,
+  CONDITION: ActionNode 
+};
 
 const BuilderCore = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
