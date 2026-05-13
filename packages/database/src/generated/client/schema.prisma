@@ -53,6 +53,7 @@ model Workflow {
   id          String            @id @default(uuid())
   name        String
   description String?
+  definition  Json?
   tenantId    String
   tenant      Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   versions    WorkflowVersion[]
@@ -114,4 +115,14 @@ model ProcessedEvent {
   createdAt DateTime @default(now())
 
   @@index([createdAt])
+}
+
+model DeadLetterQueue {
+  id         String    @id @default(uuid())
+  topic      String
+  payload    Json
+  error      String
+  failedAt   DateTime  @default(now())
+  replayed   Boolean   @default(false)
+  replayedAt DateTime?
 }

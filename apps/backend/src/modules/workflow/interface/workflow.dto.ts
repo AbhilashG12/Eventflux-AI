@@ -17,12 +17,12 @@ const EdgeSchema = z.object({
 
 
 export const CreateWorkflowSchema = z.object({
-  name: z.string().min(3, "Name must be at least 3 characters").max(100),
+  name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
   definition: z.object({
-    nodes: z.array(NodeSchema).min(1, "A workflow must have at least 1 node"),
-    edges: z.array(EdgeSchema)
-  })
+    nodes: z.array(z.any()),
+    edges: z.array(z.any())
+  }).optional()
 });
 
 

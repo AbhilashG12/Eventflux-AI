@@ -48,6 +48,11 @@ export type ExecutionStep = $Result.DefaultSelection<Prisma.$ExecutionStepPayloa
  * 
  */
 export type ProcessedEvent = $Result.DefaultSelection<Prisma.$ProcessedEventPayload>
+/**
+ * Model DeadLetterQueue
+ * 
+ */
+export type DeadLetterQueue = $Result.DefaultSelection<Prisma.$DeadLetterQueuePayload>
 
 /**
  * Enums
@@ -283,6 +288,16 @@ export class PrismaClient<
     * ```
     */
   get processedEvent(): Prisma.ProcessedEventDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.deadLetterQueue`: Exposes CRUD operations for the **DeadLetterQueue** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DeadLetterQueues
+    * const deadLetterQueues = await prisma.deadLetterQueue.findMany()
+    * ```
+    */
+  get deadLetterQueue(): Prisma.DeadLetterQueueDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -723,7 +738,8 @@ export namespace Prisma {
     WorkflowVersion: 'WorkflowVersion',
     Execution: 'Execution',
     ExecutionStep: 'ExecutionStep',
-    ProcessedEvent: 'ProcessedEvent'
+    ProcessedEvent: 'ProcessedEvent',
+    DeadLetterQueue: 'DeadLetterQueue'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -739,7 +755,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "tenant" | "user" | "workflow" | "workflowVersion" | "execution" | "executionStep" | "processedEvent"
+      modelProps: "tenant" | "user" | "workflow" | "workflowVersion" | "execution" | "executionStep" | "processedEvent" | "deadLetterQueue"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1261,6 +1277,80 @@ export namespace Prisma {
           }
         }
       }
+      DeadLetterQueue: {
+        payload: Prisma.$DeadLetterQueuePayload<ExtArgs>
+        fields: Prisma.DeadLetterQueueFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DeadLetterQueueFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DeadLetterQueuePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DeadLetterQueueFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DeadLetterQueuePayload>
+          }
+          findFirst: {
+            args: Prisma.DeadLetterQueueFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DeadLetterQueuePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DeadLetterQueueFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DeadLetterQueuePayload>
+          }
+          findMany: {
+            args: Prisma.DeadLetterQueueFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DeadLetterQueuePayload>[]
+          }
+          create: {
+            args: Prisma.DeadLetterQueueCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DeadLetterQueuePayload>
+          }
+          createMany: {
+            args: Prisma.DeadLetterQueueCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DeadLetterQueueCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DeadLetterQueuePayload>[]
+          }
+          delete: {
+            args: Prisma.DeadLetterQueueDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DeadLetterQueuePayload>
+          }
+          update: {
+            args: Prisma.DeadLetterQueueUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DeadLetterQueuePayload>
+          }
+          deleteMany: {
+            args: Prisma.DeadLetterQueueDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DeadLetterQueueUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DeadLetterQueueUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DeadLetterQueuePayload>[]
+          }
+          upsert: {
+            args: Prisma.DeadLetterQueueUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DeadLetterQueuePayload>
+          }
+          aggregate: {
+            args: Prisma.DeadLetterQueueAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDeadLetterQueue>
+          }
+          groupBy: {
+            args: Prisma.DeadLetterQueueGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DeadLetterQueueGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DeadLetterQueueCountArgs<ExtArgs>
+            result: $Utils.Optional<DeadLetterQueueCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1376,6 +1466,7 @@ export namespace Prisma {
     execution?: ExecutionOmit
     executionStep?: ExecutionStepOmit
     processedEvent?: ProcessedEventOmit
+    deadLetterQueue?: DeadLetterQueueOmit
   }
 
   /* Types for Logging */
@@ -3825,6 +3916,7 @@ export namespace Prisma {
     id: number
     name: number
     description: number
+    definition: number
     tenantId: number
     createdAt: number
     updatedAt: number
@@ -3854,6 +3946,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    definition?: true
     tenantId?: true
     createdAt?: true
     updatedAt?: true
@@ -3936,6 +4029,7 @@ export namespace Prisma {
     id: string
     name: string
     description: string | null
+    definition: JsonValue | null
     tenantId: string
     createdAt: Date
     updatedAt: Date
@@ -3962,6 +4056,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    definition?: boolean
     tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3974,6 +4069,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    definition?: boolean
     tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3984,6 +4080,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    definition?: boolean
     tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3994,12 +4091,13 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    definition?: boolean
     tenantId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type WorkflowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "tenantId" | "createdAt" | "updatedAt", ExtArgs["result"]["workflow"]>
+  export type WorkflowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "definition" | "tenantId" | "createdAt" | "updatedAt", ExtArgs["result"]["workflow"]>
   export type WorkflowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     versions?: boolean | Workflow$versionsArgs<ExtArgs>
@@ -4022,6 +4120,7 @@ export namespace Prisma {
       id: string
       name: string
       description: string | null
+      definition: Prisma.JsonValue | null
       tenantId: string
       createdAt: Date
       updatedAt: Date
@@ -4453,6 +4552,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Workflow", 'String'>
     readonly name: FieldRef<"Workflow", 'String'>
     readonly description: FieldRef<"Workflow", 'String'>
+    readonly definition: FieldRef<"Workflow", 'Json'>
     readonly tenantId: FieldRef<"Workflow", 'String'>
     readonly createdAt: FieldRef<"Workflow", 'DateTime'>
     readonly updatedAt: FieldRef<"Workflow", 'DateTime'>
@@ -9249,6 +9349,1028 @@ export namespace Prisma {
 
 
   /**
+   * Model DeadLetterQueue
+   */
+
+  export type AggregateDeadLetterQueue = {
+    _count: DeadLetterQueueCountAggregateOutputType | null
+    _min: DeadLetterQueueMinAggregateOutputType | null
+    _max: DeadLetterQueueMaxAggregateOutputType | null
+  }
+
+  export type DeadLetterQueueMinAggregateOutputType = {
+    id: string | null
+    topic: string | null
+    error: string | null
+    failedAt: Date | null
+    replayed: boolean | null
+    replayedAt: Date | null
+  }
+
+  export type DeadLetterQueueMaxAggregateOutputType = {
+    id: string | null
+    topic: string | null
+    error: string | null
+    failedAt: Date | null
+    replayed: boolean | null
+    replayedAt: Date | null
+  }
+
+  export type DeadLetterQueueCountAggregateOutputType = {
+    id: number
+    topic: number
+    payload: number
+    error: number
+    failedAt: number
+    replayed: number
+    replayedAt: number
+    _all: number
+  }
+
+
+  export type DeadLetterQueueMinAggregateInputType = {
+    id?: true
+    topic?: true
+    error?: true
+    failedAt?: true
+    replayed?: true
+    replayedAt?: true
+  }
+
+  export type DeadLetterQueueMaxAggregateInputType = {
+    id?: true
+    topic?: true
+    error?: true
+    failedAt?: true
+    replayed?: true
+    replayedAt?: true
+  }
+
+  export type DeadLetterQueueCountAggregateInputType = {
+    id?: true
+    topic?: true
+    payload?: true
+    error?: true
+    failedAt?: true
+    replayed?: true
+    replayedAt?: true
+    _all?: true
+  }
+
+  export type DeadLetterQueueAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DeadLetterQueue to aggregate.
+     */
+    where?: DeadLetterQueueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DeadLetterQueues to fetch.
+     */
+    orderBy?: DeadLetterQueueOrderByWithRelationInput | DeadLetterQueueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DeadLetterQueueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DeadLetterQueues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DeadLetterQueues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DeadLetterQueues
+    **/
+    _count?: true | DeadLetterQueueCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DeadLetterQueueMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DeadLetterQueueMaxAggregateInputType
+  }
+
+  export type GetDeadLetterQueueAggregateType<T extends DeadLetterQueueAggregateArgs> = {
+        [P in keyof T & keyof AggregateDeadLetterQueue]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDeadLetterQueue[P]>
+      : GetScalarType<T[P], AggregateDeadLetterQueue[P]>
+  }
+
+
+
+
+  export type DeadLetterQueueGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DeadLetterQueueWhereInput
+    orderBy?: DeadLetterQueueOrderByWithAggregationInput | DeadLetterQueueOrderByWithAggregationInput[]
+    by: DeadLetterQueueScalarFieldEnum[] | DeadLetterQueueScalarFieldEnum
+    having?: DeadLetterQueueScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DeadLetterQueueCountAggregateInputType | true
+    _min?: DeadLetterQueueMinAggregateInputType
+    _max?: DeadLetterQueueMaxAggregateInputType
+  }
+
+  export type DeadLetterQueueGroupByOutputType = {
+    id: string
+    topic: string
+    payload: JsonValue
+    error: string
+    failedAt: Date
+    replayed: boolean
+    replayedAt: Date | null
+    _count: DeadLetterQueueCountAggregateOutputType | null
+    _min: DeadLetterQueueMinAggregateOutputType | null
+    _max: DeadLetterQueueMaxAggregateOutputType | null
+  }
+
+  type GetDeadLetterQueueGroupByPayload<T extends DeadLetterQueueGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DeadLetterQueueGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DeadLetterQueueGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DeadLetterQueueGroupByOutputType[P]>
+            : GetScalarType<T[P], DeadLetterQueueGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DeadLetterQueueSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    topic?: boolean
+    payload?: boolean
+    error?: boolean
+    failedAt?: boolean
+    replayed?: boolean
+    replayedAt?: boolean
+  }, ExtArgs["result"]["deadLetterQueue"]>
+
+  export type DeadLetterQueueSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    topic?: boolean
+    payload?: boolean
+    error?: boolean
+    failedAt?: boolean
+    replayed?: boolean
+    replayedAt?: boolean
+  }, ExtArgs["result"]["deadLetterQueue"]>
+
+  export type DeadLetterQueueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    topic?: boolean
+    payload?: boolean
+    error?: boolean
+    failedAt?: boolean
+    replayed?: boolean
+    replayedAt?: boolean
+  }, ExtArgs["result"]["deadLetterQueue"]>
+
+  export type DeadLetterQueueSelectScalar = {
+    id?: boolean
+    topic?: boolean
+    payload?: boolean
+    error?: boolean
+    failedAt?: boolean
+    replayed?: boolean
+    replayedAt?: boolean
+  }
+
+  export type DeadLetterQueueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "topic" | "payload" | "error" | "failedAt" | "replayed" | "replayedAt", ExtArgs["result"]["deadLetterQueue"]>
+
+  export type $DeadLetterQueuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DeadLetterQueue"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      topic: string
+      payload: Prisma.JsonValue
+      error: string
+      failedAt: Date
+      replayed: boolean
+      replayedAt: Date | null
+    }, ExtArgs["result"]["deadLetterQueue"]>
+    composites: {}
+  }
+
+  type DeadLetterQueueGetPayload<S extends boolean | null | undefined | DeadLetterQueueDefaultArgs> = $Result.GetResult<Prisma.$DeadLetterQueuePayload, S>
+
+  type DeadLetterQueueCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DeadLetterQueueFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DeadLetterQueueCountAggregateInputType | true
+    }
+
+  export interface DeadLetterQueueDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DeadLetterQueue'], meta: { name: 'DeadLetterQueue' } }
+    /**
+     * Find zero or one DeadLetterQueue that matches the filter.
+     * @param {DeadLetterQueueFindUniqueArgs} args - Arguments to find a DeadLetterQueue
+     * @example
+     * // Get one DeadLetterQueue
+     * const deadLetterQueue = await prisma.deadLetterQueue.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DeadLetterQueueFindUniqueArgs>(args: SelectSubset<T, DeadLetterQueueFindUniqueArgs<ExtArgs>>): Prisma__DeadLetterQueueClient<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DeadLetterQueue that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DeadLetterQueueFindUniqueOrThrowArgs} args - Arguments to find a DeadLetterQueue
+     * @example
+     * // Get one DeadLetterQueue
+     * const deadLetterQueue = await prisma.deadLetterQueue.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DeadLetterQueueFindUniqueOrThrowArgs>(args: SelectSubset<T, DeadLetterQueueFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DeadLetterQueueClient<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DeadLetterQueue that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DeadLetterQueueFindFirstArgs} args - Arguments to find a DeadLetterQueue
+     * @example
+     * // Get one DeadLetterQueue
+     * const deadLetterQueue = await prisma.deadLetterQueue.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DeadLetterQueueFindFirstArgs>(args?: SelectSubset<T, DeadLetterQueueFindFirstArgs<ExtArgs>>): Prisma__DeadLetterQueueClient<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DeadLetterQueue that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DeadLetterQueueFindFirstOrThrowArgs} args - Arguments to find a DeadLetterQueue
+     * @example
+     * // Get one DeadLetterQueue
+     * const deadLetterQueue = await prisma.deadLetterQueue.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DeadLetterQueueFindFirstOrThrowArgs>(args?: SelectSubset<T, DeadLetterQueueFindFirstOrThrowArgs<ExtArgs>>): Prisma__DeadLetterQueueClient<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DeadLetterQueues that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DeadLetterQueueFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DeadLetterQueues
+     * const deadLetterQueues = await prisma.deadLetterQueue.findMany()
+     * 
+     * // Get first 10 DeadLetterQueues
+     * const deadLetterQueues = await prisma.deadLetterQueue.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const deadLetterQueueWithIdOnly = await prisma.deadLetterQueue.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DeadLetterQueueFindManyArgs>(args?: SelectSubset<T, DeadLetterQueueFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DeadLetterQueue.
+     * @param {DeadLetterQueueCreateArgs} args - Arguments to create a DeadLetterQueue.
+     * @example
+     * // Create one DeadLetterQueue
+     * const DeadLetterQueue = await prisma.deadLetterQueue.create({
+     *   data: {
+     *     // ... data to create a DeadLetterQueue
+     *   }
+     * })
+     * 
+     */
+    create<T extends DeadLetterQueueCreateArgs>(args: SelectSubset<T, DeadLetterQueueCreateArgs<ExtArgs>>): Prisma__DeadLetterQueueClient<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DeadLetterQueues.
+     * @param {DeadLetterQueueCreateManyArgs} args - Arguments to create many DeadLetterQueues.
+     * @example
+     * // Create many DeadLetterQueues
+     * const deadLetterQueue = await prisma.deadLetterQueue.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DeadLetterQueueCreateManyArgs>(args?: SelectSubset<T, DeadLetterQueueCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DeadLetterQueues and returns the data saved in the database.
+     * @param {DeadLetterQueueCreateManyAndReturnArgs} args - Arguments to create many DeadLetterQueues.
+     * @example
+     * // Create many DeadLetterQueues
+     * const deadLetterQueue = await prisma.deadLetterQueue.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DeadLetterQueues and only return the `id`
+     * const deadLetterQueueWithIdOnly = await prisma.deadLetterQueue.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DeadLetterQueueCreateManyAndReturnArgs>(args?: SelectSubset<T, DeadLetterQueueCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DeadLetterQueue.
+     * @param {DeadLetterQueueDeleteArgs} args - Arguments to delete one DeadLetterQueue.
+     * @example
+     * // Delete one DeadLetterQueue
+     * const DeadLetterQueue = await prisma.deadLetterQueue.delete({
+     *   where: {
+     *     // ... filter to delete one DeadLetterQueue
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DeadLetterQueueDeleteArgs>(args: SelectSubset<T, DeadLetterQueueDeleteArgs<ExtArgs>>): Prisma__DeadLetterQueueClient<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DeadLetterQueue.
+     * @param {DeadLetterQueueUpdateArgs} args - Arguments to update one DeadLetterQueue.
+     * @example
+     * // Update one DeadLetterQueue
+     * const deadLetterQueue = await prisma.deadLetterQueue.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DeadLetterQueueUpdateArgs>(args: SelectSubset<T, DeadLetterQueueUpdateArgs<ExtArgs>>): Prisma__DeadLetterQueueClient<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DeadLetterQueues.
+     * @param {DeadLetterQueueDeleteManyArgs} args - Arguments to filter DeadLetterQueues to delete.
+     * @example
+     * // Delete a few DeadLetterQueues
+     * const { count } = await prisma.deadLetterQueue.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DeadLetterQueueDeleteManyArgs>(args?: SelectSubset<T, DeadLetterQueueDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DeadLetterQueues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DeadLetterQueueUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DeadLetterQueues
+     * const deadLetterQueue = await prisma.deadLetterQueue.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DeadLetterQueueUpdateManyArgs>(args: SelectSubset<T, DeadLetterQueueUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DeadLetterQueues and returns the data updated in the database.
+     * @param {DeadLetterQueueUpdateManyAndReturnArgs} args - Arguments to update many DeadLetterQueues.
+     * @example
+     * // Update many DeadLetterQueues
+     * const deadLetterQueue = await prisma.deadLetterQueue.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DeadLetterQueues and only return the `id`
+     * const deadLetterQueueWithIdOnly = await prisma.deadLetterQueue.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DeadLetterQueueUpdateManyAndReturnArgs>(args: SelectSubset<T, DeadLetterQueueUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DeadLetterQueue.
+     * @param {DeadLetterQueueUpsertArgs} args - Arguments to update or create a DeadLetterQueue.
+     * @example
+     * // Update or create a DeadLetterQueue
+     * const deadLetterQueue = await prisma.deadLetterQueue.upsert({
+     *   create: {
+     *     // ... data to create a DeadLetterQueue
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DeadLetterQueue we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DeadLetterQueueUpsertArgs>(args: SelectSubset<T, DeadLetterQueueUpsertArgs<ExtArgs>>): Prisma__DeadLetterQueueClient<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DeadLetterQueues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DeadLetterQueueCountArgs} args - Arguments to filter DeadLetterQueues to count.
+     * @example
+     * // Count the number of DeadLetterQueues
+     * const count = await prisma.deadLetterQueue.count({
+     *   where: {
+     *     // ... the filter for the DeadLetterQueues we want to count
+     *   }
+     * })
+    **/
+    count<T extends DeadLetterQueueCountArgs>(
+      args?: Subset<T, DeadLetterQueueCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DeadLetterQueueCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DeadLetterQueue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DeadLetterQueueAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DeadLetterQueueAggregateArgs>(args: Subset<T, DeadLetterQueueAggregateArgs>): Prisma.PrismaPromise<GetDeadLetterQueueAggregateType<T>>
+
+    /**
+     * Group by DeadLetterQueue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DeadLetterQueueGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DeadLetterQueueGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DeadLetterQueueGroupByArgs['orderBy'] }
+        : { orderBy?: DeadLetterQueueGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DeadLetterQueueGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDeadLetterQueueGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DeadLetterQueue model
+   */
+  readonly fields: DeadLetterQueueFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DeadLetterQueue.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DeadLetterQueueClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DeadLetterQueue model
+   */
+  interface DeadLetterQueueFieldRefs {
+    readonly id: FieldRef<"DeadLetterQueue", 'String'>
+    readonly topic: FieldRef<"DeadLetterQueue", 'String'>
+    readonly payload: FieldRef<"DeadLetterQueue", 'Json'>
+    readonly error: FieldRef<"DeadLetterQueue", 'String'>
+    readonly failedAt: FieldRef<"DeadLetterQueue", 'DateTime'>
+    readonly replayed: FieldRef<"DeadLetterQueue", 'Boolean'>
+    readonly replayedAt: FieldRef<"DeadLetterQueue", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DeadLetterQueue findUnique
+   */
+  export type DeadLetterQueueFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * Filter, which DeadLetterQueue to fetch.
+     */
+    where: DeadLetterQueueWhereUniqueInput
+  }
+
+  /**
+   * DeadLetterQueue findUniqueOrThrow
+   */
+  export type DeadLetterQueueFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * Filter, which DeadLetterQueue to fetch.
+     */
+    where: DeadLetterQueueWhereUniqueInput
+  }
+
+  /**
+   * DeadLetterQueue findFirst
+   */
+  export type DeadLetterQueueFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * Filter, which DeadLetterQueue to fetch.
+     */
+    where?: DeadLetterQueueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DeadLetterQueues to fetch.
+     */
+    orderBy?: DeadLetterQueueOrderByWithRelationInput | DeadLetterQueueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DeadLetterQueues.
+     */
+    cursor?: DeadLetterQueueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DeadLetterQueues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DeadLetterQueues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DeadLetterQueues.
+     */
+    distinct?: DeadLetterQueueScalarFieldEnum | DeadLetterQueueScalarFieldEnum[]
+  }
+
+  /**
+   * DeadLetterQueue findFirstOrThrow
+   */
+  export type DeadLetterQueueFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * Filter, which DeadLetterQueue to fetch.
+     */
+    where?: DeadLetterQueueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DeadLetterQueues to fetch.
+     */
+    orderBy?: DeadLetterQueueOrderByWithRelationInput | DeadLetterQueueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DeadLetterQueues.
+     */
+    cursor?: DeadLetterQueueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DeadLetterQueues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DeadLetterQueues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DeadLetterQueues.
+     */
+    distinct?: DeadLetterQueueScalarFieldEnum | DeadLetterQueueScalarFieldEnum[]
+  }
+
+  /**
+   * DeadLetterQueue findMany
+   */
+  export type DeadLetterQueueFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * Filter, which DeadLetterQueues to fetch.
+     */
+    where?: DeadLetterQueueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DeadLetterQueues to fetch.
+     */
+    orderBy?: DeadLetterQueueOrderByWithRelationInput | DeadLetterQueueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DeadLetterQueues.
+     */
+    cursor?: DeadLetterQueueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DeadLetterQueues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DeadLetterQueues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DeadLetterQueues.
+     */
+    distinct?: DeadLetterQueueScalarFieldEnum | DeadLetterQueueScalarFieldEnum[]
+  }
+
+  /**
+   * DeadLetterQueue create
+   */
+  export type DeadLetterQueueCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * The data needed to create a DeadLetterQueue.
+     */
+    data: XOR<DeadLetterQueueCreateInput, DeadLetterQueueUncheckedCreateInput>
+  }
+
+  /**
+   * DeadLetterQueue createMany
+   */
+  export type DeadLetterQueueCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DeadLetterQueues.
+     */
+    data: DeadLetterQueueCreateManyInput | DeadLetterQueueCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DeadLetterQueue createManyAndReturn
+   */
+  export type DeadLetterQueueCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * The data used to create many DeadLetterQueues.
+     */
+    data: DeadLetterQueueCreateManyInput | DeadLetterQueueCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DeadLetterQueue update
+   */
+  export type DeadLetterQueueUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * The data needed to update a DeadLetterQueue.
+     */
+    data: XOR<DeadLetterQueueUpdateInput, DeadLetterQueueUncheckedUpdateInput>
+    /**
+     * Choose, which DeadLetterQueue to update.
+     */
+    where: DeadLetterQueueWhereUniqueInput
+  }
+
+  /**
+   * DeadLetterQueue updateMany
+   */
+  export type DeadLetterQueueUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DeadLetterQueues.
+     */
+    data: XOR<DeadLetterQueueUpdateManyMutationInput, DeadLetterQueueUncheckedUpdateManyInput>
+    /**
+     * Filter which DeadLetterQueues to update
+     */
+    where?: DeadLetterQueueWhereInput
+    /**
+     * Limit how many DeadLetterQueues to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DeadLetterQueue updateManyAndReturn
+   */
+  export type DeadLetterQueueUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * The data used to update DeadLetterQueues.
+     */
+    data: XOR<DeadLetterQueueUpdateManyMutationInput, DeadLetterQueueUncheckedUpdateManyInput>
+    /**
+     * Filter which DeadLetterQueues to update
+     */
+    where?: DeadLetterQueueWhereInput
+    /**
+     * Limit how many DeadLetterQueues to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DeadLetterQueue upsert
+   */
+  export type DeadLetterQueueUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * The filter to search for the DeadLetterQueue to update in case it exists.
+     */
+    where: DeadLetterQueueWhereUniqueInput
+    /**
+     * In case the DeadLetterQueue found by the `where` argument doesn't exist, create a new DeadLetterQueue with this data.
+     */
+    create: XOR<DeadLetterQueueCreateInput, DeadLetterQueueUncheckedCreateInput>
+    /**
+     * In case the DeadLetterQueue was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DeadLetterQueueUpdateInput, DeadLetterQueueUncheckedUpdateInput>
+  }
+
+  /**
+   * DeadLetterQueue delete
+   */
+  export type DeadLetterQueueDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * Filter which DeadLetterQueue to delete.
+     */
+    where: DeadLetterQueueWhereUniqueInput
+  }
+
+  /**
+   * DeadLetterQueue deleteMany
+   */
+  export type DeadLetterQueueDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DeadLetterQueues to delete
+     */
+    where?: DeadLetterQueueWhereInput
+    /**
+     * Limit how many DeadLetterQueues to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DeadLetterQueue without action
+   */
+  export type DeadLetterQueueDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueue
+     */
+    select?: DeadLetterQueueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DeadLetterQueue
+     */
+    omit?: DeadLetterQueueOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -9291,6 +10413,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
+    definition: 'definition',
     tenantId: 'tenantId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -9349,19 +10472,25 @@ export namespace Prisma {
   export type ProcessedEventScalarFieldEnum = (typeof ProcessedEventScalarFieldEnum)[keyof typeof ProcessedEventScalarFieldEnum]
 
 
+  export const DeadLetterQueueScalarFieldEnum: {
+    id: 'id',
+    topic: 'topic',
+    payload: 'payload',
+    error: 'error',
+    failedAt: 'failedAt',
+    replayed: 'replayed',
+    replayedAt: 'replayedAt'
+  };
+
+  export type DeadLetterQueueScalarFieldEnum = (typeof DeadLetterQueueScalarFieldEnum)[keyof typeof DeadLetterQueueScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
-
-
-  export const JsonNullValueInput: {
-    JsonNull: typeof JsonNull
-  };
-
-  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const NullableJsonNullValueInput: {
@@ -9372,20 +10501,19 @@ export namespace Prisma {
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
   };
 
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
-  };
-
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   export const JsonNullValueFilter: {
@@ -9395,6 +10523,14 @@ export namespace Prisma {
   };
 
   export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   /**
@@ -9445,6 +10581,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -9473,20 +10623,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
    * Reference to a field of type 'ExecutionStatus'
    */
   export type EnumExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExecutionStatus'>
@@ -9497,6 +10633,13 @@ export namespace Prisma {
    * Reference to a field of type 'ExecutionStatus[]'
    */
   export type ListEnumExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExecutionStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -9652,6 +10795,7 @@ export namespace Prisma {
     id?: StringFilter<"Workflow"> | string
     name?: StringFilter<"Workflow"> | string
     description?: StringNullableFilter<"Workflow"> | string | null
+    definition?: JsonNullableFilter<"Workflow">
     tenantId?: StringFilter<"Workflow"> | string
     createdAt?: DateTimeFilter<"Workflow"> | Date | string
     updatedAt?: DateTimeFilter<"Workflow"> | Date | string
@@ -9663,6 +10807,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    definition?: SortOrderInput | SortOrder
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9677,6 +10822,7 @@ export namespace Prisma {
     NOT?: WorkflowWhereInput | WorkflowWhereInput[]
     name?: StringFilter<"Workflow"> | string
     description?: StringNullableFilter<"Workflow"> | string | null
+    definition?: JsonNullableFilter<"Workflow">
     tenantId?: StringFilter<"Workflow"> | string
     createdAt?: DateTimeFilter<"Workflow"> | Date | string
     updatedAt?: DateTimeFilter<"Workflow"> | Date | string
@@ -9688,6 +10834,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    definition?: SortOrderInput | SortOrder
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9703,6 +10850,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Workflow"> | string
     name?: StringWithAggregatesFilter<"Workflow"> | string
     description?: StringNullableWithAggregatesFilter<"Workflow"> | string | null
+    definition?: JsonNullableWithAggregatesFilter<"Workflow">
     tenantId?: StringWithAggregatesFilter<"Workflow"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Workflow"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Workflow"> | Date | string
@@ -9965,6 +11113,68 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"ProcessedEvent"> | Date | string
   }
 
+  export type DeadLetterQueueWhereInput = {
+    AND?: DeadLetterQueueWhereInput | DeadLetterQueueWhereInput[]
+    OR?: DeadLetterQueueWhereInput[]
+    NOT?: DeadLetterQueueWhereInput | DeadLetterQueueWhereInput[]
+    id?: StringFilter<"DeadLetterQueue"> | string
+    topic?: StringFilter<"DeadLetterQueue"> | string
+    payload?: JsonFilter<"DeadLetterQueue">
+    error?: StringFilter<"DeadLetterQueue"> | string
+    failedAt?: DateTimeFilter<"DeadLetterQueue"> | Date | string
+    replayed?: BoolFilter<"DeadLetterQueue"> | boolean
+    replayedAt?: DateTimeNullableFilter<"DeadLetterQueue"> | Date | string | null
+  }
+
+  export type DeadLetterQueueOrderByWithRelationInput = {
+    id?: SortOrder
+    topic?: SortOrder
+    payload?: SortOrder
+    error?: SortOrder
+    failedAt?: SortOrder
+    replayed?: SortOrder
+    replayedAt?: SortOrderInput | SortOrder
+  }
+
+  export type DeadLetterQueueWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DeadLetterQueueWhereInput | DeadLetterQueueWhereInput[]
+    OR?: DeadLetterQueueWhereInput[]
+    NOT?: DeadLetterQueueWhereInput | DeadLetterQueueWhereInput[]
+    topic?: StringFilter<"DeadLetterQueue"> | string
+    payload?: JsonFilter<"DeadLetterQueue">
+    error?: StringFilter<"DeadLetterQueue"> | string
+    failedAt?: DateTimeFilter<"DeadLetterQueue"> | Date | string
+    replayed?: BoolFilter<"DeadLetterQueue"> | boolean
+    replayedAt?: DateTimeNullableFilter<"DeadLetterQueue"> | Date | string | null
+  }, "id">
+
+  export type DeadLetterQueueOrderByWithAggregationInput = {
+    id?: SortOrder
+    topic?: SortOrder
+    payload?: SortOrder
+    error?: SortOrder
+    failedAt?: SortOrder
+    replayed?: SortOrder
+    replayedAt?: SortOrderInput | SortOrder
+    _count?: DeadLetterQueueCountOrderByAggregateInput
+    _max?: DeadLetterQueueMaxOrderByAggregateInput
+    _min?: DeadLetterQueueMinOrderByAggregateInput
+  }
+
+  export type DeadLetterQueueScalarWhereWithAggregatesInput = {
+    AND?: DeadLetterQueueScalarWhereWithAggregatesInput | DeadLetterQueueScalarWhereWithAggregatesInput[]
+    OR?: DeadLetterQueueScalarWhereWithAggregatesInput[]
+    NOT?: DeadLetterQueueScalarWhereWithAggregatesInput | DeadLetterQueueScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DeadLetterQueue"> | string
+    topic?: StringWithAggregatesFilter<"DeadLetterQueue"> | string
+    payload?: JsonWithAggregatesFilter<"DeadLetterQueue">
+    error?: StringWithAggregatesFilter<"DeadLetterQueue"> | string
+    failedAt?: DateTimeWithAggregatesFilter<"DeadLetterQueue"> | Date | string
+    replayed?: BoolWithAggregatesFilter<"DeadLetterQueue"> | boolean
+    replayedAt?: DateTimeNullableWithAggregatesFilter<"DeadLetterQueue"> | Date | string | null
+  }
+
   export type TenantCreateInput = {
     id?: string
     name: string
@@ -10109,6 +11319,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutWorkflowsInput
@@ -10119,6 +11330,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10129,6 +11341,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutWorkflowsNestedInput
@@ -10139,6 +11352,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10149,6 +11363,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10158,6 +11373,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10166,6 +11382,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10442,6 +11659,76 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DeadLetterQueueCreateInput = {
+    id?: string
+    topic: string
+    payload: JsonNullValueInput | InputJsonValue
+    error: string
+    failedAt?: Date | string
+    replayed?: boolean
+    replayedAt?: Date | string | null
+  }
+
+  export type DeadLetterQueueUncheckedCreateInput = {
+    id?: string
+    topic: string
+    payload: JsonNullValueInput | InputJsonValue
+    error: string
+    failedAt?: Date | string
+    replayed?: boolean
+    replayedAt?: Date | string | null
+  }
+
+  export type DeadLetterQueueUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    error?: StringFieldUpdateOperationsInput | string
+    failedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replayed?: BoolFieldUpdateOperationsInput | boolean
+    replayedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DeadLetterQueueUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    error?: StringFieldUpdateOperationsInput | string
+    failedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replayed?: BoolFieldUpdateOperationsInput | boolean
+    replayedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DeadLetterQueueCreateManyInput = {
+    id?: string
+    topic: string
+    payload: JsonNullValueInput | InputJsonValue
+    error: string
+    failedAt?: Date | string
+    replayed?: boolean
+    replayedAt?: Date | string | null
+  }
+
+  export type DeadLetterQueueUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    error?: StringFieldUpdateOperationsInput | string
+    failedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replayed?: BoolFieldUpdateOperationsInput | boolean
+    replayedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DeadLetterQueueUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    error?: StringFieldUpdateOperationsInput | string
+    failedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replayed?: BoolFieldUpdateOperationsInput | boolean
+    replayedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -10613,6 +11900,29 @@ export namespace Prisma {
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type WorkflowVersionListRelationFilter = {
     every?: WorkflowVersionWhereInput
@@ -10633,6 +11943,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    definition?: SortOrder
     tenantId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10672,6 +11983,32 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -10829,29 +12166,6 @@ export namespace Prisma {
     notIn?: $Enums.ExecutionStatus[] | ListEnumExecutionStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumExecutionStatusFilter<$PrismaModel> | $Enums.ExecutionStatus
   }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
@@ -10915,32 +12229,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumExecutionStatusFilter<$PrismaModel>
     _max?: NestedEnumExecutionStatusFilter<$PrismaModel>
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -11017,6 +12305,47 @@ export namespace Prisma {
     topic?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type DeadLetterQueueCountOrderByAggregateInput = {
+    id?: SortOrder
+    topic?: SortOrder
+    payload?: SortOrder
+    error?: SortOrder
+    failedAt?: SortOrder
+    replayed?: SortOrder
+    replayedAt?: SortOrder
+  }
+
+  export type DeadLetterQueueMaxOrderByAggregateInput = {
+    id?: SortOrder
+    topic?: SortOrder
+    error?: SortOrder
+    failedAt?: SortOrder
+    replayed?: SortOrder
+    replayedAt?: SortOrder
+  }
+
+  export type DeadLetterQueueMinOrderByAggregateInput = {
+    id?: SortOrder
+    topic?: SortOrder
+    error?: SortOrder
+    failedAt?: SortOrder
+    replayed?: SortOrder
+    replayedAt?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type UserCreateNestedManyWithoutTenantInput = {
@@ -11335,6 +12664,10 @@ export namespace Prisma {
     update?: XOR<XOR<ExecutionUpdateToOneWithWhereWithoutStepsInput, ExecutionUpdateWithoutStepsInput>, ExecutionUncheckedUpdateWithoutStepsInput>
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -11460,6 +12793,29 @@ export namespace Prisma {
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedEnumWorkflowStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.WorkflowStatus | EnumWorkflowStatusFieldRefInput<$PrismaModel>
@@ -11555,29 +12911,6 @@ export namespace Prisma {
     _min?: NestedEnumExecutionStatusFilter<$PrismaModel>
     _max?: NestedEnumExecutionStatusFilter<$PrismaModel>
   }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
@@ -11591,6 +12924,19 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type UserCreateWithoutTenantInput = {
@@ -11625,6 +12971,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     versions?: WorkflowVersionCreateNestedManyWithoutWorkflowInput
@@ -11634,6 +12981,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     versions?: WorkflowVersionUncheckedCreateNestedManyWithoutWorkflowInput
@@ -11701,6 +13049,7 @@ export namespace Prisma {
     id?: StringFilter<"Workflow"> | string
     name?: StringFilter<"Workflow"> | string
     description?: StringNullableFilter<"Workflow"> | string | null
+    definition?: JsonNullableFilter<"Workflow">
     tenantId?: StringFilter<"Workflow"> | string
     createdAt?: DateTimeFilter<"Workflow"> | Date | string
     updatedAt?: DateTimeFilter<"Workflow"> | Date | string
@@ -11881,6 +13230,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutWorkflowsInput
@@ -11890,6 +13240,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11945,6 +13296,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutWorkflowsNestedInput
@@ -11954,6 +13306,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12173,6 +13526,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12208,6 +13562,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     versions?: WorkflowVersionUpdateManyWithoutWorkflowNestedInput
@@ -12217,6 +13572,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     versions?: WorkflowVersionUncheckedUpdateManyWithoutWorkflowNestedInput
@@ -12226,6 +13582,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    definition?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

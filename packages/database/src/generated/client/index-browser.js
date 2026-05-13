@@ -143,6 +143,7 @@ exports.Prisma.WorkflowScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
+  definition: 'definition',
   tenantId: 'tenantId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -186,17 +187,27 @@ exports.Prisma.ProcessedEventScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.DeadLetterQueueScalarFieldEnum = {
+  id: 'id',
+  topic: 'topic',
+  payload: 'payload',
+  error: 'error',
+  failedAt: 'failedAt',
+  replayed: 'replayed',
+  replayedAt: 'replayedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
 };
 
-exports.Prisma.JsonNullValueInput = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -205,15 +216,15 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
 };
 exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN',
@@ -240,7 +251,8 @@ exports.Prisma.ModelName = {
   WorkflowVersion: 'WorkflowVersion',
   Execution: 'Execution',
   ExecutionStep: 'ExecutionStep',
-  ProcessedEvent: 'ProcessedEvent'
+  ProcessedEvent: 'ProcessedEvent',
+  DeadLetterQueue: 'DeadLetterQueue'
 };
 
 /**

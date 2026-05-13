@@ -5,8 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
- }
-
+}
 
 enum Role {
   ADMIN
@@ -25,8 +24,6 @@ enum ExecutionStatus {
   COMPLETED
   FAILED
 }
-
-
 
 model Tenant {
   id        String     @id @default(uuid())
@@ -52,11 +49,11 @@ model User {
   @@index([tenantId])
 }
 
-
 model Workflow {
   id          String            @id @default(uuid())
   name        String
   description String?
+  definition  Json?       
   tenantId    String
   tenant      Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   versions    WorkflowVersion[]
@@ -66,14 +63,13 @@ model Workflow {
   @@index([tenantId]) 
 }
 
-
 model WorkflowVersion {
   id          String         @id @default(uuid())
   workflowId  String
   workflow    Workflow       @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   version     Int
   status      WorkflowStatus @default(DRAFT)
-  definition  Json           
+  definition  Json          
   executions  Execution[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -119,4 +115,14 @@ model ProcessedEvent {
   createdAt DateTime @default(now())
 
   @@index([createdAt])
+}
+
+model DeadLetterQueue {
+  id          String   @id @default(uuid())
+  topic       String
+  payload     Json
+  error       String
+  failedAt    DateTime @default(now())
+  replayed    Boolean  @default(false)
+  replayedAt  DateTime?
 }
