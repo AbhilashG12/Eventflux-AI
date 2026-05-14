@@ -1,13 +1,42 @@
 import { useState } from 'react';
+import { apiClient } from '../../../core/api/client';
+import { useErrorStore } from '../../../core/store/error.store';
+import { useSuccessStore } from '../../../core/store/success.store';
 
 export const TenantDashboard = () => {
   const [apiKey] = useState('ef_live_8f7d6e5c4b3a2109');
   const [copied, setCopied] = useState(false);
+  const [email, setEmail] = useState('');
+  const [generatedLink, setGeneratedLink] = useState('');
+  const [isInviting, setIsInviting] = useState(false);
 
-  const handleCopy = () => {
+  const showError = useErrorStore(state => state.showError);
+  const showSuccess = useSuccessStore(state => state.showSuccess);
+
+  const handleCopyKey = () => {
     navigator.clipboard.writeText(apiKey);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleInvite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsInviting(true);
+    try {
+      const { data } = await apiClient.post('/invites', { email });
+      setGeneratedLink(data.inviteLink);
+      showSuccess(`Invite generated for ${email}`);
+      setEmail('');
+    } catch (err: any) {
+      showError(err.response?.data?.error || "Failed to send invite");
+    } finally {
+      setIsInviting(false);
+    }
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(generatedLink);
+    showSuccess("Link copied to clipboard!");
   };
 
   return (
@@ -63,7 +92,7 @@ export const TenantDashboard = () => {
                 className="flex-1 bg-[#0a0a0a] border border-border rounded-lg px-4 py-2 text-sm font-mono text-gray-300 focus:outline-none"
               />
               <button 
-                onClick={handleCopy}
+                onClick={handleCopyKey}
                 className="bg-white text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors w-24"
               >
                 {copied ? 'Copied!' : 'Copy'}
@@ -105,6 +134,47 @@ export const TenantDashboard = () => {
         </div>
 
       </div>
+
+      <div className="bg-surface border border-border rounded-2xl p-6 shadow-lg">
+        <h3 className="text-lg font-semibold text-white mb-4">Team Access</h3>
+        <p className="text-sm text-gray-400 mb-6">
+          Generate a secure, single-use cryptographic link to add engineers to your workspace. Links expire in 7 days.
+        </p>
+        
+        <form onSubmit={handleInvite} className="flex flex-col sm:flex-row gap-3">
+          <input 
+            type="email" 
+            required 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="engineer@company.com" 
+            className="flex-1 bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-sm text-white focus:border-indigo-500 focus:outline-none transition-colors"
+          />
+          <button 
+            type="submit" 
+            disabled={isInviting}
+            className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 px-6 py-2.5 rounded-lg text-sm font-medium text-white transition-colors whitespace-nowrap"
+          >
+            {isInviting ? 'Generating...' : 'Generate Link'}
+          </button>
+        </form>
+
+        {generatedLink && (
+          <div className="mt-6 p-4 bg-indigo-500/10 border border-indigo-500/30 rounded-lg flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2">
+            <div className="flex-1 overflow-hidden">
+              <p className="text-xs text-indigo-300 font-semibold uppercase tracking-wider mb-1">Secure Invite Link</p>
+              <p className="text-indigo-200 text-sm truncate font-mono">{generatedLink}</p>
+            </div>
+            <button 
+              onClick={handleCopyLink} 
+              className="bg-indigo-500/20 hover:bg-indigo-500/40 text-indigo-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors shrink-0"
+            >
+              Copy Link
+            </button>
+          </div>
+        )}
+      </div>
+
     </div>
   );
 };

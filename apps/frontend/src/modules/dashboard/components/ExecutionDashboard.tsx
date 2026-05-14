@@ -1,29 +1,34 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { socketClient } from '../../../core/websocket/socket.client';
 import { useExecutionStore } from '../../../core/store/execution.store';
 
+const seenEvents = new Set<string>();
+
 export const ExecutionDashboard = ({ workflowNodes }: { workflowNodes: any[] }) => {
   const { nodeStatuses, logs, updateNodeStatus } = useExecutionStore();
-  
-  // 🔥 The Deduplication Shield: Tracks events that have already been painted to the UI
-  const processedEvents = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     socketClient.connect();
 
     const handleNodeUpdate = (payload: any) => {
-      // 1. Create a unique fingerprint for this execution step
-      const eventFingerprint = `${payload.nodeId}-${payload.status}`;
+      const executionKey = payload.executionId || Math.floor(Date.now() / 1000);
+      const fingerprint = `${executionKey}-${payload.nodeId}-${payload.status}`;
 
-      // 2. If we've already seen this exact status for this exact node, drop the event completely.
-      if (processedEvents.current.has(eventFingerprint)) return;
+      if (seenEvents.has(fingerprint)) return;
       
-      // 3. Otherwise, log it in the shield and process it
-      processedEvents.current.add(eventFingerprint);
+      seenEvents.add(fingerprint);
+      setTimeout(() => seenEvents.delete(fingerprint), 2000);
 
-      const logMessage = payload.status === 'FAILED' 
-        ? `Error: ${payload.error}` 
-        : `Completed successfully.`;
+      let logMessage = '';
+      if (payload.status === 'FAILED') {
+        logMessage = `Error: ${payload.error}`;
+      } else if (payload.status === 'RUNNING') {
+        logMessage = `Started processing...`;
+      } else if (payload.status === 'COMPLETED') {
+        logMessage = `Completed successfully.`;
+      } else {
+        logMessage = `Status: ${payload.status}`;
+      }
         
       updateNodeStatus(payload.nodeId, payload.status, logMessage);
     };
@@ -31,7 +36,6 @@ export const ExecutionDashboard = ({ workflowNodes }: { workflowNodes: any[] }) 
     socketClient.subscribe('node_status_update', handleNodeUpdate);
 
     return () => {
-
       socketClient.unsubscribe('node_status_update');
     };
   }, [updateNodeStatus]);
@@ -47,7 +51,6 @@ export const ExecutionDashboard = ({ workflowNodes }: { workflowNodes: any[] }) 
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
-      {/* Header */}
       <div className="border-b border-white/10 pb-4 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold tracking-tight text-white">Live Execution Run</h2>
@@ -59,7 +62,6 @@ export const ExecutionDashboard = ({ workflowNodes }: { workflowNodes: any[] }) 
         </div>
       </div>
 
-      {/* Node Badges */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {workflowNodes.map((node, idx) => {
           const status = nodeStatuses[node.id] || 'PENDING';
@@ -78,6 +80,7 @@ export const ExecutionDashboard = ({ workflowNodes }: { workflowNodes: any[] }) 
           );
         })}
       </div>
+
       <div className="rounded-xl overflow-hidden border border-white/10 bg-[#050505] shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
         <div className="bg-black/40 px-4 py-2 border-b border-white/5 flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-red-500/80"></div>

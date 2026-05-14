@@ -197,6 +197,16 @@ exports.Prisma.DeadLetterQueueScalarFieldEnum = {
   replayedAt: 'replayedAt'
 };
 
+exports.Prisma.InvitationScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  token: 'token',
+  tenantId: 'tenantId',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -252,7 +262,8 @@ exports.Prisma.ModelName = {
   Execution: 'Execution',
   ExecutionStep: 'ExecutionStep',
   ProcessedEvent: 'ProcessedEvent',
-  DeadLetterQueue: 'DeadLetterQueue'
+  DeadLetterQueue: 'DeadLetterQueue',
+  Invitation: 'Invitation'
 };
 
 /**

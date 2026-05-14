@@ -13,6 +13,7 @@ import { WebSocketManager } from './core/websocket/ws.manager.js';
 import { requestLogger } from './core/middleware/logger.middleware.js';
 import { apiLimiter } from './core/middleware/ratelimiting.middleware.js';
 import { EventHardenerService } from './core/events/event.hardener.js';
+import { inviteRoutes } from './modules/tenant/interface/invite.routes.js';
 
 const executeUseCase = new ExecuteWorkflowUseCase();
 const app = express();
@@ -26,8 +27,9 @@ app.use(requestLogger);
 app.use(apiLimiter);
 app.use('/api/auth', authRoutes);
 app.use('/auth', authRoutes);
-app.use('/api', requireAuth);
+app.use('/api/invites', inviteRoutes);
 
+app.use('/api', requireAuth);
 app.get('/api/health', async (req, res) => {
   const workflowCount = await db.workflow.count({
     where: { tenantId: req.tenantId }
@@ -61,7 +63,11 @@ async function startSystem() {
       'workflow-events',
       payload,
       async () => {
-        await executeUseCase.trigger(payload.workflowId, payload.initialPayload);
+        setTimeout(() => {
+          executeUseCase.trigger(payload.workflowId, payload.initialPayload).catch(err => {
+            logger.error(`Execution failed: ${err.message}`);
+          });
+        }, 0);
       }
     );
   });
