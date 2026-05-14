@@ -163,7 +163,6 @@ exports.Prisma.ExecutionScalarFieldEnum = {
   id: 'id',
   workflowVersionId: 'workflowVersionId',
   status: 'status',
-  logs: 'logs',
   startedAt: 'startedAt',
   completedAt: 'completedAt',
   createdAt: 'createdAt'
@@ -205,6 +204,15 @@ exports.Prisma.InvitationScalarFieldEnum = {
   status: 'status',
   expiresAt: 'expiresAt',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.ExecutionLogScalarFieldEnum = {
+  id: 'id',
+  executionId: 'executionId',
+  nodeId: 'nodeId',
+  status: 'status',
+  message: 'message',
+  timestamp: 'timestamp'
 };
 
 exports.Prisma.SortOrder = {
@@ -263,7 +271,8 @@ exports.Prisma.ModelName = {
   ExecutionStep: 'ExecutionStep',
   ProcessedEvent: 'ProcessedEvent',
   DeadLetterQueue: 'DeadLetterQueue',
-  Invitation: 'Invitation'
+  Invitation: 'Invitation',
+  ExecutionLog: 'ExecutionLog'
 };
 
 /**

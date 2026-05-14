@@ -14,6 +14,7 @@ import { requestLogger } from './core/middleware/logger.middleware.js';
 import { apiLimiter } from './core/middleware/ratelimiting.middleware.js';
 import { EventHardenerService } from './core/events/event.hardener.js';
 import { inviteRoutes } from './modules/tenant/interface/invite.routes.js';
+import { executionRoutes } from './modules/execution/execution.routes.js';
 
 const executeUseCase = new ExecuteWorkflowUseCase();
 const app = express();
@@ -30,6 +31,7 @@ app.use('/auth', authRoutes);
 app.use('/api/invites', inviteRoutes);
 
 app.use('/api', requireAuth);
+app.use('/api/executions',executionRoutes);
 app.get('/api/health', async (req, res) => {
   const workflowCount = await db.workflow.count({
     where: { tenantId: req.tenantId }
@@ -54,41 +56,79 @@ app.delete('/api/tenant', requireRole(['ADMIN']), (req, res) => {
 
 async function startSystem() {
   await producer.connect();
+  
+registerHandler('execution-events', async (payload) => {
+  const execId = payload.executionId || (payload.eventName ? payload.eventName.split('-')[0] : null);
+  const nodeId = payload.nodeId || (payload.eventName ? payload.eventName.split('-')[1] : null);
+  const status = payload.status || (payload.eventName ? payload.eventName.split('-')[2] : null);
+  const idempotentEventId = payload.eventId || payload.eventName || `${execId}-${nodeId}-${status}-${Date.now()}`;
 
-  registerHandler('workflow-events', async (payload) => {
-    const eventId = payload.executionId || `wf-${Date.now()}`;
-    
-    await EventHardenerService.processIdempotent(
-      eventId,
-      'workflow-events',
-      payload,
-      async () => {
-        setTimeout(() => {
-          executeUseCase.trigger(payload.workflowId, payload.initialPayload).catch(err => {
-            logger.error(`Execution failed: ${err.message}`);
-          });
-        }, 0);
-      }
-    );
-  });
+  if (!execId || !nodeId || !status) {
+    console.error("❌ [KAFKA] Malformed execution event payload:", payload);
+    return;
+  }
 
-  registerHandler('execution-events', async (payload) => {
-    const eventId = `${payload.executionId}-${payload.nodeId}-${payload.status}`;
-    
-    await EventHardenerService.processIdempotent(
-      eventId,
-      'execution-events',
-      payload,
-      async () => {
-        logger.info(`📡 Broadcasting WS update for Node: ${payload.nodeId}`);
-        wsManager.broadcastToTenant(
-          payload.tenantId, 
-          'node_status_update', 
-          payload
-        );
+  await EventHardenerService.processIdempotent(idempotentEventId, 'execution-events', payload, async () => {
+    try {
+      await db.executionLog.create({
+        data: {
+          executionId: execId,
+          nodeId: nodeId,
+          status: status.toUpperCase(),
+          message: `Step [${nodeId}] is ${status.toUpperCase()}`
+        }
+      });
+
+      if (status.toLowerCase() === 'completed') {
+        await db.execution.update({ 
+          where: { id: execId }, 
+          data: { status: 'COMPLETED', completedAt: new Date() }
+        }).catch(() => {});
+      } else if (status.toLowerCase() === 'failed') {
+        await db.execution.update({ 
+          where: { id: execId }, 
+          data: { status: 'FAILED', completedAt: new Date() }
+        }).catch(() => {});
       }
-    );
+      console.log(`🔌 [WS] Broadcasting update for ${nodeId}: ${status}`);
+      if (payload.tenantId) {
+        wsManager.broadcastToTenant(payload.tenantId, 'workflow-node-update', { 
+          nodeId, 
+          status,
+          timestamp: new Date()
+        });
+      }
+    } catch (dbError) {
+      console.error(`💥 [KAFKA] Error saving execution log:`, dbError);
+    }
   });
+});
+
+registerHandler('execution-events', async (payload) => {
+  const eventName = payload.eventName;
+  
+  await EventHardenerService.processIdempotent(eventName, 'execution-events', payload, async () => {
+    const [execId, nodeId, status] = eventName.split('-'); 
+    await db.executionLog.create({
+      data: {
+        executionId: execId,
+        nodeId: nodeId,
+        status: status.toUpperCase(),
+        message: `Node ${nodeId} is ${status}`
+      }
+    });
+
+    if (status === 'completed') {
+      await db.execution.update({ where: { id: execId }, data: { status: 'COMPLETED', completedAt: new Date() }});
+    }
+    logger.info(`🔌 Broadcasting WS update: ${eventName}`);
+    wsManager.broadcastToTenant(payload.tenantId, 'workflow-node-update', { 
+      nodeId, 
+      status,
+      timestamp: new Date()
+    });
+  });
+});
 
   await startConsumer();
 

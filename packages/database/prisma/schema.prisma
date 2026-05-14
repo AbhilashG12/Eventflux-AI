@@ -85,10 +85,10 @@ model Execution {
   workflowVersion   WorkflowVersion @relation(fields: [workflowVersionId], references: [id])
   status            ExecutionStatus @default(PENDING)
   steps             ExecutionStep[]
-  logs              Json?
   startedAt         DateTime?      
   completedAt       DateTime?
   createdAt         DateTime        @default(now())
+  logs              ExecutionLog[]
 
   @@index([workflowVersionId])
   @@index([status])
@@ -139,4 +139,16 @@ model Invitation {
   createdAt DateTime @default(now())
 
   @@index([token])
+}
+
+model ExecutionLog {
+  id          String    @id @default(uuid())
+  executionId String
+  execution   Execution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  nodeId      String
+  status      String 
+  message     String?
+  timestamp   DateTime  @default(now())
+
+  @@index([executionId])
 }
