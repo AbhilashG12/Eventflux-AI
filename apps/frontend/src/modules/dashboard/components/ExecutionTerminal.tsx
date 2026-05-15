@@ -13,7 +13,7 @@ export const ExecutionTerminal = ({ logs, executionId, status }: ExecutionTermin
   const logsEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    logsEndRef.current?.scrollIntoView({ behavior: 'smooth',block : 'nearest' });
   }, [logs]);
 
   return (

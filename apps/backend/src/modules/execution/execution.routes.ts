@@ -11,7 +11,8 @@ executionRoutes.get('/workflow/:workflowId', requireAuth, async (req: Request, r
     const executions = await db.execution.findMany({
       where: { 
         workflowVersion: {
-          workflowId: workflowId
+          workflowId: workflowId,
+          workflow : {tenantId : (req as any).tenantId}
         }
       },
       orderBy: { createdAt: 'desc' },

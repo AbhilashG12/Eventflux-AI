@@ -2,13 +2,19 @@ import { db } from '@eventflux/database';
 
 export class EventHardenerService {
   static async processIdempotent<T>(
-    eventId: string,
+    eventId: string | undefined | null,
     topic: string,
     payload: T,
     processorFn: () => Promise<void>
   ) {
+    const safeEventId = 
+      eventId || 
+      (payload as any)?.eventId || 
+      (payload as any)?.eventName || 
+      `fallback-${topic}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
     const alreadyProcessed = await db.processedEvent.findUnique({
-      where: { eventId }
+      where: { eventId: safeEventId }
     });
 
     if (alreadyProcessed) {
@@ -20,7 +26,7 @@ export class EventHardenerService {
 
       await db.processedEvent.create({
         data: { 
-          eventId, 
+          eventId: safeEventId, 
           topic,
           status: 'PROCESSED' 
         }
@@ -28,7 +34,7 @@ export class EventHardenerService {
     } catch (error: any) {
       await db.deadLetterQueue.create({
         data: {
-          id: eventId,
+          id: safeEventId,
           topic,
           payload: payload as any,
           error: error.message || 'Unknown execution failure'

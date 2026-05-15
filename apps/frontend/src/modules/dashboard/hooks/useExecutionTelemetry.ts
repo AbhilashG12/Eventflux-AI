@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { apiClient } from '../../../core/api/client';
 import { useSocketStore } from '../../../core/store/socket.store';
 
@@ -23,22 +23,23 @@ export const useExecutionTelemetry = (workflowId: string) => {
   const [logs, setLogs] = useState<ExecutionLog[]>([]);
   
   const lastMessage = useSocketStore(state => state.lastMessage);
-
-  // Fetch History
-  useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const { data } = await apiClient.get(`/executions/workflow/${workflowId}`);
-        setExecutions(data);
-        if (data.length > 0) setSelectedExecutionId(data[0].id);
-      } catch (err) {
-        console.error("Failed to fetch history");
-      }
-    };
-    if (workflowId) fetchHistory();
+  const fetchHistory = useCallback(async () => {
+    if (!workflowId) return;
+    try {
+      const { data } = await apiClient.get(`/executions/workflow/${workflowId}`);
+      setExecutions(data);
+      setSelectedExecutionId(current => current || (data.length > 0 ? data[0].id : null));
+    } catch (err) {
+      console.error("Failed to fetch history");
+    }
   }, [workflowId]);
 
-  // Fetch Logs for selected execution
+  useEffect(() => {
+    fetchHistory();
+    const interval = setInterval(fetchHistory, 3000);
+    return () => clearInterval(interval);
+  }, [fetchHistory]);
+
   useEffect(() => {
     if (!selectedExecutionId) return;
     const fetchLogs = async () => {
@@ -48,28 +49,26 @@ export const useExecutionTelemetry = (workflowId: string) => {
     fetchLogs();
   }, [selectedExecutionId]);
 
-  // WebSocket Live Stream
   useEffect(() => {
     if (lastMessage && selectedExecutionId) {
-      const { nodeId, status, timestamp } = lastMessage;
-      
+      const { executionId: wsExecId, nodeId, status, timestamp } = lastMessage as any;
+      if (wsExecId && wsExecId !== selectedExecutionId) return;
+
       const newLog: ExecutionLog = {
         id: Math.random().toString(),
         nodeId,
         status: status.toUpperCase(),
-        message: `Step [${nodeId}] marked as ${status.toUpperCase()}`,
+        message: `Step [${nodeId}] is ${status.toUpperCase()}`,
         timestamp: timestamp || new Date().toISOString()
       };
       
       setLogs(prev => [...prev, newLog]);
-      
-      if (status === 'completed') {
-        setExecutions(prev => prev.map(ex => 
-          ex.id === selectedExecutionId ? { ...ex, status: 'COMPLETED' } : ex
-        ));
+
+      if (status.toLowerCase() === 'completed' || status.toLowerCase() === 'failed') {
+         fetchHistory(); 
       }
     }
-  }, [lastMessage, selectedExecutionId]);
+  }, [lastMessage, selectedExecutionId, fetchHistory]);
 
   return {
     executions,

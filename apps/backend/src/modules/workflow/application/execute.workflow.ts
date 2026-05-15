@@ -4,7 +4,6 @@ import { publishEvent } from '@eventflux/kafka';
 export class ExecuteWorkflowUseCase {
   async trigger(workflowId: string, initialPayload: any) {
     try {
-      // 1. Fetch the live Canvas Draft we just saved to the database
       const workflow = await db.workflow.findUnique({
         where: { id: workflowId }
       });
@@ -18,13 +17,11 @@ export class ExecuteWorkflowUseCase {
       const definition = workflow.definition as any;
       const nodes = definition.nodes || [];
       
-      const executionId = `exec_${Date.now()}`;
-      console.log(`[Execution Engine] Starting Test Execution ${executionId} for Workflow ${workflowId}`);
+      const executionId = initialPayload?.executionId || `exec_${Date.now()}`;
+      
+      console.log(`[Execution Engine] Starting Execution ${executionId} for Workflow ${workflowId}`);
 
-      // 2. Traverse the DAG and process each node
       for (const node of nodes) {
-        
-        // 🟢 STEP A: Broadcast that the node is RUNNING
         await publishEvent('execution-events', `${executionId}-${node.id}-running`, {
           tenantId,
           executionId,
@@ -33,11 +30,8 @@ export class ExecuteWorkflowUseCase {
           logs: `> Initializing ${node.data?.actionType || node.type}...\n> Fetching configurations...`
         });
 
-        // ⏱️ SIMULATE HEAVY COMPUTE (e.g., waiting for Llama 3 API or HTTP Request)
-        // This artificial 2.5s delay lets you watch the UI animate perfectly.
         await new Promise(resolve => setTimeout(resolve, 2500));
 
-        // 🟢 STEP B: Broadcast that the node is COMPLETED
         await publishEvent('execution-events', `${executionId}-${node.id}-completed`, {
           tenantId,
           executionId,

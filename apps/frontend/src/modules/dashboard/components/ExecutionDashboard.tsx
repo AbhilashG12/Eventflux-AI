@@ -1,20 +1,20 @@
 import { useExecutionTelemetry } from '../hooks/useExecutionTelemetry';
 import { ExecutionSidebar } from './ExecutionSidebar';
 import { ExecutionTerminal } from './ExecutionTerminal';
+import { useWorkflowStore } from '../../../core/store/workflow.store';
 
 export const ExecutionDashboard = ({ workflowNodes }: { workflowNodes: any[] }) => {
-  const WORKFLOW_ID = 'bd597b4f-b22c-428d-a137-c5c4b66edf32'; 
-  
+  const activeWorkflowId = useWorkflowStore(state => state.workflowId);
   const { 
     executions, 
     selectedExecutionId, 
     setSelectedExecutionId, 
     logs, 
     activeStatus 
-  } = useExecutionTelemetry(WORKFLOW_ID);
+  } = useExecutionTelemetry(activeWorkflowId || '');
 
   return (
-    <div className="max-w-7xl mx-auto p-6 h-[80vh] flex gap-6 animate-in fade-in">
+    <div className="max-w-7xl mx-auto p-6 h-full min-h-175 flex gap-6 transition-opacity duration-300">
       <ExecutionSidebar 
         executions={executions} 
         selectedId={selectedExecutionId} 
