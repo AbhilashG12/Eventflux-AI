@@ -2,14 +2,29 @@ import { db } from '@eventflux/database';
 import { publishEvent } from '@eventflux/kafka';
 
 export class ExecuteWorkflowUseCase {
-  async trigger(workflowId: string, initialPayload: any) {
+
+  private interpolate(text: string, state: Record<string, any>): string {
+    if (typeof text !== 'string') return text;
+    
+    return text.replace(/\{\{([^}]+)\}\}/g, (_, path) => {
+      const keys = path.split('.');
+      let current = state;
+      for (const key of keys) {
+        if (current[key] === undefined) return '';
+        current = current[key];
+      }
+      return String(current);
+    });
+  }
+
+  async trigger(workflowId: string, initialPayload: any, forcedExecutionId?: string) {
     try {
       const workflow = await db.workflow.findUnique({
         where: { id: workflowId }
       });
 
       if (!workflow || !workflow.definition) {
-        console.error(`[Execution Engine] Workflow ${workflowId} not found or has no definition.`);
+        console.error(`[Execution Engine] Workflow ${workflowId} not found.`);
         return;
       }
 
@@ -17,9 +32,13 @@ export class ExecuteWorkflowUseCase {
       const definition = workflow.definition as any;
       const nodes = definition.nodes || [];
       
-      const executionId = initialPayload?.executionId || `exec_${Date.now()}`;
+      const executionId = forcedExecutionId || initialPayload?.executionId || `exec_${Date.now()}`;
       
-      console.log(`[Execution Engine] Starting Execution ${executionId} for Workflow ${workflowId}`);
+      const executionState: Record<string, any> = {
+        trigger: initialPayload || {}
+      };
+
+      console.log(`[Execution Engine] Starting Execution ${executionId}`);
 
       for (const node of nodes) {
         await publishEvent('execution-events', `${executionId}-${node.id}-running`, {
@@ -27,22 +46,67 @@ export class ExecuteWorkflowUseCase {
           executionId,
           nodeId: node.id,
           status: 'RUNNING',
-          logs: `> Initializing ${node.data?.actionType || node.type}...\n> Fetching configurations...`
+          logs: `> Starting ${node.type}...\n> Resolving variables...`
         });
 
-        await new Promise(resolve => setTimeout(resolve, 2500));
+        let stepOutput: any = {};
+        let stepStatus = 'COMPLETED';
+        let stepLogs = '';
 
-        await publishEvent('execution-events', `${executionId}-${node.id}-completed`, {
+        try {
+          switch (node.type) {
+            
+            case 'HTTP_REQUEST': {
+              const urlTemplate = node.data?.url || 'https://jsonplaceholder.typicode.com/todos/1';
+              const resolvedUrl = this.interpolate(urlTemplate, executionState);
+              
+              stepLogs += `> Executing HTTP GET to: ${resolvedUrl}\n`;
+              await new Promise(res => setTimeout(res, 1000));
+              
+              stepOutput = { status: 200, data: { message: "Mock response from API" }, requestedUrl: resolvedUrl };
+              stepLogs += `> Response 200 OK received.`;
+              break;
+            }
+
+            case 'DATA_TRANSFORM': {
+              stepLogs += `> Transforming payload data...\n`;
+              // Example: Taking data from a previous step and altering it
+              const sourceData = executionState[node.data?.sourceNodeId || 'trigger'];
+              stepOutput = { transformed: true, originalSize: JSON.stringify(sourceData).length };
+              stepLogs += `> Transformation complete.`;
+              break;
+            }
+
+            default: {
+              // Fallback for UI nodes or unsupported types
+              stepLogs += `> Executing standard node logic...\n`;
+              await new Promise(res => setTimeout(res, 800));
+              stepOutput = { message: "Standard execution complete" };
+            }
+          }
+
+        } catch (error: any) {
+          stepStatus = 'FAILED';
+          stepLogs += `\n> CRITICAL ERROR: ${error.message}`;
+        }
+        executionState[node.id] = stepOutput;
+
+        await publishEvent('execution-events', `${executionId}-${node.id}-${stepStatus.toLowerCase()}`, {
           tenantId,
           executionId,
           nodeId: node.id,
-          status: 'COMPLETED',
-          logs: `> Execution successful.\n> Payload passed to next step.`,
-          output: { status: 200, message: "OK" }
+          status: stepStatus,
+          logs: stepLogs,
+          output: stepOutput
         });
+
+        if (stepStatus === 'FAILED') {
+          console.error(`[Execution Engine] Halting execution ${executionId} at node ${node.id}`);
+          break; 
+        }
       }
 
-      console.log(`[Execution Engine] Execution ${executionId} completed successfully.`);
+      console.log(`[Execution Engine] Execution ${executionId} finished.`);
       
     } catch (error) {
       console.error("[Execution Engine] Execution failed:", error);

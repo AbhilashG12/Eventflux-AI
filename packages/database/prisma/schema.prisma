@@ -126,6 +126,8 @@ model DeadLetterQueue {
   failedAt    DateTime @default(now())
   replayed    Boolean  @default(false)
   replayedAt  DateTime?
+  retryCount  Int             @default(0)            
+  history     ReplayHistory[]
 }
 
 model Invitation {
@@ -151,4 +153,16 @@ model ExecutionLog {
   timestamp   DateTime  @default(now())
 
   @@index([executionId])
+}
+
+model ReplayHistory {
+  id          String          @id @default(uuid())
+  dlqId       String
+  dlq         DeadLetterQueue @relation(fields: [dlqId], references: [id], onDelete: Cascade)
+  userId      String          
+  status      String      
+  message     String?
+  replayedAt  DateTime        @default(now())
+
+  @@index([dlqId])
 }

@@ -4,10 +4,11 @@ import { WorkflowBuilder } from '../builder/pages/WorkflowBuilder';
 import { ExecutionDashboard } from '../dashboard/components/ExecutionDashboard';
 import { TenantDashboard } from '../builder/pages/TenantDashboard';
 import { useWorkflowStore } from '../../core/store/workflow.store';
+import { DLQDashboard } from '../dashboard/components/DLQDashboard';
 // import { useAuthStore } from '../../core/store/auth.store';
 
 export const MainWorkspace = () => {
-  const [activeView, setActiveView] = useState<'BUILDER' | 'DASHBOARD' | 'TENANT'>('BUILDER');
+  const [activeView, setActiveView] = useState<'BUILDER' | 'DASHBOARD' | 'TENANT' | 'DLQ'>('BUILDER');
   const nodes = useWorkflowStore((state) => state.nodes);
 //   const logout = useAuthStore((state) => state.logout);
 
@@ -42,6 +43,12 @@ export const MainWorkspace = () => {
         </div>
       </div>
 
+        <div className={`absolute inset-0 overflow-y-auto transition-opacity duration-700 ${activeView === 'DLQ' ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}>
+    <div className="pt-24 pb-32 relative z-20">
+      <DLQDashboard />
+    </div>
+  </div>
+
       <motion.div 
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -75,6 +82,16 @@ export const MainWorkspace = () => {
         >
           Settings
         </button>
+
+                <button
+        onClick={() => setActiveView('DLQ')}
+        className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+          activeView === 'DLQ' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/10'
+        }`}
+      >
+        Operations
+      </button>
+
       </motion.div>
     </div>
   );

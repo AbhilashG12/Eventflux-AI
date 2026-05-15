@@ -15,6 +15,7 @@ import { apiLimiter } from './core/middleware/ratelimiting.middleware.js';
 import { EventHardenerService } from './core/events/event.hardener.js';
 import { inviteRoutes } from './modules/tenant/interface/invite.routes.js';
 import { executionRoutes } from './modules/execution/execution.routes.js';
+import { dlqRoutes } from './modules/dlq/dlq.routes.js';
 
 const executeUseCase = new ExecuteWorkflowUseCase();
 const app = express();
@@ -32,6 +33,7 @@ app.use('/api/invites', inviteRoutes);
 
 app.use('/api', requireAuth);
 app.use('/api/executions', executionRoutes);
+app.use('/api/dlq', dlqRoutes);
 
 app.get('/api/health', async (req, res) => {
   const workflowCount = await db.workflow.count({
@@ -124,6 +126,7 @@ async function startSystem() {
     const idempotentEventId = payload.eventId || payload.eventName || `${execId}-${nodeId}-${status}-${Date.now()}`;
 
     if (!execId || !nodeId || !status) {
+      console.warn("⚠️ [KAFKA] Ignored malformed execution event:", payload);
       return;
     }
 

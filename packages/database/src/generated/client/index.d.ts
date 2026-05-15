@@ -63,6 +63,11 @@ export type Invitation = $Result.DefaultSelection<Prisma.$InvitationPayload>
  * 
  */
 export type ExecutionLog = $Result.DefaultSelection<Prisma.$ExecutionLogPayload>
+/**
+ * Model ReplayHistory
+ * 
+ */
+export type ReplayHistory = $Result.DefaultSelection<Prisma.$ReplayHistoryPayload>
 
 /**
  * Enums
@@ -328,6 +333,16 @@ export class PrismaClient<
     * ```
     */
   get executionLog(): Prisma.ExecutionLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.replayHistory`: Exposes CRUD operations for the **ReplayHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ReplayHistories
+    * const replayHistories = await prisma.replayHistory.findMany()
+    * ```
+    */
+  get replayHistory(): Prisma.ReplayHistoryDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -771,7 +786,8 @@ export namespace Prisma {
     ProcessedEvent: 'ProcessedEvent',
     DeadLetterQueue: 'DeadLetterQueue',
     Invitation: 'Invitation',
-    ExecutionLog: 'ExecutionLog'
+    ExecutionLog: 'ExecutionLog',
+    ReplayHistory: 'ReplayHistory'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -787,7 +803,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "tenant" | "user" | "workflow" | "workflowVersion" | "execution" | "executionStep" | "processedEvent" | "deadLetterQueue" | "invitation" | "executionLog"
+      modelProps: "tenant" | "user" | "workflow" | "workflowVersion" | "execution" | "executionStep" | "processedEvent" | "deadLetterQueue" | "invitation" | "executionLog" | "replayHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1531,6 +1547,80 @@ export namespace Prisma {
           }
         }
       }
+      ReplayHistory: {
+        payload: Prisma.$ReplayHistoryPayload<ExtArgs>
+        fields: Prisma.ReplayHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ReplayHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReplayHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ReplayHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReplayHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.ReplayHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReplayHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ReplayHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReplayHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.ReplayHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReplayHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.ReplayHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReplayHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.ReplayHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ReplayHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReplayHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.ReplayHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReplayHistoryPayload>
+          }
+          update: {
+            args: Prisma.ReplayHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReplayHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.ReplayHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ReplayHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ReplayHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReplayHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.ReplayHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReplayHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.ReplayHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateReplayHistory>
+          }
+          groupBy: {
+            args: Prisma.ReplayHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ReplayHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ReplayHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<ReplayHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1649,6 +1739,7 @@ export namespace Prisma {
     deadLetterQueue?: DeadLetterQueueOmit
     invitation?: InvitationOmit
     executionLog?: ExecutionLogOmit
+    replayHistory?: ReplayHistoryOmit
   }
 
   /* Types for Logging */
@@ -1872,6 +1963,37 @@ export namespace Prisma {
    */
   export type ExecutionCountOutputTypeCountLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExecutionLogWhereInput
+  }
+
+
+  /**
+   * Count Type DeadLetterQueueCountOutputType
+   */
+
+  export type DeadLetterQueueCountOutputType = {
+    history: number
+  }
+
+  export type DeadLetterQueueCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    history?: boolean | DeadLetterQueueCountOutputTypeCountHistoryArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DeadLetterQueueCountOutputType without action
+   */
+  export type DeadLetterQueueCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DeadLetterQueueCountOutputType
+     */
+    select?: DeadLetterQueueCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DeadLetterQueueCountOutputType without action
+   */
+  export type DeadLetterQueueCountOutputTypeCountHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReplayHistoryWhereInput
   }
 
 
@@ -9601,8 +9723,18 @@ export namespace Prisma {
 
   export type AggregateDeadLetterQueue = {
     _count: DeadLetterQueueCountAggregateOutputType | null
+    _avg: DeadLetterQueueAvgAggregateOutputType | null
+    _sum: DeadLetterQueueSumAggregateOutputType | null
     _min: DeadLetterQueueMinAggregateOutputType | null
     _max: DeadLetterQueueMaxAggregateOutputType | null
+  }
+
+  export type DeadLetterQueueAvgAggregateOutputType = {
+    retryCount: number | null
+  }
+
+  export type DeadLetterQueueSumAggregateOutputType = {
+    retryCount: number | null
   }
 
   export type DeadLetterQueueMinAggregateOutputType = {
@@ -9612,6 +9744,7 @@ export namespace Prisma {
     failedAt: Date | null
     replayed: boolean | null
     replayedAt: Date | null
+    retryCount: number | null
   }
 
   export type DeadLetterQueueMaxAggregateOutputType = {
@@ -9621,6 +9754,7 @@ export namespace Prisma {
     failedAt: Date | null
     replayed: boolean | null
     replayedAt: Date | null
+    retryCount: number | null
   }
 
   export type DeadLetterQueueCountAggregateOutputType = {
@@ -9631,9 +9765,18 @@ export namespace Prisma {
     failedAt: number
     replayed: number
     replayedAt: number
+    retryCount: number
     _all: number
   }
 
+
+  export type DeadLetterQueueAvgAggregateInputType = {
+    retryCount?: true
+  }
+
+  export type DeadLetterQueueSumAggregateInputType = {
+    retryCount?: true
+  }
 
   export type DeadLetterQueueMinAggregateInputType = {
     id?: true
@@ -9642,6 +9785,7 @@ export namespace Prisma {
     failedAt?: true
     replayed?: true
     replayedAt?: true
+    retryCount?: true
   }
 
   export type DeadLetterQueueMaxAggregateInputType = {
@@ -9651,6 +9795,7 @@ export namespace Prisma {
     failedAt?: true
     replayed?: true
     replayedAt?: true
+    retryCount?: true
   }
 
   export type DeadLetterQueueCountAggregateInputType = {
@@ -9661,6 +9806,7 @@ export namespace Prisma {
     failedAt?: true
     replayed?: true
     replayedAt?: true
+    retryCount?: true
     _all?: true
   }
 
@@ -9702,6 +9848,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: DeadLetterQueueAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DeadLetterQueueSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: DeadLetterQueueMinAggregateInputType
@@ -9732,6 +9890,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: DeadLetterQueueCountAggregateInputType | true
+    _avg?: DeadLetterQueueAvgAggregateInputType
+    _sum?: DeadLetterQueueSumAggregateInputType
     _min?: DeadLetterQueueMinAggregateInputType
     _max?: DeadLetterQueueMaxAggregateInputType
   }
@@ -9744,7 +9904,10 @@ export namespace Prisma {
     failedAt: Date
     replayed: boolean
     replayedAt: Date | null
+    retryCount: number
     _count: DeadLetterQueueCountAggregateOutputType | null
+    _avg: DeadLetterQueueAvgAggregateOutputType | null
+    _sum: DeadLetterQueueSumAggregateOutputType | null
     _min: DeadLetterQueueMinAggregateOutputType | null
     _max: DeadLetterQueueMaxAggregateOutputType | null
   }
@@ -9771,6 +9934,9 @@ export namespace Prisma {
     failedAt?: boolean
     replayed?: boolean
     replayedAt?: boolean
+    retryCount?: boolean
+    history?: boolean | DeadLetterQueue$historyArgs<ExtArgs>
+    _count?: boolean | DeadLetterQueueCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["deadLetterQueue"]>
 
   export type DeadLetterQueueSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9781,6 +9947,7 @@ export namespace Prisma {
     failedAt?: boolean
     replayed?: boolean
     replayedAt?: boolean
+    retryCount?: boolean
   }, ExtArgs["result"]["deadLetterQueue"]>
 
   export type DeadLetterQueueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9791,6 +9958,7 @@ export namespace Prisma {
     failedAt?: boolean
     replayed?: boolean
     replayedAt?: boolean
+    retryCount?: boolean
   }, ExtArgs["result"]["deadLetterQueue"]>
 
   export type DeadLetterQueueSelectScalar = {
@@ -9801,13 +9969,22 @@ export namespace Prisma {
     failedAt?: boolean
     replayed?: boolean
     replayedAt?: boolean
+    retryCount?: boolean
   }
 
-  export type DeadLetterQueueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "topic" | "payload" | "error" | "failedAt" | "replayed" | "replayedAt", ExtArgs["result"]["deadLetterQueue"]>
+  export type DeadLetterQueueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "topic" | "payload" | "error" | "failedAt" | "replayed" | "replayedAt" | "retryCount", ExtArgs["result"]["deadLetterQueue"]>
+  export type DeadLetterQueueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    history?: boolean | DeadLetterQueue$historyArgs<ExtArgs>
+    _count?: boolean | DeadLetterQueueCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DeadLetterQueueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type DeadLetterQueueIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $DeadLetterQueuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "DeadLetterQueue"
-    objects: {}
+    objects: {
+      history: Prisma.$ReplayHistoryPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       topic: string
@@ -9816,6 +9993,7 @@ export namespace Prisma {
       failedAt: Date
       replayed: boolean
       replayedAt: Date | null
+      retryCount: number
     }, ExtArgs["result"]["deadLetterQueue"]>
     composites: {}
   }
@@ -10210,6 +10388,7 @@ export namespace Prisma {
    */
   export interface Prisma__DeadLetterQueueClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    history<T extends DeadLetterQueue$historyArgs<ExtArgs> = {}>(args?: Subset<T, DeadLetterQueue$historyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10246,6 +10425,7 @@ export namespace Prisma {
     readonly failedAt: FieldRef<"DeadLetterQueue", 'DateTime'>
     readonly replayed: FieldRef<"DeadLetterQueue", 'Boolean'>
     readonly replayedAt: FieldRef<"DeadLetterQueue", 'DateTime'>
+    readonly retryCount: FieldRef<"DeadLetterQueue", 'Int'>
   }
     
 
@@ -10262,6 +10442,10 @@ export namespace Prisma {
      * Omit specific fields from the DeadLetterQueue
      */
     omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeadLetterQueueInclude<ExtArgs> | null
     /**
      * Filter, which DeadLetterQueue to fetch.
      */
@@ -10281,6 +10465,10 @@ export namespace Prisma {
      */
     omit?: DeadLetterQueueOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeadLetterQueueInclude<ExtArgs> | null
+    /**
      * Filter, which DeadLetterQueue to fetch.
      */
     where: DeadLetterQueueWhereUniqueInput
@@ -10298,6 +10486,10 @@ export namespace Prisma {
      * Omit specific fields from the DeadLetterQueue
      */
     omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeadLetterQueueInclude<ExtArgs> | null
     /**
      * Filter, which DeadLetterQueue to fetch.
      */
@@ -10347,6 +10539,10 @@ export namespace Prisma {
      */
     omit?: DeadLetterQueueOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeadLetterQueueInclude<ExtArgs> | null
+    /**
      * Filter, which DeadLetterQueue to fetch.
      */
     where?: DeadLetterQueueWhereInput
@@ -10394,6 +10590,10 @@ export namespace Prisma {
      * Omit specific fields from the DeadLetterQueue
      */
     omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeadLetterQueueInclude<ExtArgs> | null
     /**
      * Filter, which DeadLetterQueues to fetch.
      */
@@ -10443,6 +10643,10 @@ export namespace Prisma {
      */
     omit?: DeadLetterQueueOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeadLetterQueueInclude<ExtArgs> | null
+    /**
      * The data needed to create a DeadLetterQueue.
      */
     data: XOR<DeadLetterQueueCreateInput, DeadLetterQueueUncheckedCreateInput>
@@ -10490,6 +10694,10 @@ export namespace Prisma {
      * Omit specific fields from the DeadLetterQueue
      */
     omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeadLetterQueueInclude<ExtArgs> | null
     /**
      * The data needed to update a DeadLetterQueue.
      */
@@ -10557,6 +10765,10 @@ export namespace Prisma {
      */
     omit?: DeadLetterQueueOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeadLetterQueueInclude<ExtArgs> | null
+    /**
      * The filter to search for the DeadLetterQueue to update in case it exists.
      */
     where: DeadLetterQueueWhereUniqueInput
@@ -10583,6 +10795,10 @@ export namespace Prisma {
      */
     omit?: DeadLetterQueueOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeadLetterQueueInclude<ExtArgs> | null
+    /**
      * Filter which DeadLetterQueue to delete.
      */
     where: DeadLetterQueueWhereUniqueInput
@@ -10603,6 +10819,30 @@ export namespace Prisma {
   }
 
   /**
+   * DeadLetterQueue.history
+   */
+  export type DeadLetterQueue$historyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryInclude<ExtArgs> | null
+    where?: ReplayHistoryWhereInput
+    orderBy?: ReplayHistoryOrderByWithRelationInput | ReplayHistoryOrderByWithRelationInput[]
+    cursor?: ReplayHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReplayHistoryScalarFieldEnum | ReplayHistoryScalarFieldEnum[]
+  }
+
+  /**
    * DeadLetterQueue without action
    */
   export type DeadLetterQueueDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10614,6 +10854,10 @@ export namespace Prisma {
      * Omit specific fields from the DeadLetterQueue
      */
     omit?: DeadLetterQueueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeadLetterQueueInclude<ExtArgs> | null
   }
 
 
@@ -12783,6 +13027,1082 @@ export namespace Prisma {
 
 
   /**
+   * Model ReplayHistory
+   */
+
+  export type AggregateReplayHistory = {
+    _count: ReplayHistoryCountAggregateOutputType | null
+    _min: ReplayHistoryMinAggregateOutputType | null
+    _max: ReplayHistoryMaxAggregateOutputType | null
+  }
+
+  export type ReplayHistoryMinAggregateOutputType = {
+    id: string | null
+    dlqId: string | null
+    userId: string | null
+    status: string | null
+    message: string | null
+    replayedAt: Date | null
+  }
+
+  export type ReplayHistoryMaxAggregateOutputType = {
+    id: string | null
+    dlqId: string | null
+    userId: string | null
+    status: string | null
+    message: string | null
+    replayedAt: Date | null
+  }
+
+  export type ReplayHistoryCountAggregateOutputType = {
+    id: number
+    dlqId: number
+    userId: number
+    status: number
+    message: number
+    replayedAt: number
+    _all: number
+  }
+
+
+  export type ReplayHistoryMinAggregateInputType = {
+    id?: true
+    dlqId?: true
+    userId?: true
+    status?: true
+    message?: true
+    replayedAt?: true
+  }
+
+  export type ReplayHistoryMaxAggregateInputType = {
+    id?: true
+    dlqId?: true
+    userId?: true
+    status?: true
+    message?: true
+    replayedAt?: true
+  }
+
+  export type ReplayHistoryCountAggregateInputType = {
+    id?: true
+    dlqId?: true
+    userId?: true
+    status?: true
+    message?: true
+    replayedAt?: true
+    _all?: true
+  }
+
+  export type ReplayHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReplayHistory to aggregate.
+     */
+    where?: ReplayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReplayHistories to fetch.
+     */
+    orderBy?: ReplayHistoryOrderByWithRelationInput | ReplayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ReplayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReplayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReplayHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ReplayHistories
+    **/
+    _count?: true | ReplayHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ReplayHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ReplayHistoryMaxAggregateInputType
+  }
+
+  export type GetReplayHistoryAggregateType<T extends ReplayHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateReplayHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReplayHistory[P]>
+      : GetScalarType<T[P], AggregateReplayHistory[P]>
+  }
+
+
+
+
+  export type ReplayHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReplayHistoryWhereInput
+    orderBy?: ReplayHistoryOrderByWithAggregationInput | ReplayHistoryOrderByWithAggregationInput[]
+    by: ReplayHistoryScalarFieldEnum[] | ReplayHistoryScalarFieldEnum
+    having?: ReplayHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ReplayHistoryCountAggregateInputType | true
+    _min?: ReplayHistoryMinAggregateInputType
+    _max?: ReplayHistoryMaxAggregateInputType
+  }
+
+  export type ReplayHistoryGroupByOutputType = {
+    id: string
+    dlqId: string
+    userId: string
+    status: string
+    message: string | null
+    replayedAt: Date
+    _count: ReplayHistoryCountAggregateOutputType | null
+    _min: ReplayHistoryMinAggregateOutputType | null
+    _max: ReplayHistoryMaxAggregateOutputType | null
+  }
+
+  type GetReplayHistoryGroupByPayload<T extends ReplayHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ReplayHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ReplayHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReplayHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], ReplayHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ReplayHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dlqId?: boolean
+    userId?: boolean
+    status?: boolean
+    message?: boolean
+    replayedAt?: boolean
+    dlq?: boolean | DeadLetterQueueDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["replayHistory"]>
+
+  export type ReplayHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dlqId?: boolean
+    userId?: boolean
+    status?: boolean
+    message?: boolean
+    replayedAt?: boolean
+    dlq?: boolean | DeadLetterQueueDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["replayHistory"]>
+
+  export type ReplayHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    dlqId?: boolean
+    userId?: boolean
+    status?: boolean
+    message?: boolean
+    replayedAt?: boolean
+    dlq?: boolean | DeadLetterQueueDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["replayHistory"]>
+
+  export type ReplayHistorySelectScalar = {
+    id?: boolean
+    dlqId?: boolean
+    userId?: boolean
+    status?: boolean
+    message?: boolean
+    replayedAt?: boolean
+  }
+
+  export type ReplayHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dlqId" | "userId" | "status" | "message" | "replayedAt", ExtArgs["result"]["replayHistory"]>
+  export type ReplayHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dlq?: boolean | DeadLetterQueueDefaultArgs<ExtArgs>
+  }
+  export type ReplayHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dlq?: boolean | DeadLetterQueueDefaultArgs<ExtArgs>
+  }
+  export type ReplayHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    dlq?: boolean | DeadLetterQueueDefaultArgs<ExtArgs>
+  }
+
+  export type $ReplayHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ReplayHistory"
+    objects: {
+      dlq: Prisma.$DeadLetterQueuePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      dlqId: string
+      userId: string
+      status: string
+      message: string | null
+      replayedAt: Date
+    }, ExtArgs["result"]["replayHistory"]>
+    composites: {}
+  }
+
+  type ReplayHistoryGetPayload<S extends boolean | null | undefined | ReplayHistoryDefaultArgs> = $Result.GetResult<Prisma.$ReplayHistoryPayload, S>
+
+  type ReplayHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ReplayHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ReplayHistoryCountAggregateInputType | true
+    }
+
+  export interface ReplayHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ReplayHistory'], meta: { name: 'ReplayHistory' } }
+    /**
+     * Find zero or one ReplayHistory that matches the filter.
+     * @param {ReplayHistoryFindUniqueArgs} args - Arguments to find a ReplayHistory
+     * @example
+     * // Get one ReplayHistory
+     * const replayHistory = await prisma.replayHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ReplayHistoryFindUniqueArgs>(args: SelectSubset<T, ReplayHistoryFindUniqueArgs<ExtArgs>>): Prisma__ReplayHistoryClient<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ReplayHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ReplayHistoryFindUniqueOrThrowArgs} args - Arguments to find a ReplayHistory
+     * @example
+     * // Get one ReplayHistory
+     * const replayHistory = await prisma.replayHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ReplayHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, ReplayHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReplayHistoryClient<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ReplayHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReplayHistoryFindFirstArgs} args - Arguments to find a ReplayHistory
+     * @example
+     * // Get one ReplayHistory
+     * const replayHistory = await prisma.replayHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ReplayHistoryFindFirstArgs>(args?: SelectSubset<T, ReplayHistoryFindFirstArgs<ExtArgs>>): Prisma__ReplayHistoryClient<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ReplayHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReplayHistoryFindFirstOrThrowArgs} args - Arguments to find a ReplayHistory
+     * @example
+     * // Get one ReplayHistory
+     * const replayHistory = await prisma.replayHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ReplayHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, ReplayHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReplayHistoryClient<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ReplayHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReplayHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ReplayHistories
+     * const replayHistories = await prisma.replayHistory.findMany()
+     * 
+     * // Get first 10 ReplayHistories
+     * const replayHistories = await prisma.replayHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const replayHistoryWithIdOnly = await prisma.replayHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ReplayHistoryFindManyArgs>(args?: SelectSubset<T, ReplayHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ReplayHistory.
+     * @param {ReplayHistoryCreateArgs} args - Arguments to create a ReplayHistory.
+     * @example
+     * // Create one ReplayHistory
+     * const ReplayHistory = await prisma.replayHistory.create({
+     *   data: {
+     *     // ... data to create a ReplayHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends ReplayHistoryCreateArgs>(args: SelectSubset<T, ReplayHistoryCreateArgs<ExtArgs>>): Prisma__ReplayHistoryClient<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ReplayHistories.
+     * @param {ReplayHistoryCreateManyArgs} args - Arguments to create many ReplayHistories.
+     * @example
+     * // Create many ReplayHistories
+     * const replayHistory = await prisma.replayHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ReplayHistoryCreateManyArgs>(args?: SelectSubset<T, ReplayHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ReplayHistories and returns the data saved in the database.
+     * @param {ReplayHistoryCreateManyAndReturnArgs} args - Arguments to create many ReplayHistories.
+     * @example
+     * // Create many ReplayHistories
+     * const replayHistory = await prisma.replayHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ReplayHistories and only return the `id`
+     * const replayHistoryWithIdOnly = await prisma.replayHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ReplayHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, ReplayHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ReplayHistory.
+     * @param {ReplayHistoryDeleteArgs} args - Arguments to delete one ReplayHistory.
+     * @example
+     * // Delete one ReplayHistory
+     * const ReplayHistory = await prisma.replayHistory.delete({
+     *   where: {
+     *     // ... filter to delete one ReplayHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ReplayHistoryDeleteArgs>(args: SelectSubset<T, ReplayHistoryDeleteArgs<ExtArgs>>): Prisma__ReplayHistoryClient<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ReplayHistory.
+     * @param {ReplayHistoryUpdateArgs} args - Arguments to update one ReplayHistory.
+     * @example
+     * // Update one ReplayHistory
+     * const replayHistory = await prisma.replayHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ReplayHistoryUpdateArgs>(args: SelectSubset<T, ReplayHistoryUpdateArgs<ExtArgs>>): Prisma__ReplayHistoryClient<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ReplayHistories.
+     * @param {ReplayHistoryDeleteManyArgs} args - Arguments to filter ReplayHistories to delete.
+     * @example
+     * // Delete a few ReplayHistories
+     * const { count } = await prisma.replayHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ReplayHistoryDeleteManyArgs>(args?: SelectSubset<T, ReplayHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ReplayHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReplayHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ReplayHistories
+     * const replayHistory = await prisma.replayHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ReplayHistoryUpdateManyArgs>(args: SelectSubset<T, ReplayHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ReplayHistories and returns the data updated in the database.
+     * @param {ReplayHistoryUpdateManyAndReturnArgs} args - Arguments to update many ReplayHistories.
+     * @example
+     * // Update many ReplayHistories
+     * const replayHistory = await prisma.replayHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ReplayHistories and only return the `id`
+     * const replayHistoryWithIdOnly = await prisma.replayHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ReplayHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, ReplayHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ReplayHistory.
+     * @param {ReplayHistoryUpsertArgs} args - Arguments to update or create a ReplayHistory.
+     * @example
+     * // Update or create a ReplayHistory
+     * const replayHistory = await prisma.replayHistory.upsert({
+     *   create: {
+     *     // ... data to create a ReplayHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ReplayHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ReplayHistoryUpsertArgs>(args: SelectSubset<T, ReplayHistoryUpsertArgs<ExtArgs>>): Prisma__ReplayHistoryClient<$Result.GetResult<Prisma.$ReplayHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ReplayHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReplayHistoryCountArgs} args - Arguments to filter ReplayHistories to count.
+     * @example
+     * // Count the number of ReplayHistories
+     * const count = await prisma.replayHistory.count({
+     *   where: {
+     *     // ... the filter for the ReplayHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends ReplayHistoryCountArgs>(
+      args?: Subset<T, ReplayHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ReplayHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ReplayHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReplayHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ReplayHistoryAggregateArgs>(args: Subset<T, ReplayHistoryAggregateArgs>): Prisma.PrismaPromise<GetReplayHistoryAggregateType<T>>
+
+    /**
+     * Group by ReplayHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReplayHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ReplayHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ReplayHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: ReplayHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ReplayHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReplayHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ReplayHistory model
+   */
+  readonly fields: ReplayHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ReplayHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ReplayHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    dlq<T extends DeadLetterQueueDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DeadLetterQueueDefaultArgs<ExtArgs>>): Prisma__DeadLetterQueueClient<$Result.GetResult<Prisma.$DeadLetterQueuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ReplayHistory model
+   */
+  interface ReplayHistoryFieldRefs {
+    readonly id: FieldRef<"ReplayHistory", 'String'>
+    readonly dlqId: FieldRef<"ReplayHistory", 'String'>
+    readonly userId: FieldRef<"ReplayHistory", 'String'>
+    readonly status: FieldRef<"ReplayHistory", 'String'>
+    readonly message: FieldRef<"ReplayHistory", 'String'>
+    readonly replayedAt: FieldRef<"ReplayHistory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ReplayHistory findUnique
+   */
+  export type ReplayHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ReplayHistory to fetch.
+     */
+    where: ReplayHistoryWhereUniqueInput
+  }
+
+  /**
+   * ReplayHistory findUniqueOrThrow
+   */
+  export type ReplayHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ReplayHistory to fetch.
+     */
+    where: ReplayHistoryWhereUniqueInput
+  }
+
+  /**
+   * ReplayHistory findFirst
+   */
+  export type ReplayHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ReplayHistory to fetch.
+     */
+    where?: ReplayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReplayHistories to fetch.
+     */
+    orderBy?: ReplayHistoryOrderByWithRelationInput | ReplayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReplayHistories.
+     */
+    cursor?: ReplayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReplayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReplayHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReplayHistories.
+     */
+    distinct?: ReplayHistoryScalarFieldEnum | ReplayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * ReplayHistory findFirstOrThrow
+   */
+  export type ReplayHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ReplayHistory to fetch.
+     */
+    where?: ReplayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReplayHistories to fetch.
+     */
+    orderBy?: ReplayHistoryOrderByWithRelationInput | ReplayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ReplayHistories.
+     */
+    cursor?: ReplayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReplayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReplayHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReplayHistories.
+     */
+    distinct?: ReplayHistoryScalarFieldEnum | ReplayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * ReplayHistory findMany
+   */
+  export type ReplayHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which ReplayHistories to fetch.
+     */
+    where?: ReplayHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ReplayHistories to fetch.
+     */
+    orderBy?: ReplayHistoryOrderByWithRelationInput | ReplayHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ReplayHistories.
+     */
+    cursor?: ReplayHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ReplayHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ReplayHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReplayHistories.
+     */
+    distinct?: ReplayHistoryScalarFieldEnum | ReplayHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * ReplayHistory create
+   */
+  export type ReplayHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ReplayHistory.
+     */
+    data: XOR<ReplayHistoryCreateInput, ReplayHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * ReplayHistory createMany
+   */
+  export type ReplayHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ReplayHistories.
+     */
+    data: ReplayHistoryCreateManyInput | ReplayHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ReplayHistory createManyAndReturn
+   */
+  export type ReplayHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many ReplayHistories.
+     */
+    data: ReplayHistoryCreateManyInput | ReplayHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ReplayHistory update
+   */
+  export type ReplayHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ReplayHistory.
+     */
+    data: XOR<ReplayHistoryUpdateInput, ReplayHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which ReplayHistory to update.
+     */
+    where: ReplayHistoryWhereUniqueInput
+  }
+
+  /**
+   * ReplayHistory updateMany
+   */
+  export type ReplayHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ReplayHistories.
+     */
+    data: XOR<ReplayHistoryUpdateManyMutationInput, ReplayHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which ReplayHistories to update
+     */
+    where?: ReplayHistoryWhereInput
+    /**
+     * Limit how many ReplayHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ReplayHistory updateManyAndReturn
+   */
+  export type ReplayHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update ReplayHistories.
+     */
+    data: XOR<ReplayHistoryUpdateManyMutationInput, ReplayHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which ReplayHistories to update
+     */
+    where?: ReplayHistoryWhereInput
+    /**
+     * Limit how many ReplayHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ReplayHistory upsert
+   */
+  export type ReplayHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ReplayHistory to update in case it exists.
+     */
+    where: ReplayHistoryWhereUniqueInput
+    /**
+     * In case the ReplayHistory found by the `where` argument doesn't exist, create a new ReplayHistory with this data.
+     */
+    create: XOR<ReplayHistoryCreateInput, ReplayHistoryUncheckedCreateInput>
+    /**
+     * In case the ReplayHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ReplayHistoryUpdateInput, ReplayHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * ReplayHistory delete
+   */
+  export type ReplayHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which ReplayHistory to delete.
+     */
+    where: ReplayHistoryWhereUniqueInput
+  }
+
+  /**
+   * ReplayHistory deleteMany
+   */
+  export type ReplayHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ReplayHistories to delete
+     */
+    where?: ReplayHistoryWhereInput
+    /**
+     * Limit how many ReplayHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ReplayHistory without action
+   */
+  export type ReplayHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReplayHistory
+     */
+    select?: ReplayHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ReplayHistory
+     */
+    omit?: ReplayHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReplayHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -12890,7 +14210,8 @@ export namespace Prisma {
     error: 'error',
     failedAt: 'failedAt',
     replayed: 'replayed',
-    replayedAt: 'replayedAt'
+    replayedAt: 'replayedAt',
+    retryCount: 'retryCount'
   };
 
   export type DeadLetterQueueScalarFieldEnum = (typeof DeadLetterQueueScalarFieldEnum)[keyof typeof DeadLetterQueueScalarFieldEnum]
@@ -12919,6 +14240,18 @@ export namespace Prisma {
   };
 
   export type ExecutionLogScalarFieldEnum = (typeof ExecutionLogScalarFieldEnum)[keyof typeof ExecutionLogScalarFieldEnum]
+
+
+  export const ReplayHistoryScalarFieldEnum: {
+    id: 'id',
+    dlqId: 'dlqId',
+    userId: 'userId',
+    status: 'status',
+    message: 'message',
+    replayedAt: 'replayedAt'
+  };
+
+  export type ReplayHistoryScalarFieldEnum = (typeof ReplayHistoryScalarFieldEnum)[keyof typeof ReplayHistoryScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -13561,6 +14894,8 @@ export namespace Prisma {
     failedAt?: DateTimeFilter<"DeadLetterQueue"> | Date | string
     replayed?: BoolFilter<"DeadLetterQueue"> | boolean
     replayedAt?: DateTimeNullableFilter<"DeadLetterQueue"> | Date | string | null
+    retryCount?: IntFilter<"DeadLetterQueue"> | number
+    history?: ReplayHistoryListRelationFilter
   }
 
   export type DeadLetterQueueOrderByWithRelationInput = {
@@ -13571,6 +14906,8 @@ export namespace Prisma {
     failedAt?: SortOrder
     replayed?: SortOrder
     replayedAt?: SortOrderInput | SortOrder
+    retryCount?: SortOrder
+    history?: ReplayHistoryOrderByRelationAggregateInput
   }
 
   export type DeadLetterQueueWhereUniqueInput = Prisma.AtLeast<{
@@ -13584,6 +14921,8 @@ export namespace Prisma {
     failedAt?: DateTimeFilter<"DeadLetterQueue"> | Date | string
     replayed?: BoolFilter<"DeadLetterQueue"> | boolean
     replayedAt?: DateTimeNullableFilter<"DeadLetterQueue"> | Date | string | null
+    retryCount?: IntFilter<"DeadLetterQueue"> | number
+    history?: ReplayHistoryListRelationFilter
   }, "id">
 
   export type DeadLetterQueueOrderByWithAggregationInput = {
@@ -13594,9 +14933,12 @@ export namespace Prisma {
     failedAt?: SortOrder
     replayed?: SortOrder
     replayedAt?: SortOrderInput | SortOrder
+    retryCount?: SortOrder
     _count?: DeadLetterQueueCountOrderByAggregateInput
+    _avg?: DeadLetterQueueAvgOrderByAggregateInput
     _max?: DeadLetterQueueMaxOrderByAggregateInput
     _min?: DeadLetterQueueMinOrderByAggregateInput
+    _sum?: DeadLetterQueueSumOrderByAggregateInput
   }
 
   export type DeadLetterQueueScalarWhereWithAggregatesInput = {
@@ -13610,6 +14952,7 @@ export namespace Prisma {
     failedAt?: DateTimeWithAggregatesFilter<"DeadLetterQueue"> | Date | string
     replayed?: BoolWithAggregatesFilter<"DeadLetterQueue"> | boolean
     replayedAt?: DateTimeNullableWithAggregatesFilter<"DeadLetterQueue"> | Date | string | null
+    retryCount?: IntWithAggregatesFilter<"DeadLetterQueue"> | number
   }
 
   export type InvitationWhereInput = {
@@ -13735,6 +15078,66 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"ExecutionLog"> | string
     message?: StringNullableWithAggregatesFilter<"ExecutionLog"> | string | null
     timestamp?: DateTimeWithAggregatesFilter<"ExecutionLog"> | Date | string
+  }
+
+  export type ReplayHistoryWhereInput = {
+    AND?: ReplayHistoryWhereInput | ReplayHistoryWhereInput[]
+    OR?: ReplayHistoryWhereInput[]
+    NOT?: ReplayHistoryWhereInput | ReplayHistoryWhereInput[]
+    id?: StringFilter<"ReplayHistory"> | string
+    dlqId?: StringFilter<"ReplayHistory"> | string
+    userId?: StringFilter<"ReplayHistory"> | string
+    status?: StringFilter<"ReplayHistory"> | string
+    message?: StringNullableFilter<"ReplayHistory"> | string | null
+    replayedAt?: DateTimeFilter<"ReplayHistory"> | Date | string
+    dlq?: XOR<DeadLetterQueueScalarRelationFilter, DeadLetterQueueWhereInput>
+  }
+
+  export type ReplayHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    dlqId?: SortOrder
+    userId?: SortOrder
+    status?: SortOrder
+    message?: SortOrderInput | SortOrder
+    replayedAt?: SortOrder
+    dlq?: DeadLetterQueueOrderByWithRelationInput
+  }
+
+  export type ReplayHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ReplayHistoryWhereInput | ReplayHistoryWhereInput[]
+    OR?: ReplayHistoryWhereInput[]
+    NOT?: ReplayHistoryWhereInput | ReplayHistoryWhereInput[]
+    dlqId?: StringFilter<"ReplayHistory"> | string
+    userId?: StringFilter<"ReplayHistory"> | string
+    status?: StringFilter<"ReplayHistory"> | string
+    message?: StringNullableFilter<"ReplayHistory"> | string | null
+    replayedAt?: DateTimeFilter<"ReplayHistory"> | Date | string
+    dlq?: XOR<DeadLetterQueueScalarRelationFilter, DeadLetterQueueWhereInput>
+  }, "id">
+
+  export type ReplayHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    dlqId?: SortOrder
+    userId?: SortOrder
+    status?: SortOrder
+    message?: SortOrderInput | SortOrder
+    replayedAt?: SortOrder
+    _count?: ReplayHistoryCountOrderByAggregateInput
+    _max?: ReplayHistoryMaxOrderByAggregateInput
+    _min?: ReplayHistoryMinOrderByAggregateInput
+  }
+
+  export type ReplayHistoryScalarWhereWithAggregatesInput = {
+    AND?: ReplayHistoryScalarWhereWithAggregatesInput | ReplayHistoryScalarWhereWithAggregatesInput[]
+    OR?: ReplayHistoryScalarWhereWithAggregatesInput[]
+    NOT?: ReplayHistoryScalarWhereWithAggregatesInput | ReplayHistoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ReplayHistory"> | string
+    dlqId?: StringWithAggregatesFilter<"ReplayHistory"> | string
+    userId?: StringWithAggregatesFilter<"ReplayHistory"> | string
+    status?: StringWithAggregatesFilter<"ReplayHistory"> | string
+    message?: StringNullableWithAggregatesFilter<"ReplayHistory"> | string | null
+    replayedAt?: DateTimeWithAggregatesFilter<"ReplayHistory"> | Date | string
   }
 
   export type TenantCreateInput = {
@@ -14230,6 +15633,8 @@ export namespace Prisma {
     failedAt?: Date | string
     replayed?: boolean
     replayedAt?: Date | string | null
+    retryCount?: number
+    history?: ReplayHistoryCreateNestedManyWithoutDlqInput
   }
 
   export type DeadLetterQueueUncheckedCreateInput = {
@@ -14240,6 +15645,8 @@ export namespace Prisma {
     failedAt?: Date | string
     replayed?: boolean
     replayedAt?: Date | string | null
+    retryCount?: number
+    history?: ReplayHistoryUncheckedCreateNestedManyWithoutDlqInput
   }
 
   export type DeadLetterQueueUpdateInput = {
@@ -14250,6 +15657,8 @@ export namespace Prisma {
     failedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replayed?: BoolFieldUpdateOperationsInput | boolean
     replayedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
+    history?: ReplayHistoryUpdateManyWithoutDlqNestedInput
   }
 
   export type DeadLetterQueueUncheckedUpdateInput = {
@@ -14260,6 +15669,8 @@ export namespace Prisma {
     failedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replayed?: BoolFieldUpdateOperationsInput | boolean
     replayedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
+    history?: ReplayHistoryUncheckedUpdateManyWithoutDlqNestedInput
   }
 
   export type DeadLetterQueueCreateManyInput = {
@@ -14270,6 +15681,7 @@ export namespace Prisma {
     failedAt?: Date | string
     replayed?: boolean
     replayedAt?: Date | string | null
+    retryCount?: number
   }
 
   export type DeadLetterQueueUpdateManyMutationInput = {
@@ -14280,6 +15692,7 @@ export namespace Prisma {
     failedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replayed?: BoolFieldUpdateOperationsInput | boolean
     replayedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type DeadLetterQueueUncheckedUpdateManyInput = {
@@ -14290,6 +15703,7 @@ export namespace Prisma {
     failedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replayed?: BoolFieldUpdateOperationsInput | boolean
     replayedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type InvitationCreateInput = {
@@ -14421,6 +15835,68 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReplayHistoryCreateInput = {
+    id?: string
+    userId: string
+    status: string
+    message?: string | null
+    replayedAt?: Date | string
+    dlq: DeadLetterQueueCreateNestedOneWithoutHistoryInput
+  }
+
+  export type ReplayHistoryUncheckedCreateInput = {
+    id?: string
+    dlqId: string
+    userId: string
+    status: string
+    message?: string | null
+    replayedAt?: Date | string
+  }
+
+  export type ReplayHistoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    replayedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dlq?: DeadLetterQueueUpdateOneRequiredWithoutHistoryNestedInput
+  }
+
+  export type ReplayHistoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dlqId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    replayedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReplayHistoryCreateManyInput = {
+    id?: string
+    dlqId: string
+    userId: string
+    status: string
+    message?: string | null
+    replayedAt?: Date | string
+  }
+
+  export type ReplayHistoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    replayedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReplayHistoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dlqId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    replayedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -15025,6 +16501,16 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type ReplayHistoryListRelationFilter = {
+    every?: ReplayHistoryWhereInput
+    some?: ReplayHistoryWhereInput
+    none?: ReplayHistoryWhereInput
+  }
+
+  export type ReplayHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type DeadLetterQueueCountOrderByAggregateInput = {
     id?: SortOrder
     topic?: SortOrder
@@ -15033,6 +16519,11 @@ export namespace Prisma {
     failedAt?: SortOrder
     replayed?: SortOrder
     replayedAt?: SortOrder
+    retryCount?: SortOrder
+  }
+
+  export type DeadLetterQueueAvgOrderByAggregateInput = {
+    retryCount?: SortOrder
   }
 
   export type DeadLetterQueueMaxOrderByAggregateInput = {
@@ -15042,6 +16533,7 @@ export namespace Prisma {
     failedAt?: SortOrder
     replayed?: SortOrder
     replayedAt?: SortOrder
+    retryCount?: SortOrder
   }
 
   export type DeadLetterQueueMinOrderByAggregateInput = {
@@ -15051,6 +16543,11 @@ export namespace Prisma {
     failedAt?: SortOrder
     replayed?: SortOrder
     replayedAt?: SortOrder
+    retryCount?: SortOrder
+  }
+
+  export type DeadLetterQueueSumOrderByAggregateInput = {
+    retryCount?: SortOrder
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -15116,6 +16613,38 @@ export namespace Prisma {
     status?: SortOrder
     message?: SortOrder
     timestamp?: SortOrder
+  }
+
+  export type DeadLetterQueueScalarRelationFilter = {
+    is?: DeadLetterQueueWhereInput
+    isNot?: DeadLetterQueueWhereInput
+  }
+
+  export type ReplayHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    dlqId?: SortOrder
+    userId?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    replayedAt?: SortOrder
+  }
+
+  export type ReplayHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    dlqId?: SortOrder
+    userId?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    replayedAt?: SortOrder
+  }
+
+  export type ReplayHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    dlqId?: SortOrder
+    userId?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    replayedAt?: SortOrder
   }
 
   export type UserCreateNestedManyWithoutTenantInput = {
@@ -15518,8 +17047,50 @@ export namespace Prisma {
     update?: XOR<XOR<ExecutionUpdateToOneWithWhereWithoutStepsInput, ExecutionUpdateWithoutStepsInput>, ExecutionUncheckedUpdateWithoutStepsInput>
   }
 
+  export type ReplayHistoryCreateNestedManyWithoutDlqInput = {
+    create?: XOR<ReplayHistoryCreateWithoutDlqInput, ReplayHistoryUncheckedCreateWithoutDlqInput> | ReplayHistoryCreateWithoutDlqInput[] | ReplayHistoryUncheckedCreateWithoutDlqInput[]
+    connectOrCreate?: ReplayHistoryCreateOrConnectWithoutDlqInput | ReplayHistoryCreateOrConnectWithoutDlqInput[]
+    createMany?: ReplayHistoryCreateManyDlqInputEnvelope
+    connect?: ReplayHistoryWhereUniqueInput | ReplayHistoryWhereUniqueInput[]
+  }
+
+  export type ReplayHistoryUncheckedCreateNestedManyWithoutDlqInput = {
+    create?: XOR<ReplayHistoryCreateWithoutDlqInput, ReplayHistoryUncheckedCreateWithoutDlqInput> | ReplayHistoryCreateWithoutDlqInput[] | ReplayHistoryUncheckedCreateWithoutDlqInput[]
+    connectOrCreate?: ReplayHistoryCreateOrConnectWithoutDlqInput | ReplayHistoryCreateOrConnectWithoutDlqInput[]
+    createMany?: ReplayHistoryCreateManyDlqInputEnvelope
+    connect?: ReplayHistoryWhereUniqueInput | ReplayHistoryWhereUniqueInput[]
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type ReplayHistoryUpdateManyWithoutDlqNestedInput = {
+    create?: XOR<ReplayHistoryCreateWithoutDlqInput, ReplayHistoryUncheckedCreateWithoutDlqInput> | ReplayHistoryCreateWithoutDlqInput[] | ReplayHistoryUncheckedCreateWithoutDlqInput[]
+    connectOrCreate?: ReplayHistoryCreateOrConnectWithoutDlqInput | ReplayHistoryCreateOrConnectWithoutDlqInput[]
+    upsert?: ReplayHistoryUpsertWithWhereUniqueWithoutDlqInput | ReplayHistoryUpsertWithWhereUniqueWithoutDlqInput[]
+    createMany?: ReplayHistoryCreateManyDlqInputEnvelope
+    set?: ReplayHistoryWhereUniqueInput | ReplayHistoryWhereUniqueInput[]
+    disconnect?: ReplayHistoryWhereUniqueInput | ReplayHistoryWhereUniqueInput[]
+    delete?: ReplayHistoryWhereUniqueInput | ReplayHistoryWhereUniqueInput[]
+    connect?: ReplayHistoryWhereUniqueInput | ReplayHistoryWhereUniqueInput[]
+    update?: ReplayHistoryUpdateWithWhereUniqueWithoutDlqInput | ReplayHistoryUpdateWithWhereUniqueWithoutDlqInput[]
+    updateMany?: ReplayHistoryUpdateManyWithWhereWithoutDlqInput | ReplayHistoryUpdateManyWithWhereWithoutDlqInput[]
+    deleteMany?: ReplayHistoryScalarWhereInput | ReplayHistoryScalarWhereInput[]
+  }
+
+  export type ReplayHistoryUncheckedUpdateManyWithoutDlqNestedInput = {
+    create?: XOR<ReplayHistoryCreateWithoutDlqInput, ReplayHistoryUncheckedCreateWithoutDlqInput> | ReplayHistoryCreateWithoutDlqInput[] | ReplayHistoryUncheckedCreateWithoutDlqInput[]
+    connectOrCreate?: ReplayHistoryCreateOrConnectWithoutDlqInput | ReplayHistoryCreateOrConnectWithoutDlqInput[]
+    upsert?: ReplayHistoryUpsertWithWhereUniqueWithoutDlqInput | ReplayHistoryUpsertWithWhereUniqueWithoutDlqInput[]
+    createMany?: ReplayHistoryCreateManyDlqInputEnvelope
+    set?: ReplayHistoryWhereUniqueInput | ReplayHistoryWhereUniqueInput[]
+    disconnect?: ReplayHistoryWhereUniqueInput | ReplayHistoryWhereUniqueInput[]
+    delete?: ReplayHistoryWhereUniqueInput | ReplayHistoryWhereUniqueInput[]
+    connect?: ReplayHistoryWhereUniqueInput | ReplayHistoryWhereUniqueInput[]
+    update?: ReplayHistoryUpdateWithWhereUniqueWithoutDlqInput | ReplayHistoryUpdateWithWhereUniqueWithoutDlqInput[]
+    updateMany?: ReplayHistoryUpdateManyWithWhereWithoutDlqInput | ReplayHistoryUpdateManyWithWhereWithoutDlqInput[]
+    deleteMany?: ReplayHistoryScalarWhereInput | ReplayHistoryScalarWhereInput[]
   }
 
   export type TenantCreateNestedOneWithoutInvitationsInput = {
@@ -15548,6 +17119,20 @@ export namespace Prisma {
     upsert?: ExecutionUpsertWithoutLogsInput
     connect?: ExecutionWhereUniqueInput
     update?: XOR<XOR<ExecutionUpdateToOneWithWhereWithoutLogsInput, ExecutionUpdateWithoutLogsInput>, ExecutionUncheckedUpdateWithoutLogsInput>
+  }
+
+  export type DeadLetterQueueCreateNestedOneWithoutHistoryInput = {
+    create?: XOR<DeadLetterQueueCreateWithoutHistoryInput, DeadLetterQueueUncheckedCreateWithoutHistoryInput>
+    connectOrCreate?: DeadLetterQueueCreateOrConnectWithoutHistoryInput
+    connect?: DeadLetterQueueWhereUniqueInput
+  }
+
+  export type DeadLetterQueueUpdateOneRequiredWithoutHistoryNestedInput = {
+    create?: XOR<DeadLetterQueueCreateWithoutHistoryInput, DeadLetterQueueUncheckedCreateWithoutHistoryInput>
+    connectOrCreate?: DeadLetterQueueCreateOrConnectWithoutHistoryInput
+    upsert?: DeadLetterQueueUpsertWithoutHistoryInput
+    connect?: DeadLetterQueueWhereUniqueInput
+    update?: XOR<XOR<DeadLetterQueueUpdateToOneWithWhereWithoutHistoryInput, DeadLetterQueueUpdateWithoutHistoryInput>, DeadLetterQueueUncheckedUpdateWithoutHistoryInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -16513,6 +18098,60 @@ export namespace Prisma {
     logs?: ExecutionLogUncheckedUpdateManyWithoutExecutionNestedInput
   }
 
+  export type ReplayHistoryCreateWithoutDlqInput = {
+    id?: string
+    userId: string
+    status: string
+    message?: string | null
+    replayedAt?: Date | string
+  }
+
+  export type ReplayHistoryUncheckedCreateWithoutDlqInput = {
+    id?: string
+    userId: string
+    status: string
+    message?: string | null
+    replayedAt?: Date | string
+  }
+
+  export type ReplayHistoryCreateOrConnectWithoutDlqInput = {
+    where: ReplayHistoryWhereUniqueInput
+    create: XOR<ReplayHistoryCreateWithoutDlqInput, ReplayHistoryUncheckedCreateWithoutDlqInput>
+  }
+
+  export type ReplayHistoryCreateManyDlqInputEnvelope = {
+    data: ReplayHistoryCreateManyDlqInput | ReplayHistoryCreateManyDlqInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReplayHistoryUpsertWithWhereUniqueWithoutDlqInput = {
+    where: ReplayHistoryWhereUniqueInput
+    update: XOR<ReplayHistoryUpdateWithoutDlqInput, ReplayHistoryUncheckedUpdateWithoutDlqInput>
+    create: XOR<ReplayHistoryCreateWithoutDlqInput, ReplayHistoryUncheckedCreateWithoutDlqInput>
+  }
+
+  export type ReplayHistoryUpdateWithWhereUniqueWithoutDlqInput = {
+    where: ReplayHistoryWhereUniqueInput
+    data: XOR<ReplayHistoryUpdateWithoutDlqInput, ReplayHistoryUncheckedUpdateWithoutDlqInput>
+  }
+
+  export type ReplayHistoryUpdateManyWithWhereWithoutDlqInput = {
+    where: ReplayHistoryScalarWhereInput
+    data: XOR<ReplayHistoryUpdateManyMutationInput, ReplayHistoryUncheckedUpdateManyWithoutDlqInput>
+  }
+
+  export type ReplayHistoryScalarWhereInput = {
+    AND?: ReplayHistoryScalarWhereInput | ReplayHistoryScalarWhereInput[]
+    OR?: ReplayHistoryScalarWhereInput[]
+    NOT?: ReplayHistoryScalarWhereInput | ReplayHistoryScalarWhereInput[]
+    id?: StringFilter<"ReplayHistory"> | string
+    dlqId?: StringFilter<"ReplayHistory"> | string
+    userId?: StringFilter<"ReplayHistory"> | string
+    status?: StringFilter<"ReplayHistory"> | string
+    message?: StringNullableFilter<"ReplayHistory"> | string | null
+    replayedAt?: DateTimeFilter<"ReplayHistory"> | Date | string
+  }
+
   export type TenantCreateWithoutInvitationsInput = {
     id?: string
     name: string
@@ -16627,6 +18266,66 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
+  }
+
+  export type DeadLetterQueueCreateWithoutHistoryInput = {
+    id?: string
+    topic: string
+    payload: JsonNullValueInput | InputJsonValue
+    error: string
+    failedAt?: Date | string
+    replayed?: boolean
+    replayedAt?: Date | string | null
+    retryCount?: number
+  }
+
+  export type DeadLetterQueueUncheckedCreateWithoutHistoryInput = {
+    id?: string
+    topic: string
+    payload: JsonNullValueInput | InputJsonValue
+    error: string
+    failedAt?: Date | string
+    replayed?: boolean
+    replayedAt?: Date | string | null
+    retryCount?: number
+  }
+
+  export type DeadLetterQueueCreateOrConnectWithoutHistoryInput = {
+    where: DeadLetterQueueWhereUniqueInput
+    create: XOR<DeadLetterQueueCreateWithoutHistoryInput, DeadLetterQueueUncheckedCreateWithoutHistoryInput>
+  }
+
+  export type DeadLetterQueueUpsertWithoutHistoryInput = {
+    update: XOR<DeadLetterQueueUpdateWithoutHistoryInput, DeadLetterQueueUncheckedUpdateWithoutHistoryInput>
+    create: XOR<DeadLetterQueueCreateWithoutHistoryInput, DeadLetterQueueUncheckedCreateWithoutHistoryInput>
+    where?: DeadLetterQueueWhereInput
+  }
+
+  export type DeadLetterQueueUpdateToOneWithWhereWithoutHistoryInput = {
+    where?: DeadLetterQueueWhereInput
+    data: XOR<DeadLetterQueueUpdateWithoutHistoryInput, DeadLetterQueueUncheckedUpdateWithoutHistoryInput>
+  }
+
+  export type DeadLetterQueueUpdateWithoutHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    error?: StringFieldUpdateOperationsInput | string
+    failedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replayed?: BoolFieldUpdateOperationsInput | boolean
+    replayedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type DeadLetterQueueUncheckedUpdateWithoutHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    topic?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    error?: StringFieldUpdateOperationsInput | string
+    failedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replayed?: BoolFieldUpdateOperationsInput | boolean
+    replayedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserCreateManyTenantInput = {
@@ -16883,6 +18582,38 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReplayHistoryCreateManyDlqInput = {
+    id?: string
+    userId: string
+    status: string
+    message?: string | null
+    replayedAt?: Date | string
+  }
+
+  export type ReplayHistoryUpdateWithoutDlqInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    replayedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReplayHistoryUncheckedUpdateWithoutDlqInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    replayedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReplayHistoryUncheckedUpdateManyWithoutDlqInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    replayedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

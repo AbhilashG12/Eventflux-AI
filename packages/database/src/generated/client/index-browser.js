@@ -193,7 +193,8 @@ exports.Prisma.DeadLetterQueueScalarFieldEnum = {
   error: 'error',
   failedAt: 'failedAt',
   replayed: 'replayed',
-  replayedAt: 'replayedAt'
+  replayedAt: 'replayedAt',
+  retryCount: 'retryCount'
 };
 
 exports.Prisma.InvitationScalarFieldEnum = {
@@ -213,6 +214,15 @@ exports.Prisma.ExecutionLogScalarFieldEnum = {
   status: 'status',
   message: 'message',
   timestamp: 'timestamp'
+};
+
+exports.Prisma.ReplayHistoryScalarFieldEnum = {
+  id: 'id',
+  dlqId: 'dlqId',
+  userId: 'userId',
+  status: 'status',
+  message: 'message',
+  replayedAt: 'replayedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -272,7 +282,8 @@ exports.Prisma.ModelName = {
   ProcessedEvent: 'ProcessedEvent',
   DeadLetterQueue: 'DeadLetterQueue',
   Invitation: 'Invitation',
-  ExecutionLog: 'ExecutionLog'
+  ExecutionLog: 'ExecutionLog',
+  ReplayHistory: 'ReplayHistory'
 };
 
 /**
