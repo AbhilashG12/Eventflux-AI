@@ -28,11 +28,12 @@ export const useAuthStore = create<AuthState>()(
         isAuthenticated: true 
       }),
       
-      logout: () => set({ 
-        token: null, 
-        user: null, 
-        isAuthenticated: false 
-      }),
+      logout: () => {
+        set({ token: null, user: null, isAuthenticated: false });
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = '/login';
+      },
     }),
     {
       name: 'eventflux-auth-storage', 
