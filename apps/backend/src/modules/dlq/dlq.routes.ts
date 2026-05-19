@@ -7,11 +7,17 @@ export const dlqRoutes: Router = Router();
 
 dlqRoutes.get('/', requireAuth, requireRole(['ADMIN']), async (req: Request, res: Response) => {
   try {
-    const dlqItems = await db.deadLetterQueue.findMany({
+    const tenantId = (req as any).tenantId;
+    const allDlqItems = await db.deadLetterQueue.findMany({
       orderBy: { failedAt: 'desc' },
       include: { history: { orderBy: { replayedAt: 'desc' } } }
     });
-    res.json(dlqItems);
+    const tenantDlqItems = allDlqItems.filter(item => {
+      const payload = item.payload as any;
+      return payload && payload.tenantId === tenantId;
+    });
+
+    res.json(tenantDlqItems);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch DLQ" });
   }

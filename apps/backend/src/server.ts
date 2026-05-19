@@ -16,6 +16,7 @@ import { EventHardenerService } from './core/events/event.hardener.js';
 import { inviteRoutes } from './modules/tenant/interface/invite.routes.js';
 import { executionRoutes } from './modules/execution/execution.routes.js';
 import { dlqRoutes } from './modules/dlq/dlq.routes.js';
+import { analyticsRoutes } from './modules/analytics/analytics.routes.js';
 
 const executeUseCase = new ExecuteWorkflowUseCase();
 const app = express();
@@ -34,6 +35,8 @@ app.use('/api/invites', inviteRoutes);
 app.use('/api', requireAuth);
 app.use('/api/executions', executionRoutes);
 app.use('/api/dlq', dlqRoutes);
+
+app.use('/api/analytics' ,analyticsRoutes);
 
 app.get('/api/health', async (req, res) => {
   const workflowCount = await db.workflow.count({
@@ -132,6 +135,7 @@ async function startSystem() {
 
     await EventHardenerService.processIdempotent(idempotentEventId, 'execution-events', payload, async () => {
       try {
+        const targetTenant = payload.tenantId || 'default';
         await db.executionLog.create({
           data: {
             executionId: execId,
@@ -146,14 +150,14 @@ async function startSystem() {
             where: { id: execId }, 
             data: { status: 'COMPLETED', completedAt: new Date() }
           }).catch(() => {});
+          wsManager.broadcastToTenant(targetTenant, 'analytics-pulse', { status: 'COMPLETED' });
         } else if (status.toLowerCase() === 'failed') {
           await db.execution.update({ 
             where: { id: execId }, 
             data: { status: 'FAILED', completedAt: new Date() }
           }).catch(() => {});
+          wsManager.broadcastToTenant(targetTenant, 'analytics-pulse', { status: 'FAILED' });
         }
-
-        const targetTenant = payload.tenantId || 'default';
 
         wsManager.broadcastToTenant(targetTenant, 'workflow-node-update', { 
           executionId: execId,

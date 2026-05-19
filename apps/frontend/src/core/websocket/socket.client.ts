@@ -1,7 +1,7 @@
 import { io, Socket } from 'socket.io-client';
 import { useAuthStore } from '../store/auth.store';
 
-class SocketManager {
+export class SocketManager {
   private socket: Socket | null = null;
 
   connect() {
