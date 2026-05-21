@@ -7,9 +7,21 @@ import { producer } from './producer.js';
 const kafka = new Kafka({
   clientId: config.kafka.clientId,
   brokers: config.kafka.brokers,
+  connectionTimeout : 10000,
+  requestTimeout : 30000,
+  retry :{
+    initialRetryTime : 300,
+    retries : 8
+  }
 });
 
-export const consumer = kafka.consumer({ groupId: 'eventflux-engine-group' });
+export const consumer = kafka.consumer({ 
+  groupId: 'eventflux-engine-group',
+  sessionTimeout : 30000,
+  heartbeatInterval : 3000,
+  maxWaitTimeInMs : 1000,
+  allowAutoTopicCreation : true,
+});
 
 type MessageHandler = (payload: any) => Promise<void>;
 const registry = new Map<string, MessageHandler>();

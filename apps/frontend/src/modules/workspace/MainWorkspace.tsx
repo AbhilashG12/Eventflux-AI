@@ -52,7 +52,7 @@ export const MainWorkspace = () => {
       />
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjA1KSIvPjwvc3ZnPg==')] opacity-[0.15] pointer-events-none z-0" />
 
-      <div className="relative grow w-full h-full z-10 overflow-y-auto overflow-x-hidden pb-28">
+      <div className="relative grow w-full h-full z-10 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeView}
@@ -60,14 +60,18 @@ export const MainWorkspace = () => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="w-full h-full min-h-full"
+            className="w-full h-full"
           >
             <Suspense fallback={<LocalLoader />}>
-              {activeView === 'BUILDER' && <WorkflowBuilder />}
-              {activeView === 'DASHBOARD' && <div className="pt-10 px-6 h-full"><ExecutionDashboard workflowNodes={nodes} /></div>}
-              {activeView === 'ANALYTICS' && <div className="pt-10 px-6"><AnalyticsDashboard /></div>}
-              {activeView === 'TENANT' && <div className="pt-10 px-6"><TenantDashboard /></div>}
-              {activeView === 'DLQ' && <div className="pt-10 px-6"><DLQDashboard /></div>}
+              {activeView === 'BUILDER' && (
+                <div className="w-full h-[calc(100vh-125px)] relative">
+                  <WorkflowBuilder />
+                </div>
+              )}
+              {activeView === 'DASHBOARD' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><ExecutionDashboard workflowNodes={nodes} /></div>}
+              {activeView === 'ANALYTICS' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><AnalyticsDashboard /></div>}
+              {activeView === 'TENANT' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><TenantDashboard /></div>}
+              {activeView === 'DLQ' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><DLQDashboard /></div>}
             </Suspense>
           </motion.div>
         </AnimatePresence>

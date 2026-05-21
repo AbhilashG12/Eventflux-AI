@@ -34,7 +34,16 @@ dlqRoutes.post('/:id/replay', requireAuth, requireRole(['ADMIN']), async (req: R
       return res.status(404).json({ error: "DLQ item not found" });
     }
 
-    await publishEvent(dlqItem.topic, id, dlqItem.payload);
+    const rawPayload = typeof dlqItem.payload === 'string' ? JSON.parse(dlqItem.payload) : dlqItem.payload;
+    
+    const newReplayId = `rpl-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+    const replayedPayload = {
+      ...rawPayload,
+      eventId: newReplayId
+    };
+
+    await publishEvent(dlqItem.topic, newReplayId, replayedPayload);
 
     await db.deadLetterQueue.update({
       where: { id },
@@ -50,7 +59,7 @@ dlqRoutes.post('/:id/replay', requireAuth, requireRole(['ADMIN']), async (req: R
         dlqId: id,
         userId: userId,
         status: 'SUCCESS',
-        message: 'Event re-queued to Kafka successfully'
+        message: `Event re-queued as ${newReplayId}`
       }
     });
 
