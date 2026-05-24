@@ -45,7 +45,6 @@ export class RegisterUseCase {
         targetTenantId = tenant.id;
       }
 
-      // Create the user attached to the correct Tenant
       const passwordHash = await bcrypt.hash(input.password, 10);
       const user = await tx.user.create({
         data: {
