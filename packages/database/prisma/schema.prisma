@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/client" 
+  output   = "../src/generated/client"
 }
 
 datasource db {
@@ -25,15 +25,21 @@ enum ExecutionStatus {
   FAILED
 }
 
+enum TriggerType {
+  MANUAL
+  WEBHOOK
+  CRON
+}
+
 model Tenant {
-  id        String     @id @default(uuid())
-  name      String
-  slug      String     @unique 
-  apiKey    String     @unique @default(cuid())
-  users     User[]
-  workflows Workflow[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id          String       @id @default(uuid())
+  name        String
+  slug        String       @unique
+  apiKey      String       @unique @default(cuid())
+  users       User[]
+  workflows   Workflow[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   invitations Invitation[]
 }
 
@@ -41,7 +47,7 @@ model User {
   id        String   @id @default(uuid())
   email     String   @unique
   password  String
-  role      Role     @default(MEMBER) 
+  role      Role     @default(MEMBER)
   tenantId  String
   tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
@@ -51,29 +57,32 @@ model User {
 }
 
 model Workflow {
-  id          String            @id @default(uuid())
-  name        String
-  description String?
-  definition  Json?       
-  tenantId    String
-  tenant      Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  versions    WorkflowVersion[]
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  id              String            @id @default(uuid())
+  name            String
+  description     String?
+  definition      Json?
+  tenantId        String
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  status          WorkflowStatus    @default(DRAFT)
+  triggerType     TriggerType       @default(MANUAL)
+  cronSummary     String?
+  activeVersionId String?
+  versions        WorkflowVersion[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
-  @@index([tenantId]) 
+  @@index([tenantId])
 }
 
 model WorkflowVersion {
-  id          String         @id @default(uuid())
-  workflowId  String
-  workflow    Workflow       @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  version     Int
-  status      WorkflowStatus @default(DRAFT)
-  definition  Json          
-  executions  Execution[]
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  id         String         @id @default(uuid())
+  workflowId String
+  workflow   Workflow       @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  version    Int
+  definition Json
+  executions Execution[]
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
 
   @@unique([workflowId, version])
   @@index([workflowId])
@@ -85,7 +94,7 @@ model Execution {
   workflowVersion   WorkflowVersion @relation(fields: [workflowVersionId], references: [id])
   status            ExecutionStatus @default(PENDING)
   steps             ExecutionStep[]
-  startedAt         DateTime?      
+  startedAt         DateTime?
   completedAt       DateTime?
   createdAt         DateTime        @default(now())
   logs              ExecutionLog[]
@@ -98,10 +107,11 @@ model ExecutionStep {
   id          String          @id @default(uuid())
   executionId String
   execution   Execution       @relation(fields: [executionId], references: [id], onDelete: Cascade)
-  nodeId      String          
+  nodeId      String
   status      ExecutionStatus @default(PENDING)
-  output      Json?          
-  error       String?        
+  output      Json?
+  error       String?
+  retryCount  Int             @default(0)
   startedAt   DateTime?
   completedAt DateTime?
 
@@ -110,24 +120,24 @@ model ExecutionStep {
 }
 
 model ProcessedEvent {
-  eventId   String   @id 
+  eventId   String   @id
   topic     String
-  status    String   
+  status    String
   createdAt DateTime @default(now())
 
   @@index([createdAt])
 }
 
 model DeadLetterQueue {
-  id          String   @id @default(uuid())
-  topic       String
-  payload     Json
-  error       String
-  failedAt    DateTime @default(now())
-  replayed    Boolean  @default(false)
-  replayedAt  DateTime?
-  retryCount  Int             @default(0)            
-  history     ReplayHistory[]
+  id         String          @id @default(uuid())
+  topic      String
+  payload    Json
+  error      String
+  failedAt   DateTime        @default(now())
+  replayed   Boolean         @default(false)
+  replayedAt DateTime?
+  retryCount Int             @default(0)
+  history    ReplayHistory[]
 }
 
 model Invitation {
@@ -136,7 +146,7 @@ model Invitation {
   token     String   @unique
   tenantId  String
   tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  status    String   @default("PENDING") 
+  status    String   @default("PENDING")
   expiresAt DateTime
   createdAt DateTime @default(now())
 
@@ -148,21 +158,48 @@ model ExecutionLog {
   executionId String
   execution   Execution @relation(fields: [executionId], references: [id], onDelete: Cascade)
   nodeId      String
-  status      String 
+  pluginType  String?
+  status      String
   message     String?
+  retryCount  Int       @default(0)
   timestamp   DateTime  @default(now())
 
   @@index([executionId])
 }
 
 model ReplayHistory {
-  id          String          @id @default(uuid())
-  dlqId       String
-  dlq         DeadLetterQueue @relation(fields: [dlqId], references: [id], onDelete: Cascade)
-  userId      String          
-  status      String      
-  message     String?
-  replayedAt  DateTime        @default(now())
+  id         String          @id @default(uuid())
+  dlqId      String
+  dlq        DeadLetterQueue @relation(fields: [dlqId], references: [id], onDelete: Cascade)
+  userId     String
+  status     String
+  message    String?
+  replayedAt DateTime        @default(now())
 
   @@index([dlqId])
+}
+
+model ApiKey {
+  id         String    @id @default(uuid())
+  tenantId   String
+  name       String
+  keyHash    String    @unique
+  keyPrefix  String
+  lastUsedAt DateTime?
+  revoked    Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([tenantId])
+}
+
+model Secret {
+  id        String   @id @default(uuid())
+  tenantId  String
+  name      String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, name])
 }

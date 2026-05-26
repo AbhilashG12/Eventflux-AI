@@ -25,6 +25,12 @@ enum ExecutionStatus {
   FAILED
 }
 
+enum TriggerType {
+  MANUAL
+  WEBHOOK
+  CRON
+}
+
 model Tenant {
   id          String       @id @default(uuid())
   name        String
@@ -51,29 +57,32 @@ model User {
 }
 
 model Workflow {
-  id          String            @id @default(uuid())
-  name        String
-  description String?
-  definition  Json?
-  tenantId    String
-  tenant      Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  versions    WorkflowVersion[]
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  id              String            @id @default(uuid())
+  name            String
+  description     String?
+  definition      Json?
+  tenantId        String
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  status          WorkflowStatus    @default(DRAFT)
+  triggerType     TriggerType       @default(MANUAL)
+  cronSummary     String?
+  activeVersionId String?
+  versions        WorkflowVersion[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
   @@index([tenantId])
 }
 
 model WorkflowVersion {
-  id         String         @id @default(uuid())
+  id         String      @id @default(uuid())
   workflowId String
-  workflow   Workflow       @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  workflow   Workflow    @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   version    Int
-  status     WorkflowStatus @default(DRAFT)
   definition Json
   executions Execution[]
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
   @@unique([workflowId, version])
   @@index([workflowId])
@@ -102,6 +111,7 @@ model ExecutionStep {
   status      ExecutionStatus @default(PENDING)
   output      Json?
   error       String?
+  retryCount  Int             @default(0)
   startedAt   DateTime?
   completedAt DateTime?
 
@@ -148,8 +158,10 @@ model ExecutionLog {
   executionId String
   execution   Execution @relation(fields: [executionId], references: [id], onDelete: Cascade)
   nodeId      String
+  pluginType  String?
   status      String
   message     String?
+  retryCount  Int       @default(0)
   timestamp   DateTime  @default(now())
 
   @@index([executionId])
@@ -165,4 +177,29 @@ model ReplayHistory {
   replayedAt DateTime        @default(now())
 
   @@index([dlqId])
+}
+
+model ApiKey {
+  id         String    @id @default(uuid())
+  tenantId   String
+  name       String
+  keyHash    String    @unique
+  keyPrefix  String
+  lastUsedAt DateTime?
+  revoked    Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([tenantId])
+}
+
+model Secret {
+  id        String   @id @default(uuid())
+  tenantId  String
+  name      String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tenantId, name])
 }

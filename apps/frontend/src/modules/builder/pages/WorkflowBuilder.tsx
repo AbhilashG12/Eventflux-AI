@@ -22,13 +22,21 @@ const BuilderCore = () => {
     nodes, edges, onNodesChange, onEdgesChange, onConnect, setSelectedNodeId 
   } = useWorkflowStore();
 
-  const { isSaving, onSave, onTestRun } = useWorkflowActions();
+  const { isSaving, isPublishing, workflowStatus, onSave, onPublish, onTestRun } = useWorkflowActions();
   const { onDragOver, onDrop } = useWorkflowDragDrop(
-  reactFlowWrapper as React.RefObject<HTMLDivElement>
-);
+    reactFlowWrapper as React.RefObject<HTMLDivElement>
+  );
+
   return (
     <div className="w-full h-full flex flex-col relative z-10">
-      <BuilderHeader onSave={onSave} isSaving={isSaving} onTestRun={onTestRun} />
+      <BuilderHeader 
+        onSave={onSave} 
+        isSaving={isSaving} 
+        onPublish={onPublish}
+        isPublishing={isPublishing}
+        workflowStatus={workflowStatus}
+        onTestRun={onTestRun} 
+      />
 
       <div className="flex-1 w-full flex overflow-hidden">
         <NodePalette />

@@ -7,7 +7,7 @@ import { requireAuth, requireRole } from './core/middleware/auth.middleware.js';
 import { db } from '@eventflux/database';
 import { authRoutes } from './modules/auth/interface/auth.routes.js';
 import { workflowRoutes } from './modules/workflow/interface/workflow.routes.js';
-import { producer, consumer, startConsumer, registerHandler } from '@eventflux/kafka';
+import { producer, startConsumer, registerHandler } from '@eventflux/kafka';
 import { ExecuteWorkflowUseCase } from './modules/workflow/application/execute.workflow.js';
 import { WebSocketManager } from './core/websocket/ws.manager.js';
 import { requestLogger } from './core/middleware/logger.middleware.js';
@@ -17,6 +17,8 @@ import { inviteRoutes } from './modules/tenant/interface/invite.routes.js';
 import { executionRoutes } from './modules/execution/execution.routes.js';
 import { dlqRoutes } from './modules/dlq/dlq.routes.js';
 import { analyticsRoutes } from './modules/analytics/analytics.routes.js';
+import { secretsRoutes } from "./modules/secrets/secrets.routes.js";
+import {webhookRoutes} from "./modules/webhooks/webhooks.routes.js";
 
 const executeUseCase = new ExecuteWorkflowUseCase();
 const app = express();
@@ -28,36 +30,38 @@ app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
 app.use(apiLimiter);
+
 app.use('/api/auth', authRoutes);
 app.use('/auth', authRoutes);
 app.use('/api/invites', inviteRoutes);
 
+app.use('/api/webhooks', webhookRoutes);
+
 app.use('/api', requireAuth);
 app.use('/api/executions', executionRoutes);
 app.use('/api/dlq', dlqRoutes);
-
-app.use('/api/analytics' ,analyticsRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use("/api/workflows", workflowRoutes);
+app.use('/api/secrets', secretsRoutes);
 
 app.get('/api/health', async (req, res) => {
   const workflowCount = await db.workflow.count({
-    where: { tenantId: req.tenantId }
+    where: { tenantId: (req as any).tenantId }
   });
   
   res.json({ 
     status: 'ok', 
-    tenant: req.tenantId,
+    tenant: (req as any).tenantId,
     workflows: workflowCount 
   });
 });
 
-app.use("/api/workflows", workflowRoutes);
-
 app.get('/api/me', (req, res) => {
-  res.json({ message: 'You are authenticated', user: req.user });
+  res.json({ message: 'You are authenticated', user: (req as any).user });
 });
 
 app.delete('/api/tenant', requireRole(['ADMIN']), (req, res) => {
-  res.json({ message: 'Tenant deletion requested', tenantId: req.tenantId });
+  res.json({ message: 'Tenant deletion requested', tenantId: (req as any).tenantId });
 });
 
 async function startSystem() {
@@ -83,7 +87,6 @@ async function startSystem() {
             data: {
               workflowId: payload.workflowId,
               version: 1,
-              status: 'DRAFT',
               definition: parentWorkflow?.definition || {} 
             }
           });

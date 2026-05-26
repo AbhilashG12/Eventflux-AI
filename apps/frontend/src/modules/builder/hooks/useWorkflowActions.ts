@@ -6,6 +6,9 @@ import { useSuccessStore } from '../../../core/store/success.store';
 
 export const useWorkflowActions = () => {
   const [isSaving, setIsSaving] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [workflowStatus, setWorkflowStatus] = useState<'DRAFT' | 'PUBLISHED'>('DRAFT');
+  
   const { nodes, edges, workflowId, setWorkflowId, setNodes, setEdges } = useWorkflowStore();
   
   const showError = useErrorStore((state) => state.showError);
@@ -18,6 +21,7 @@ export const useWorkflowActions = () => {
         if (data && data.length > 0) {
           const wf = data[0]; 
           setWorkflowId(wf.id);
+          if (wf.status) setWorkflowStatus(wf.status);
           if (wf.definition?.nodes) setNodes(wf.definition.nodes);
           if (wf.definition?.edges) setEdges(wf.definition.edges);
         }
@@ -40,24 +44,42 @@ export const useWorkflowActions = () => {
       };
 
       if (workflowId) {
-        await apiClient.put(`/workflows/${workflowId}`, payload);
-        showSuccess("Workflow updated successfully!");
+        await apiClient.patch(`/workflows/${workflowId}/draft`, payload);
+        showSuccess("Draft saved successfully!");
       } else {
         const { data } = await apiClient.post('/workflows', payload);
         const newId = data.id || data.workflowId || data.workflow?.id; 
         
         if (newId) {
           setWorkflowId(newId);
-          showSuccess("Workflow published successfully!");
+          showSuccess("Draft created successfully!");
         } else {
-          console.error("Backend response missing ID:", data);
           showError("Workflow saved, but backend didn't return an ID.");
         }
       }
+      setWorkflowStatus('DRAFT');
     } catch (error: any) {
       showError(`Failed to save: ${error.response?.data?.error || error.message}`);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const onPublish = async () => {
+    if (!workflowId) {
+      showError("Please save a draft first before publishing!");
+      return;
+    }
+
+    setIsPublishing(true);
+    try {
+      await apiClient.post(`/workflows/${workflowId}/publish`);
+      showSuccess("Workflow published successfully!");
+      setWorkflowStatus('PUBLISHED');
+    } catch (error: any) {
+      showError(`Failed to publish: ${error.response?.data?.error || error.message}`);
+    } finally {
+      setIsPublishing(false);
     }
   };
 
@@ -76,5 +98,5 @@ export const useWorkflowActions = () => {
     }
   };
 
-  return { isSaving, onSave, onTestRun };
+  return { isSaving, isPublishing, workflowStatus, onSave, onPublish, onTestRun };
 };

@@ -68,6 +68,16 @@ export type ExecutionLog = $Result.DefaultSelection<Prisma.$ExecutionLogPayload>
  * 
  */
 export type ReplayHistory = $Result.DefaultSelection<Prisma.$ReplayHistoryPayload>
+/**
+ * Model ApiKey
+ * 
+ */
+export type ApiKey = $Result.DefaultSelection<Prisma.$ApiKeyPayload>
+/**
+ * Model Secret
+ * 
+ */
+export type Secret = $Result.DefaultSelection<Prisma.$SecretPayload>
 
 /**
  * Enums
@@ -99,6 +109,15 @@ export const ExecutionStatus: {
 
 export type ExecutionStatus = (typeof ExecutionStatus)[keyof typeof ExecutionStatus]
 
+
+export const TriggerType: {
+  MANUAL: 'MANUAL',
+  WEBHOOK: 'WEBHOOK',
+  CRON: 'CRON'
+};
+
+export type TriggerType = (typeof TriggerType)[keyof typeof TriggerType]
+
 }
 
 export type Role = $Enums.Role
@@ -112,6 +131,10 @@ export const WorkflowStatus: typeof $Enums.WorkflowStatus
 export type ExecutionStatus = $Enums.ExecutionStatus
 
 export const ExecutionStatus: typeof $Enums.ExecutionStatus
+
+export type TriggerType = $Enums.TriggerType
+
+export const TriggerType: typeof $Enums.TriggerType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -343,6 +366,26 @@ export class PrismaClient<
     * ```
     */
   get replayHistory(): Prisma.ReplayHistoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.apiKey`: Exposes CRUD operations for the **ApiKey** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ApiKeys
+    * const apiKeys = await prisma.apiKey.findMany()
+    * ```
+    */
+  get apiKey(): Prisma.ApiKeyDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.secret`: Exposes CRUD operations for the **Secret** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Secrets
+    * const secrets = await prisma.secret.findMany()
+    * ```
+    */
+  get secret(): Prisma.SecretDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -787,7 +830,9 @@ export namespace Prisma {
     DeadLetterQueue: 'DeadLetterQueue',
     Invitation: 'Invitation',
     ExecutionLog: 'ExecutionLog',
-    ReplayHistory: 'ReplayHistory'
+    ReplayHistory: 'ReplayHistory',
+    ApiKey: 'ApiKey',
+    Secret: 'Secret'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -803,7 +848,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "tenant" | "user" | "workflow" | "workflowVersion" | "execution" | "executionStep" | "processedEvent" | "deadLetterQueue" | "invitation" | "executionLog" | "replayHistory"
+      modelProps: "tenant" | "user" | "workflow" | "workflowVersion" | "execution" | "executionStep" | "processedEvent" | "deadLetterQueue" | "invitation" | "executionLog" | "replayHistory" | "apiKey" | "secret"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1621,6 +1666,154 @@ export namespace Prisma {
           }
         }
       }
+      ApiKey: {
+        payload: Prisma.$ApiKeyPayload<ExtArgs>
+        fields: Prisma.ApiKeyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApiKeyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiKeyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApiKeyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiKeyPayload>
+          }
+          findFirst: {
+            args: Prisma.ApiKeyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiKeyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApiKeyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiKeyPayload>
+          }
+          findMany: {
+            args: Prisma.ApiKeyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiKeyPayload>[]
+          }
+          create: {
+            args: Prisma.ApiKeyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiKeyPayload>
+          }
+          createMany: {
+            args: Prisma.ApiKeyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApiKeyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiKeyPayload>[]
+          }
+          delete: {
+            args: Prisma.ApiKeyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiKeyPayload>
+          }
+          update: {
+            args: Prisma.ApiKeyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiKeyPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApiKeyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApiKeyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ApiKeyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiKeyPayload>[]
+          }
+          upsert: {
+            args: Prisma.ApiKeyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiKeyPayload>
+          }
+          aggregate: {
+            args: Prisma.ApiKeyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApiKey>
+          }
+          groupBy: {
+            args: Prisma.ApiKeyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApiKeyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApiKeyCountArgs<ExtArgs>
+            result: $Utils.Optional<ApiKeyCountAggregateOutputType> | number
+          }
+        }
+      }
+      Secret: {
+        payload: Prisma.$SecretPayload<ExtArgs>
+        fields: Prisma.SecretFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SecretFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecretPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SecretFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecretPayload>
+          }
+          findFirst: {
+            args: Prisma.SecretFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecretPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SecretFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecretPayload>
+          }
+          findMany: {
+            args: Prisma.SecretFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecretPayload>[]
+          }
+          create: {
+            args: Prisma.SecretCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecretPayload>
+          }
+          createMany: {
+            args: Prisma.SecretCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SecretCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecretPayload>[]
+          }
+          delete: {
+            args: Prisma.SecretDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecretPayload>
+          }
+          update: {
+            args: Prisma.SecretUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecretPayload>
+          }
+          deleteMany: {
+            args: Prisma.SecretDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SecretUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SecretUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecretPayload>[]
+          }
+          upsert: {
+            args: Prisma.SecretUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SecretPayload>
+          }
+          aggregate: {
+            args: Prisma.SecretAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSecret>
+          }
+          groupBy: {
+            args: Prisma.SecretGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SecretGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SecretCountArgs<ExtArgs>
+            result: $Utils.Optional<SecretCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1740,6 +1933,8 @@ export namespace Prisma {
     invitation?: InvitationOmit
     executionLog?: ExecutionLogOmit
     replayHistory?: ReplayHistoryOmit
+    apiKey?: ApiKeyOmit
+    secret?: SecretOmit
   }
 
   /* Types for Logging */
@@ -4249,6 +4444,10 @@ export namespace Prisma {
     name: string | null
     description: string | null
     tenantId: string | null
+    status: $Enums.WorkflowStatus | null
+    triggerType: $Enums.TriggerType | null
+    cronSummary: string | null
+    activeVersionId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4258,6 +4457,10 @@ export namespace Prisma {
     name: string | null
     description: string | null
     tenantId: string | null
+    status: $Enums.WorkflowStatus | null
+    triggerType: $Enums.TriggerType | null
+    cronSummary: string | null
+    activeVersionId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4268,6 +4471,10 @@ export namespace Prisma {
     description: number
     definition: number
     tenantId: number
+    status: number
+    triggerType: number
+    cronSummary: number
+    activeVersionId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4279,6 +4486,10 @@ export namespace Prisma {
     name?: true
     description?: true
     tenantId?: true
+    status?: true
+    triggerType?: true
+    cronSummary?: true
+    activeVersionId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4288,6 +4499,10 @@ export namespace Prisma {
     name?: true
     description?: true
     tenantId?: true
+    status?: true
+    triggerType?: true
+    cronSummary?: true
+    activeVersionId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4298,6 +4513,10 @@ export namespace Prisma {
     description?: true
     definition?: true
     tenantId?: true
+    status?: true
+    triggerType?: true
+    cronSummary?: true
+    activeVersionId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4381,6 +4600,10 @@ export namespace Prisma {
     description: string | null
     definition: JsonValue | null
     tenantId: string
+    status: $Enums.WorkflowStatus
+    triggerType: $Enums.TriggerType
+    cronSummary: string | null
+    activeVersionId: string | null
     createdAt: Date
     updatedAt: Date
     _count: WorkflowCountAggregateOutputType | null
@@ -4408,6 +4631,10 @@ export namespace Prisma {
     description?: boolean
     definition?: boolean
     tenantId?: boolean
+    status?: boolean
+    triggerType?: boolean
+    cronSummary?: boolean
+    activeVersionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
@@ -4421,6 +4648,10 @@ export namespace Prisma {
     description?: boolean
     definition?: boolean
     tenantId?: boolean
+    status?: boolean
+    triggerType?: boolean
+    cronSummary?: boolean
+    activeVersionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
@@ -4432,6 +4663,10 @@ export namespace Prisma {
     description?: boolean
     definition?: boolean
     tenantId?: boolean
+    status?: boolean
+    triggerType?: boolean
+    cronSummary?: boolean
+    activeVersionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
@@ -4443,11 +4678,15 @@ export namespace Prisma {
     description?: boolean
     definition?: boolean
     tenantId?: boolean
+    status?: boolean
+    triggerType?: boolean
+    cronSummary?: boolean
+    activeVersionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type WorkflowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "definition" | "tenantId" | "createdAt" | "updatedAt", ExtArgs["result"]["workflow"]>
+  export type WorkflowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "definition" | "tenantId" | "status" | "triggerType" | "cronSummary" | "activeVersionId" | "createdAt" | "updatedAt", ExtArgs["result"]["workflow"]>
   export type WorkflowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     versions?: boolean | Workflow$versionsArgs<ExtArgs>
@@ -4472,6 +4711,10 @@ export namespace Prisma {
       description: string | null
       definition: Prisma.JsonValue | null
       tenantId: string
+      status: $Enums.WorkflowStatus
+      triggerType: $Enums.TriggerType
+      cronSummary: string | null
+      activeVersionId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["workflow"]>
@@ -4904,6 +5147,10 @@ export namespace Prisma {
     readonly description: FieldRef<"Workflow", 'String'>
     readonly definition: FieldRef<"Workflow", 'Json'>
     readonly tenantId: FieldRef<"Workflow", 'String'>
+    readonly status: FieldRef<"Workflow", 'WorkflowStatus'>
+    readonly triggerType: FieldRef<"Workflow", 'TriggerType'>
+    readonly cronSummary: FieldRef<"Workflow", 'String'>
+    readonly activeVersionId: FieldRef<"Workflow", 'String'>
     readonly createdAt: FieldRef<"Workflow", 'DateTime'>
     readonly updatedAt: FieldRef<"Workflow", 'DateTime'>
   }
@@ -5373,7 +5620,6 @@ export namespace Prisma {
     id: string | null
     workflowId: string | null
     version: number | null
-    status: $Enums.WorkflowStatus | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5382,7 +5628,6 @@ export namespace Prisma {
     id: string | null
     workflowId: string | null
     version: number | null
-    status: $Enums.WorkflowStatus | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5391,7 +5636,6 @@ export namespace Prisma {
     id: number
     workflowId: number
     version: number
-    status: number
     definition: number
     createdAt: number
     updatedAt: number
@@ -5411,7 +5655,6 @@ export namespace Prisma {
     id?: true
     workflowId?: true
     version?: true
-    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5420,7 +5663,6 @@ export namespace Prisma {
     id?: true
     workflowId?: true
     version?: true
-    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5429,7 +5671,6 @@ export namespace Prisma {
     id?: true
     workflowId?: true
     version?: true
-    status?: true
     definition?: true
     createdAt?: true
     updatedAt?: true
@@ -5526,7 +5767,6 @@ export namespace Prisma {
     id: string
     workflowId: string
     version: number
-    status: $Enums.WorkflowStatus
     definition: JsonValue
     createdAt: Date
     updatedAt: Date
@@ -5555,7 +5795,6 @@ export namespace Prisma {
     id?: boolean
     workflowId?: boolean
     version?: boolean
-    status?: boolean
     definition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5568,7 +5807,6 @@ export namespace Prisma {
     id?: boolean
     workflowId?: boolean
     version?: boolean
-    status?: boolean
     definition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5579,7 +5817,6 @@ export namespace Prisma {
     id?: boolean
     workflowId?: boolean
     version?: boolean
-    status?: boolean
     definition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5590,13 +5827,12 @@ export namespace Prisma {
     id?: boolean
     workflowId?: boolean
     version?: boolean
-    status?: boolean
     definition?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type WorkflowVersionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workflowId" | "version" | "status" | "definition" | "createdAt" | "updatedAt", ExtArgs["result"]["workflowVersion"]>
+  export type WorkflowVersionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workflowId" | "version" | "definition" | "createdAt" | "updatedAt", ExtArgs["result"]["workflowVersion"]>
   export type WorkflowVersionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workflow?: boolean | WorkflowDefaultArgs<ExtArgs>
     executions?: boolean | WorkflowVersion$executionsArgs<ExtArgs>
@@ -5619,7 +5855,6 @@ export namespace Prisma {
       id: string
       workflowId: string
       version: number
-      status: $Enums.WorkflowStatus
       definition: Prisma.JsonValue
       createdAt: Date
       updatedAt: Date
@@ -6051,7 +6286,6 @@ export namespace Prisma {
     readonly id: FieldRef<"WorkflowVersion", 'String'>
     readonly workflowId: FieldRef<"WorkflowVersion", 'String'>
     readonly version: FieldRef<"WorkflowVersion", 'Int'>
-    readonly status: FieldRef<"WorkflowVersion", 'WorkflowStatus'>
     readonly definition: FieldRef<"WorkflowVersion", 'Json'>
     readonly createdAt: FieldRef<"WorkflowVersion", 'DateTime'>
     readonly updatedAt: FieldRef<"WorkflowVersion", 'DateTime'>
@@ -7638,8 +7872,18 @@ export namespace Prisma {
 
   export type AggregateExecutionStep = {
     _count: ExecutionStepCountAggregateOutputType | null
+    _avg: ExecutionStepAvgAggregateOutputType | null
+    _sum: ExecutionStepSumAggregateOutputType | null
     _min: ExecutionStepMinAggregateOutputType | null
     _max: ExecutionStepMaxAggregateOutputType | null
+  }
+
+  export type ExecutionStepAvgAggregateOutputType = {
+    retryCount: number | null
+  }
+
+  export type ExecutionStepSumAggregateOutputType = {
+    retryCount: number | null
   }
 
   export type ExecutionStepMinAggregateOutputType = {
@@ -7648,6 +7892,7 @@ export namespace Prisma {
     nodeId: string | null
     status: $Enums.ExecutionStatus | null
     error: string | null
+    retryCount: number | null
     startedAt: Date | null
     completedAt: Date | null
   }
@@ -7658,6 +7903,7 @@ export namespace Prisma {
     nodeId: string | null
     status: $Enums.ExecutionStatus | null
     error: string | null
+    retryCount: number | null
     startedAt: Date | null
     completedAt: Date | null
   }
@@ -7669,11 +7915,20 @@ export namespace Prisma {
     status: number
     output: number
     error: number
+    retryCount: number
     startedAt: number
     completedAt: number
     _all: number
   }
 
+
+  export type ExecutionStepAvgAggregateInputType = {
+    retryCount?: true
+  }
+
+  export type ExecutionStepSumAggregateInputType = {
+    retryCount?: true
+  }
 
   export type ExecutionStepMinAggregateInputType = {
     id?: true
@@ -7681,6 +7936,7 @@ export namespace Prisma {
     nodeId?: true
     status?: true
     error?: true
+    retryCount?: true
     startedAt?: true
     completedAt?: true
   }
@@ -7691,6 +7947,7 @@ export namespace Prisma {
     nodeId?: true
     status?: true
     error?: true
+    retryCount?: true
     startedAt?: true
     completedAt?: true
   }
@@ -7702,6 +7959,7 @@ export namespace Prisma {
     status?: true
     output?: true
     error?: true
+    retryCount?: true
     startedAt?: true
     completedAt?: true
     _all?: true
@@ -7745,6 +8003,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ExecutionStepAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExecutionStepSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ExecutionStepMinAggregateInputType
@@ -7775,6 +8045,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ExecutionStepCountAggregateInputType | true
+    _avg?: ExecutionStepAvgAggregateInputType
+    _sum?: ExecutionStepSumAggregateInputType
     _min?: ExecutionStepMinAggregateInputType
     _max?: ExecutionStepMaxAggregateInputType
   }
@@ -7786,9 +8058,12 @@ export namespace Prisma {
     status: $Enums.ExecutionStatus
     output: JsonValue | null
     error: string | null
+    retryCount: number
     startedAt: Date | null
     completedAt: Date | null
     _count: ExecutionStepCountAggregateOutputType | null
+    _avg: ExecutionStepAvgAggregateOutputType | null
+    _sum: ExecutionStepSumAggregateOutputType | null
     _min: ExecutionStepMinAggregateOutputType | null
     _max: ExecutionStepMaxAggregateOutputType | null
   }
@@ -7814,6 +8089,7 @@ export namespace Prisma {
     status?: boolean
     output?: boolean
     error?: boolean
+    retryCount?: boolean
     startedAt?: boolean
     completedAt?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
@@ -7826,6 +8102,7 @@ export namespace Prisma {
     status?: boolean
     output?: boolean
     error?: boolean
+    retryCount?: boolean
     startedAt?: boolean
     completedAt?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
@@ -7838,6 +8115,7 @@ export namespace Prisma {
     status?: boolean
     output?: boolean
     error?: boolean
+    retryCount?: boolean
     startedAt?: boolean
     completedAt?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
@@ -7850,11 +8128,12 @@ export namespace Prisma {
     status?: boolean
     output?: boolean
     error?: boolean
+    retryCount?: boolean
     startedAt?: boolean
     completedAt?: boolean
   }
 
-  export type ExecutionStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "executionId" | "nodeId" | "status" | "output" | "error" | "startedAt" | "completedAt", ExtArgs["result"]["executionStep"]>
+  export type ExecutionStepOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "executionId" | "nodeId" | "status" | "output" | "error" | "retryCount" | "startedAt" | "completedAt", ExtArgs["result"]["executionStep"]>
   export type ExecutionStepInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
   }
@@ -7877,6 +8156,7 @@ export namespace Prisma {
       status: $Enums.ExecutionStatus
       output: Prisma.JsonValue | null
       error: string | null
+      retryCount: number
       startedAt: Date | null
       completedAt: Date | null
     }, ExtArgs["result"]["executionStep"]>
@@ -8309,6 +8589,7 @@ export namespace Prisma {
     readonly status: FieldRef<"ExecutionStep", 'ExecutionStatus'>
     readonly output: FieldRef<"ExecutionStep", 'Json'>
     readonly error: FieldRef<"ExecutionStep", 'String'>
+    readonly retryCount: FieldRef<"ExecutionStep", 'Int'>
     readonly startedAt: FieldRef<"ExecutionStep", 'DateTime'>
     readonly completedAt: FieldRef<"ExecutionStep", 'DateTime'>
   }
@@ -11956,16 +12237,28 @@ export namespace Prisma {
 
   export type AggregateExecutionLog = {
     _count: ExecutionLogCountAggregateOutputType | null
+    _avg: ExecutionLogAvgAggregateOutputType | null
+    _sum: ExecutionLogSumAggregateOutputType | null
     _min: ExecutionLogMinAggregateOutputType | null
     _max: ExecutionLogMaxAggregateOutputType | null
+  }
+
+  export type ExecutionLogAvgAggregateOutputType = {
+    retryCount: number | null
+  }
+
+  export type ExecutionLogSumAggregateOutputType = {
+    retryCount: number | null
   }
 
   export type ExecutionLogMinAggregateOutputType = {
     id: string | null
     executionId: string | null
     nodeId: string | null
+    pluginType: string | null
     status: string | null
     message: string | null
+    retryCount: number | null
     timestamp: Date | null
   }
 
@@ -11973,8 +12266,10 @@ export namespace Prisma {
     id: string | null
     executionId: string | null
     nodeId: string | null
+    pluginType: string | null
     status: string | null
     message: string | null
+    retryCount: number | null
     timestamp: Date | null
   }
 
@@ -11982,19 +12277,31 @@ export namespace Prisma {
     id: number
     executionId: number
     nodeId: number
+    pluginType: number
     status: number
     message: number
+    retryCount: number
     timestamp: number
     _all: number
   }
 
 
+  export type ExecutionLogAvgAggregateInputType = {
+    retryCount?: true
+  }
+
+  export type ExecutionLogSumAggregateInputType = {
+    retryCount?: true
+  }
+
   export type ExecutionLogMinAggregateInputType = {
     id?: true
     executionId?: true
     nodeId?: true
+    pluginType?: true
     status?: true
     message?: true
+    retryCount?: true
     timestamp?: true
   }
 
@@ -12002,8 +12309,10 @@ export namespace Prisma {
     id?: true
     executionId?: true
     nodeId?: true
+    pluginType?: true
     status?: true
     message?: true
+    retryCount?: true
     timestamp?: true
   }
 
@@ -12011,8 +12320,10 @@ export namespace Prisma {
     id?: true
     executionId?: true
     nodeId?: true
+    pluginType?: true
     status?: true
     message?: true
+    retryCount?: true
     timestamp?: true
     _all?: true
   }
@@ -12055,6 +12366,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ExecutionLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExecutionLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ExecutionLogMinAggregateInputType
@@ -12085,6 +12408,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ExecutionLogCountAggregateInputType | true
+    _avg?: ExecutionLogAvgAggregateInputType
+    _sum?: ExecutionLogSumAggregateInputType
     _min?: ExecutionLogMinAggregateInputType
     _max?: ExecutionLogMaxAggregateInputType
   }
@@ -12093,10 +12418,14 @@ export namespace Prisma {
     id: string
     executionId: string
     nodeId: string
+    pluginType: string | null
     status: string
     message: string | null
+    retryCount: number
     timestamp: Date
     _count: ExecutionLogCountAggregateOutputType | null
+    _avg: ExecutionLogAvgAggregateOutputType | null
+    _sum: ExecutionLogSumAggregateOutputType | null
     _min: ExecutionLogMinAggregateOutputType | null
     _max: ExecutionLogMaxAggregateOutputType | null
   }
@@ -12119,8 +12448,10 @@ export namespace Prisma {
     id?: boolean
     executionId?: boolean
     nodeId?: boolean
+    pluginType?: boolean
     status?: boolean
     message?: boolean
+    retryCount?: boolean
     timestamp?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["executionLog"]>
@@ -12129,8 +12460,10 @@ export namespace Prisma {
     id?: boolean
     executionId?: boolean
     nodeId?: boolean
+    pluginType?: boolean
     status?: boolean
     message?: boolean
+    retryCount?: boolean
     timestamp?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["executionLog"]>
@@ -12139,8 +12472,10 @@ export namespace Prisma {
     id?: boolean
     executionId?: boolean
     nodeId?: boolean
+    pluginType?: boolean
     status?: boolean
     message?: boolean
+    retryCount?: boolean
     timestamp?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["executionLog"]>
@@ -12149,12 +12484,14 @@ export namespace Prisma {
     id?: boolean
     executionId?: boolean
     nodeId?: boolean
+    pluginType?: boolean
     status?: boolean
     message?: boolean
+    retryCount?: boolean
     timestamp?: boolean
   }
 
-  export type ExecutionLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "executionId" | "nodeId" | "status" | "message" | "timestamp", ExtArgs["result"]["executionLog"]>
+  export type ExecutionLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "executionId" | "nodeId" | "pluginType" | "status" | "message" | "retryCount" | "timestamp", ExtArgs["result"]["executionLog"]>
   export type ExecutionLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
   }
@@ -12174,8 +12511,10 @@ export namespace Prisma {
       id: string
       executionId: string
       nodeId: string
+      pluginType: string | null
       status: string
       message: string | null
+      retryCount: number
       timestamp: Date
     }, ExtArgs["result"]["executionLog"]>
     composites: {}
@@ -12604,8 +12943,10 @@ export namespace Prisma {
     readonly id: FieldRef<"ExecutionLog", 'String'>
     readonly executionId: FieldRef<"ExecutionLog", 'String'>
     readonly nodeId: FieldRef<"ExecutionLog", 'String'>
+    readonly pluginType: FieldRef<"ExecutionLog", 'String'>
     readonly status: FieldRef<"ExecutionLog", 'String'>
     readonly message: FieldRef<"ExecutionLog", 'String'>
+    readonly retryCount: FieldRef<"ExecutionLog", 'Int'>
     readonly timestamp: FieldRef<"ExecutionLog", 'DateTime'>
   }
     
@@ -14103,6 +14444,2071 @@ export namespace Prisma {
 
 
   /**
+   * Model ApiKey
+   */
+
+  export type AggregateApiKey = {
+    _count: ApiKeyCountAggregateOutputType | null
+    _min: ApiKeyMinAggregateOutputType | null
+    _max: ApiKeyMaxAggregateOutputType | null
+  }
+
+  export type ApiKeyMinAggregateOutputType = {
+    id: string | null
+    tenantId: string | null
+    name: string | null
+    keyHash: string | null
+    keyPrefix: string | null
+    lastUsedAt: Date | null
+    revoked: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ApiKeyMaxAggregateOutputType = {
+    id: string | null
+    tenantId: string | null
+    name: string | null
+    keyHash: string | null
+    keyPrefix: string | null
+    lastUsedAt: Date | null
+    revoked: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ApiKeyCountAggregateOutputType = {
+    id: number
+    tenantId: number
+    name: number
+    keyHash: number
+    keyPrefix: number
+    lastUsedAt: number
+    revoked: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ApiKeyMinAggregateInputType = {
+    id?: true
+    tenantId?: true
+    name?: true
+    keyHash?: true
+    keyPrefix?: true
+    lastUsedAt?: true
+    revoked?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ApiKeyMaxAggregateInputType = {
+    id?: true
+    tenantId?: true
+    name?: true
+    keyHash?: true
+    keyPrefix?: true
+    lastUsedAt?: true
+    revoked?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ApiKeyCountAggregateInputType = {
+    id?: true
+    tenantId?: true
+    name?: true
+    keyHash?: true
+    keyPrefix?: true
+    lastUsedAt?: true
+    revoked?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ApiKeyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiKey to aggregate.
+     */
+    where?: ApiKeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiKeys to fetch.
+     */
+    orderBy?: ApiKeyOrderByWithRelationInput | ApiKeyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApiKeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiKeys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiKeys.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ApiKeys
+    **/
+    _count?: true | ApiKeyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApiKeyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApiKeyMaxAggregateInputType
+  }
+
+  export type GetApiKeyAggregateType<T extends ApiKeyAggregateArgs> = {
+        [P in keyof T & keyof AggregateApiKey]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApiKey[P]>
+      : GetScalarType<T[P], AggregateApiKey[P]>
+  }
+
+
+
+
+  export type ApiKeyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApiKeyWhereInput
+    orderBy?: ApiKeyOrderByWithAggregationInput | ApiKeyOrderByWithAggregationInput[]
+    by: ApiKeyScalarFieldEnum[] | ApiKeyScalarFieldEnum
+    having?: ApiKeyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApiKeyCountAggregateInputType | true
+    _min?: ApiKeyMinAggregateInputType
+    _max?: ApiKeyMaxAggregateInputType
+  }
+
+  export type ApiKeyGroupByOutputType = {
+    id: string
+    tenantId: string
+    name: string
+    keyHash: string
+    keyPrefix: string
+    lastUsedAt: Date | null
+    revoked: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: ApiKeyCountAggregateOutputType | null
+    _min: ApiKeyMinAggregateOutputType | null
+    _max: ApiKeyMaxAggregateOutputType | null
+  }
+
+  type GetApiKeyGroupByPayload<T extends ApiKeyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApiKeyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApiKeyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApiKeyGroupByOutputType[P]>
+            : GetScalarType<T[P], ApiKeyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApiKeySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tenantId?: boolean
+    name?: boolean
+    keyHash?: boolean
+    keyPrefix?: boolean
+    lastUsedAt?: boolean
+    revoked?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["apiKey"]>
+
+  export type ApiKeySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tenantId?: boolean
+    name?: boolean
+    keyHash?: boolean
+    keyPrefix?: boolean
+    lastUsedAt?: boolean
+    revoked?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["apiKey"]>
+
+  export type ApiKeySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tenantId?: boolean
+    name?: boolean
+    keyHash?: boolean
+    keyPrefix?: boolean
+    lastUsedAt?: boolean
+    revoked?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["apiKey"]>
+
+  export type ApiKeySelectScalar = {
+    id?: boolean
+    tenantId?: boolean
+    name?: boolean
+    keyHash?: boolean
+    keyPrefix?: boolean
+    lastUsedAt?: boolean
+    revoked?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ApiKeyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "keyHash" | "keyPrefix" | "lastUsedAt" | "revoked" | "createdAt" | "updatedAt", ExtArgs["result"]["apiKey"]>
+
+  export type $ApiKeyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ApiKey"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      tenantId: string
+      name: string
+      keyHash: string
+      keyPrefix: string
+      lastUsedAt: Date | null
+      revoked: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["apiKey"]>
+    composites: {}
+  }
+
+  type ApiKeyGetPayload<S extends boolean | null | undefined | ApiKeyDefaultArgs> = $Result.GetResult<Prisma.$ApiKeyPayload, S>
+
+  type ApiKeyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ApiKeyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ApiKeyCountAggregateInputType | true
+    }
+
+  export interface ApiKeyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ApiKey'], meta: { name: 'ApiKey' } }
+    /**
+     * Find zero or one ApiKey that matches the filter.
+     * @param {ApiKeyFindUniqueArgs} args - Arguments to find a ApiKey
+     * @example
+     * // Get one ApiKey
+     * const apiKey = await prisma.apiKey.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApiKeyFindUniqueArgs>(args: SelectSubset<T, ApiKeyFindUniqueArgs<ExtArgs>>): Prisma__ApiKeyClient<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ApiKey that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ApiKeyFindUniqueOrThrowArgs} args - Arguments to find a ApiKey
+     * @example
+     * // Get one ApiKey
+     * const apiKey = await prisma.apiKey.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApiKeyFindUniqueOrThrowArgs>(args: SelectSubset<T, ApiKeyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApiKeyClient<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApiKey that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiKeyFindFirstArgs} args - Arguments to find a ApiKey
+     * @example
+     * // Get one ApiKey
+     * const apiKey = await prisma.apiKey.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApiKeyFindFirstArgs>(args?: SelectSubset<T, ApiKeyFindFirstArgs<ExtArgs>>): Prisma__ApiKeyClient<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApiKey that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiKeyFindFirstOrThrowArgs} args - Arguments to find a ApiKey
+     * @example
+     * // Get one ApiKey
+     * const apiKey = await prisma.apiKey.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApiKeyFindFirstOrThrowArgs>(args?: SelectSubset<T, ApiKeyFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApiKeyClient<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ApiKeys that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiKeyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ApiKeys
+     * const apiKeys = await prisma.apiKey.findMany()
+     * 
+     * // Get first 10 ApiKeys
+     * const apiKeys = await prisma.apiKey.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const apiKeyWithIdOnly = await prisma.apiKey.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ApiKeyFindManyArgs>(args?: SelectSubset<T, ApiKeyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ApiKey.
+     * @param {ApiKeyCreateArgs} args - Arguments to create a ApiKey.
+     * @example
+     * // Create one ApiKey
+     * const ApiKey = await prisma.apiKey.create({
+     *   data: {
+     *     // ... data to create a ApiKey
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApiKeyCreateArgs>(args: SelectSubset<T, ApiKeyCreateArgs<ExtArgs>>): Prisma__ApiKeyClient<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ApiKeys.
+     * @param {ApiKeyCreateManyArgs} args - Arguments to create many ApiKeys.
+     * @example
+     * // Create many ApiKeys
+     * const apiKey = await prisma.apiKey.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApiKeyCreateManyArgs>(args?: SelectSubset<T, ApiKeyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ApiKeys and returns the data saved in the database.
+     * @param {ApiKeyCreateManyAndReturnArgs} args - Arguments to create many ApiKeys.
+     * @example
+     * // Create many ApiKeys
+     * const apiKey = await prisma.apiKey.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ApiKeys and only return the `id`
+     * const apiKeyWithIdOnly = await prisma.apiKey.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApiKeyCreateManyAndReturnArgs>(args?: SelectSubset<T, ApiKeyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ApiKey.
+     * @param {ApiKeyDeleteArgs} args - Arguments to delete one ApiKey.
+     * @example
+     * // Delete one ApiKey
+     * const ApiKey = await prisma.apiKey.delete({
+     *   where: {
+     *     // ... filter to delete one ApiKey
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApiKeyDeleteArgs>(args: SelectSubset<T, ApiKeyDeleteArgs<ExtArgs>>): Prisma__ApiKeyClient<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ApiKey.
+     * @param {ApiKeyUpdateArgs} args - Arguments to update one ApiKey.
+     * @example
+     * // Update one ApiKey
+     * const apiKey = await prisma.apiKey.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApiKeyUpdateArgs>(args: SelectSubset<T, ApiKeyUpdateArgs<ExtArgs>>): Prisma__ApiKeyClient<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ApiKeys.
+     * @param {ApiKeyDeleteManyArgs} args - Arguments to filter ApiKeys to delete.
+     * @example
+     * // Delete a few ApiKeys
+     * const { count } = await prisma.apiKey.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApiKeyDeleteManyArgs>(args?: SelectSubset<T, ApiKeyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApiKeys.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiKeyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ApiKeys
+     * const apiKey = await prisma.apiKey.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApiKeyUpdateManyArgs>(args: SelectSubset<T, ApiKeyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApiKeys and returns the data updated in the database.
+     * @param {ApiKeyUpdateManyAndReturnArgs} args - Arguments to update many ApiKeys.
+     * @example
+     * // Update many ApiKeys
+     * const apiKey = await prisma.apiKey.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ApiKeys and only return the `id`
+     * const apiKeyWithIdOnly = await prisma.apiKey.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ApiKeyUpdateManyAndReturnArgs>(args: SelectSubset<T, ApiKeyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ApiKey.
+     * @param {ApiKeyUpsertArgs} args - Arguments to update or create a ApiKey.
+     * @example
+     * // Update or create a ApiKey
+     * const apiKey = await prisma.apiKey.upsert({
+     *   create: {
+     *     // ... data to create a ApiKey
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ApiKey we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApiKeyUpsertArgs>(args: SelectSubset<T, ApiKeyUpsertArgs<ExtArgs>>): Prisma__ApiKeyClient<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ApiKeys.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiKeyCountArgs} args - Arguments to filter ApiKeys to count.
+     * @example
+     * // Count the number of ApiKeys
+     * const count = await prisma.apiKey.count({
+     *   where: {
+     *     // ... the filter for the ApiKeys we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApiKeyCountArgs>(
+      args?: Subset<T, ApiKeyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApiKeyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ApiKey.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiKeyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApiKeyAggregateArgs>(args: Subset<T, ApiKeyAggregateArgs>): Prisma.PrismaPromise<GetApiKeyAggregateType<T>>
+
+    /**
+     * Group by ApiKey.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiKeyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApiKeyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApiKeyGroupByArgs['orderBy'] }
+        : { orderBy?: ApiKeyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApiKeyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApiKeyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ApiKey model
+   */
+  readonly fields: ApiKeyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ApiKey.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApiKeyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ApiKey model
+   */
+  interface ApiKeyFieldRefs {
+    readonly id: FieldRef<"ApiKey", 'String'>
+    readonly tenantId: FieldRef<"ApiKey", 'String'>
+    readonly name: FieldRef<"ApiKey", 'String'>
+    readonly keyHash: FieldRef<"ApiKey", 'String'>
+    readonly keyPrefix: FieldRef<"ApiKey", 'String'>
+    readonly lastUsedAt: FieldRef<"ApiKey", 'DateTime'>
+    readonly revoked: FieldRef<"ApiKey", 'Boolean'>
+    readonly createdAt: FieldRef<"ApiKey", 'DateTime'>
+    readonly updatedAt: FieldRef<"ApiKey", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ApiKey findUnique
+   */
+  export type ApiKeyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+    /**
+     * Filter, which ApiKey to fetch.
+     */
+    where: ApiKeyWhereUniqueInput
+  }
+
+  /**
+   * ApiKey findUniqueOrThrow
+   */
+  export type ApiKeyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+    /**
+     * Filter, which ApiKey to fetch.
+     */
+    where: ApiKeyWhereUniqueInput
+  }
+
+  /**
+   * ApiKey findFirst
+   */
+  export type ApiKeyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+    /**
+     * Filter, which ApiKey to fetch.
+     */
+    where?: ApiKeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiKeys to fetch.
+     */
+    orderBy?: ApiKeyOrderByWithRelationInput | ApiKeyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiKeys.
+     */
+    cursor?: ApiKeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiKeys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiKeys.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiKeys.
+     */
+    distinct?: ApiKeyScalarFieldEnum | ApiKeyScalarFieldEnum[]
+  }
+
+  /**
+   * ApiKey findFirstOrThrow
+   */
+  export type ApiKeyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+    /**
+     * Filter, which ApiKey to fetch.
+     */
+    where?: ApiKeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiKeys to fetch.
+     */
+    orderBy?: ApiKeyOrderByWithRelationInput | ApiKeyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiKeys.
+     */
+    cursor?: ApiKeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiKeys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiKeys.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiKeys.
+     */
+    distinct?: ApiKeyScalarFieldEnum | ApiKeyScalarFieldEnum[]
+  }
+
+  /**
+   * ApiKey findMany
+   */
+  export type ApiKeyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+    /**
+     * Filter, which ApiKeys to fetch.
+     */
+    where?: ApiKeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiKeys to fetch.
+     */
+    orderBy?: ApiKeyOrderByWithRelationInput | ApiKeyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ApiKeys.
+     */
+    cursor?: ApiKeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiKeys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiKeys.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiKeys.
+     */
+    distinct?: ApiKeyScalarFieldEnum | ApiKeyScalarFieldEnum[]
+  }
+
+  /**
+   * ApiKey create
+   */
+  export type ApiKeyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ApiKey.
+     */
+    data: XOR<ApiKeyCreateInput, ApiKeyUncheckedCreateInput>
+  }
+
+  /**
+   * ApiKey createMany
+   */
+  export type ApiKeyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ApiKeys.
+     */
+    data: ApiKeyCreateManyInput | ApiKeyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApiKey createManyAndReturn
+   */
+  export type ApiKeyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+    /**
+     * The data used to create many ApiKeys.
+     */
+    data: ApiKeyCreateManyInput | ApiKeyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApiKey update
+   */
+  export type ApiKeyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ApiKey.
+     */
+    data: XOR<ApiKeyUpdateInput, ApiKeyUncheckedUpdateInput>
+    /**
+     * Choose, which ApiKey to update.
+     */
+    where: ApiKeyWhereUniqueInput
+  }
+
+  /**
+   * ApiKey updateMany
+   */
+  export type ApiKeyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ApiKeys.
+     */
+    data: XOR<ApiKeyUpdateManyMutationInput, ApiKeyUncheckedUpdateManyInput>
+    /**
+     * Filter which ApiKeys to update
+     */
+    where?: ApiKeyWhereInput
+    /**
+     * Limit how many ApiKeys to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiKey updateManyAndReturn
+   */
+  export type ApiKeyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+    /**
+     * The data used to update ApiKeys.
+     */
+    data: XOR<ApiKeyUpdateManyMutationInput, ApiKeyUncheckedUpdateManyInput>
+    /**
+     * Filter which ApiKeys to update
+     */
+    where?: ApiKeyWhereInput
+    /**
+     * Limit how many ApiKeys to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiKey upsert
+   */
+  export type ApiKeyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ApiKey to update in case it exists.
+     */
+    where: ApiKeyWhereUniqueInput
+    /**
+     * In case the ApiKey found by the `where` argument doesn't exist, create a new ApiKey with this data.
+     */
+    create: XOR<ApiKeyCreateInput, ApiKeyUncheckedCreateInput>
+    /**
+     * In case the ApiKey was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApiKeyUpdateInput, ApiKeyUncheckedUpdateInput>
+  }
+
+  /**
+   * ApiKey delete
+   */
+  export type ApiKeyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+    /**
+     * Filter which ApiKey to delete.
+     */
+    where: ApiKeyWhereUniqueInput
+  }
+
+  /**
+   * ApiKey deleteMany
+   */
+  export type ApiKeyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiKeys to delete
+     */
+    where?: ApiKeyWhereInput
+    /**
+     * Limit how many ApiKeys to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiKey without action
+   */
+  export type ApiKeyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiKey
+     */
+    select?: ApiKeySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiKey
+     */
+    omit?: ApiKeyOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Secret
+   */
+
+  export type AggregateSecret = {
+    _count: SecretCountAggregateOutputType | null
+    _min: SecretMinAggregateOutputType | null
+    _max: SecretMaxAggregateOutputType | null
+  }
+
+  export type SecretMinAggregateOutputType = {
+    id: string | null
+    tenantId: string | null
+    name: string | null
+    value: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SecretMaxAggregateOutputType = {
+    id: string | null
+    tenantId: string | null
+    name: string | null
+    value: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SecretCountAggregateOutputType = {
+    id: number
+    tenantId: number
+    name: number
+    value: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SecretMinAggregateInputType = {
+    id?: true
+    tenantId?: true
+    name?: true
+    value?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SecretMaxAggregateInputType = {
+    id?: true
+    tenantId?: true
+    name?: true
+    value?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SecretCountAggregateInputType = {
+    id?: true
+    tenantId?: true
+    name?: true
+    value?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SecretAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Secret to aggregate.
+     */
+    where?: SecretWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Secrets to fetch.
+     */
+    orderBy?: SecretOrderByWithRelationInput | SecretOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SecretWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Secrets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Secrets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Secrets
+    **/
+    _count?: true | SecretCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SecretMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SecretMaxAggregateInputType
+  }
+
+  export type GetSecretAggregateType<T extends SecretAggregateArgs> = {
+        [P in keyof T & keyof AggregateSecret]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSecret[P]>
+      : GetScalarType<T[P], AggregateSecret[P]>
+  }
+
+
+
+
+  export type SecretGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SecretWhereInput
+    orderBy?: SecretOrderByWithAggregationInput | SecretOrderByWithAggregationInput[]
+    by: SecretScalarFieldEnum[] | SecretScalarFieldEnum
+    having?: SecretScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SecretCountAggregateInputType | true
+    _min?: SecretMinAggregateInputType
+    _max?: SecretMaxAggregateInputType
+  }
+
+  export type SecretGroupByOutputType = {
+    id: string
+    tenantId: string
+    name: string
+    value: string
+    createdAt: Date
+    updatedAt: Date
+    _count: SecretCountAggregateOutputType | null
+    _min: SecretMinAggregateOutputType | null
+    _max: SecretMaxAggregateOutputType | null
+  }
+
+  type GetSecretGroupByPayload<T extends SecretGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SecretGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SecretGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SecretGroupByOutputType[P]>
+            : GetScalarType<T[P], SecretGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SecretSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tenantId?: boolean
+    name?: boolean
+    value?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["secret"]>
+
+  export type SecretSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tenantId?: boolean
+    name?: boolean
+    value?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["secret"]>
+
+  export type SecretSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tenantId?: boolean
+    name?: boolean
+    value?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["secret"]>
+
+  export type SecretSelectScalar = {
+    id?: boolean
+    tenantId?: boolean
+    name?: boolean
+    value?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SecretOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "value" | "createdAt" | "updatedAt", ExtArgs["result"]["secret"]>
+
+  export type $SecretPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Secret"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      tenantId: string
+      name: string
+      value: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["secret"]>
+    composites: {}
+  }
+
+  type SecretGetPayload<S extends boolean | null | undefined | SecretDefaultArgs> = $Result.GetResult<Prisma.$SecretPayload, S>
+
+  type SecretCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SecretFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SecretCountAggregateInputType | true
+    }
+
+  export interface SecretDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Secret'], meta: { name: 'Secret' } }
+    /**
+     * Find zero or one Secret that matches the filter.
+     * @param {SecretFindUniqueArgs} args - Arguments to find a Secret
+     * @example
+     * // Get one Secret
+     * const secret = await prisma.secret.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SecretFindUniqueArgs>(args: SelectSubset<T, SecretFindUniqueArgs<ExtArgs>>): Prisma__SecretClient<$Result.GetResult<Prisma.$SecretPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Secret that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SecretFindUniqueOrThrowArgs} args - Arguments to find a Secret
+     * @example
+     * // Get one Secret
+     * const secret = await prisma.secret.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SecretFindUniqueOrThrowArgs>(args: SelectSubset<T, SecretFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SecretClient<$Result.GetResult<Prisma.$SecretPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Secret that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecretFindFirstArgs} args - Arguments to find a Secret
+     * @example
+     * // Get one Secret
+     * const secret = await prisma.secret.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SecretFindFirstArgs>(args?: SelectSubset<T, SecretFindFirstArgs<ExtArgs>>): Prisma__SecretClient<$Result.GetResult<Prisma.$SecretPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Secret that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecretFindFirstOrThrowArgs} args - Arguments to find a Secret
+     * @example
+     * // Get one Secret
+     * const secret = await prisma.secret.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SecretFindFirstOrThrowArgs>(args?: SelectSubset<T, SecretFindFirstOrThrowArgs<ExtArgs>>): Prisma__SecretClient<$Result.GetResult<Prisma.$SecretPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Secrets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecretFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Secrets
+     * const secrets = await prisma.secret.findMany()
+     * 
+     * // Get first 10 Secrets
+     * const secrets = await prisma.secret.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const secretWithIdOnly = await prisma.secret.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SecretFindManyArgs>(args?: SelectSubset<T, SecretFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecretPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Secret.
+     * @param {SecretCreateArgs} args - Arguments to create a Secret.
+     * @example
+     * // Create one Secret
+     * const Secret = await prisma.secret.create({
+     *   data: {
+     *     // ... data to create a Secret
+     *   }
+     * })
+     * 
+     */
+    create<T extends SecretCreateArgs>(args: SelectSubset<T, SecretCreateArgs<ExtArgs>>): Prisma__SecretClient<$Result.GetResult<Prisma.$SecretPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Secrets.
+     * @param {SecretCreateManyArgs} args - Arguments to create many Secrets.
+     * @example
+     * // Create many Secrets
+     * const secret = await prisma.secret.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SecretCreateManyArgs>(args?: SelectSubset<T, SecretCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Secrets and returns the data saved in the database.
+     * @param {SecretCreateManyAndReturnArgs} args - Arguments to create many Secrets.
+     * @example
+     * // Create many Secrets
+     * const secret = await prisma.secret.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Secrets and only return the `id`
+     * const secretWithIdOnly = await prisma.secret.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SecretCreateManyAndReturnArgs>(args?: SelectSubset<T, SecretCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecretPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Secret.
+     * @param {SecretDeleteArgs} args - Arguments to delete one Secret.
+     * @example
+     * // Delete one Secret
+     * const Secret = await prisma.secret.delete({
+     *   where: {
+     *     // ... filter to delete one Secret
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SecretDeleteArgs>(args: SelectSubset<T, SecretDeleteArgs<ExtArgs>>): Prisma__SecretClient<$Result.GetResult<Prisma.$SecretPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Secret.
+     * @param {SecretUpdateArgs} args - Arguments to update one Secret.
+     * @example
+     * // Update one Secret
+     * const secret = await prisma.secret.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SecretUpdateArgs>(args: SelectSubset<T, SecretUpdateArgs<ExtArgs>>): Prisma__SecretClient<$Result.GetResult<Prisma.$SecretPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Secrets.
+     * @param {SecretDeleteManyArgs} args - Arguments to filter Secrets to delete.
+     * @example
+     * // Delete a few Secrets
+     * const { count } = await prisma.secret.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SecretDeleteManyArgs>(args?: SelectSubset<T, SecretDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Secrets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecretUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Secrets
+     * const secret = await prisma.secret.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SecretUpdateManyArgs>(args: SelectSubset<T, SecretUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Secrets and returns the data updated in the database.
+     * @param {SecretUpdateManyAndReturnArgs} args - Arguments to update many Secrets.
+     * @example
+     * // Update many Secrets
+     * const secret = await prisma.secret.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Secrets and only return the `id`
+     * const secretWithIdOnly = await prisma.secret.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SecretUpdateManyAndReturnArgs>(args: SelectSubset<T, SecretUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SecretPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Secret.
+     * @param {SecretUpsertArgs} args - Arguments to update or create a Secret.
+     * @example
+     * // Update or create a Secret
+     * const secret = await prisma.secret.upsert({
+     *   create: {
+     *     // ... data to create a Secret
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Secret we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SecretUpsertArgs>(args: SelectSubset<T, SecretUpsertArgs<ExtArgs>>): Prisma__SecretClient<$Result.GetResult<Prisma.$SecretPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Secrets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecretCountArgs} args - Arguments to filter Secrets to count.
+     * @example
+     * // Count the number of Secrets
+     * const count = await prisma.secret.count({
+     *   where: {
+     *     // ... the filter for the Secrets we want to count
+     *   }
+     * })
+    **/
+    count<T extends SecretCountArgs>(
+      args?: Subset<T, SecretCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SecretCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Secret.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecretAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SecretAggregateArgs>(args: Subset<T, SecretAggregateArgs>): Prisma.PrismaPromise<GetSecretAggregateType<T>>
+
+    /**
+     * Group by Secret.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SecretGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SecretGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SecretGroupByArgs['orderBy'] }
+        : { orderBy?: SecretGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SecretGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSecretGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Secret model
+   */
+  readonly fields: SecretFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Secret.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SecretClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Secret model
+   */
+  interface SecretFieldRefs {
+    readonly id: FieldRef<"Secret", 'String'>
+    readonly tenantId: FieldRef<"Secret", 'String'>
+    readonly name: FieldRef<"Secret", 'String'>
+    readonly value: FieldRef<"Secret", 'String'>
+    readonly createdAt: FieldRef<"Secret", 'DateTime'>
+    readonly updatedAt: FieldRef<"Secret", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Secret findUnique
+   */
+  export type SecretFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+    /**
+     * Filter, which Secret to fetch.
+     */
+    where: SecretWhereUniqueInput
+  }
+
+  /**
+   * Secret findUniqueOrThrow
+   */
+  export type SecretFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+    /**
+     * Filter, which Secret to fetch.
+     */
+    where: SecretWhereUniqueInput
+  }
+
+  /**
+   * Secret findFirst
+   */
+  export type SecretFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+    /**
+     * Filter, which Secret to fetch.
+     */
+    where?: SecretWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Secrets to fetch.
+     */
+    orderBy?: SecretOrderByWithRelationInput | SecretOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Secrets.
+     */
+    cursor?: SecretWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Secrets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Secrets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Secrets.
+     */
+    distinct?: SecretScalarFieldEnum | SecretScalarFieldEnum[]
+  }
+
+  /**
+   * Secret findFirstOrThrow
+   */
+  export type SecretFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+    /**
+     * Filter, which Secret to fetch.
+     */
+    where?: SecretWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Secrets to fetch.
+     */
+    orderBy?: SecretOrderByWithRelationInput | SecretOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Secrets.
+     */
+    cursor?: SecretWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Secrets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Secrets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Secrets.
+     */
+    distinct?: SecretScalarFieldEnum | SecretScalarFieldEnum[]
+  }
+
+  /**
+   * Secret findMany
+   */
+  export type SecretFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+    /**
+     * Filter, which Secrets to fetch.
+     */
+    where?: SecretWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Secrets to fetch.
+     */
+    orderBy?: SecretOrderByWithRelationInput | SecretOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Secrets.
+     */
+    cursor?: SecretWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Secrets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Secrets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Secrets.
+     */
+    distinct?: SecretScalarFieldEnum | SecretScalarFieldEnum[]
+  }
+
+  /**
+   * Secret create
+   */
+  export type SecretCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Secret.
+     */
+    data: XOR<SecretCreateInput, SecretUncheckedCreateInput>
+  }
+
+  /**
+   * Secret createMany
+   */
+  export type SecretCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Secrets.
+     */
+    data: SecretCreateManyInput | SecretCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Secret createManyAndReturn
+   */
+  export type SecretCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+    /**
+     * The data used to create many Secrets.
+     */
+    data: SecretCreateManyInput | SecretCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Secret update
+   */
+  export type SecretUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Secret.
+     */
+    data: XOR<SecretUpdateInput, SecretUncheckedUpdateInput>
+    /**
+     * Choose, which Secret to update.
+     */
+    where: SecretWhereUniqueInput
+  }
+
+  /**
+   * Secret updateMany
+   */
+  export type SecretUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Secrets.
+     */
+    data: XOR<SecretUpdateManyMutationInput, SecretUncheckedUpdateManyInput>
+    /**
+     * Filter which Secrets to update
+     */
+    where?: SecretWhereInput
+    /**
+     * Limit how many Secrets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Secret updateManyAndReturn
+   */
+  export type SecretUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+    /**
+     * The data used to update Secrets.
+     */
+    data: XOR<SecretUpdateManyMutationInput, SecretUncheckedUpdateManyInput>
+    /**
+     * Filter which Secrets to update
+     */
+    where?: SecretWhereInput
+    /**
+     * Limit how many Secrets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Secret upsert
+   */
+  export type SecretUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Secret to update in case it exists.
+     */
+    where: SecretWhereUniqueInput
+    /**
+     * In case the Secret found by the `where` argument doesn't exist, create a new Secret with this data.
+     */
+    create: XOR<SecretCreateInput, SecretUncheckedCreateInput>
+    /**
+     * In case the Secret was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SecretUpdateInput, SecretUncheckedUpdateInput>
+  }
+
+  /**
+   * Secret delete
+   */
+  export type SecretDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+    /**
+     * Filter which Secret to delete.
+     */
+    where: SecretWhereUniqueInput
+  }
+
+  /**
+   * Secret deleteMany
+   */
+  export type SecretDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Secrets to delete
+     */
+    where?: SecretWhereInput
+    /**
+     * Limit how many Secrets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Secret without action
+   */
+  export type SecretDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Secret
+     */
+    select?: SecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Secret
+     */
+    omit?: SecretOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -14147,6 +16553,10 @@ export namespace Prisma {
     description: 'description',
     definition: 'definition',
     tenantId: 'tenantId',
+    status: 'status',
+    triggerType: 'triggerType',
+    cronSummary: 'cronSummary',
+    activeVersionId: 'activeVersionId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -14158,7 +16568,6 @@ export namespace Prisma {
     id: 'id',
     workflowId: 'workflowId',
     version: 'version',
-    status: 'status',
     definition: 'definition',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -14186,6 +16595,7 @@ export namespace Prisma {
     status: 'status',
     output: 'output',
     error: 'error',
+    retryCount: 'retryCount',
     startedAt: 'startedAt',
     completedAt: 'completedAt'
   };
@@ -14234,8 +16644,10 @@ export namespace Prisma {
     id: 'id',
     executionId: 'executionId',
     nodeId: 'nodeId',
+    pluginType: 'pluginType',
     status: 'status',
     message: 'message',
+    retryCount: 'retryCount',
     timestamp: 'timestamp'
   };
 
@@ -14252,6 +16664,33 @@ export namespace Prisma {
   };
 
   export type ReplayHistoryScalarFieldEnum = (typeof ReplayHistoryScalarFieldEnum)[keyof typeof ReplayHistoryScalarFieldEnum]
+
+
+  export const ApiKeyScalarFieldEnum: {
+    id: 'id',
+    tenantId: 'tenantId',
+    name: 'name',
+    keyHash: 'keyHash',
+    keyPrefix: 'keyPrefix',
+    lastUsedAt: 'lastUsedAt',
+    revoked: 'revoked',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ApiKeyScalarFieldEnum = (typeof ApiKeyScalarFieldEnum)[keyof typeof ApiKeyScalarFieldEnum]
+
+
+  export const SecretScalarFieldEnum: {
+    id: 'id',
+    tenantId: 'tenantId',
+    name: 'name',
+    value: 'value',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SecretScalarFieldEnum = (typeof SecretScalarFieldEnum)[keyof typeof SecretScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -14364,20 +16803,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
    * Reference to a field of type 'WorkflowStatus'
    */
   export type EnumWorkflowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkflowStatus'>
@@ -14388,6 +16813,34 @@ export namespace Prisma {
    * Reference to a field of type 'WorkflowStatus[]'
    */
   export type ListEnumWorkflowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkflowStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TriggerType'
+   */
+  export type EnumTriggerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TriggerType'>
+    
+
+
+  /**
+   * Reference to a field of type 'TriggerType[]'
+   */
+  export type ListEnumTriggerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TriggerType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -14569,6 +17022,10 @@ export namespace Prisma {
     description?: StringNullableFilter<"Workflow"> | string | null
     definition?: JsonNullableFilter<"Workflow">
     tenantId?: StringFilter<"Workflow"> | string
+    status?: EnumWorkflowStatusFilter<"Workflow"> | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFilter<"Workflow"> | $Enums.TriggerType
+    cronSummary?: StringNullableFilter<"Workflow"> | string | null
+    activeVersionId?: StringNullableFilter<"Workflow"> | string | null
     createdAt?: DateTimeFilter<"Workflow"> | Date | string
     updatedAt?: DateTimeFilter<"Workflow"> | Date | string
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
@@ -14581,6 +17038,10 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     definition?: SortOrderInput | SortOrder
     tenantId?: SortOrder
+    status?: SortOrder
+    triggerType?: SortOrder
+    cronSummary?: SortOrderInput | SortOrder
+    activeVersionId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     tenant?: TenantOrderByWithRelationInput
@@ -14596,6 +17057,10 @@ export namespace Prisma {
     description?: StringNullableFilter<"Workflow"> | string | null
     definition?: JsonNullableFilter<"Workflow">
     tenantId?: StringFilter<"Workflow"> | string
+    status?: EnumWorkflowStatusFilter<"Workflow"> | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFilter<"Workflow"> | $Enums.TriggerType
+    cronSummary?: StringNullableFilter<"Workflow"> | string | null
+    activeVersionId?: StringNullableFilter<"Workflow"> | string | null
     createdAt?: DateTimeFilter<"Workflow"> | Date | string
     updatedAt?: DateTimeFilter<"Workflow"> | Date | string
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
@@ -14608,6 +17073,10 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     definition?: SortOrderInput | SortOrder
     tenantId?: SortOrder
+    status?: SortOrder
+    triggerType?: SortOrder
+    cronSummary?: SortOrderInput | SortOrder
+    activeVersionId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: WorkflowCountOrderByAggregateInput
@@ -14624,6 +17093,10 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"Workflow"> | string | null
     definition?: JsonNullableWithAggregatesFilter<"Workflow">
     tenantId?: StringWithAggregatesFilter<"Workflow"> | string
+    status?: EnumWorkflowStatusWithAggregatesFilter<"Workflow"> | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeWithAggregatesFilter<"Workflow"> | $Enums.TriggerType
+    cronSummary?: StringNullableWithAggregatesFilter<"Workflow"> | string | null
+    activeVersionId?: StringNullableWithAggregatesFilter<"Workflow"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Workflow"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Workflow"> | Date | string
   }
@@ -14635,7 +17108,6 @@ export namespace Prisma {
     id?: StringFilter<"WorkflowVersion"> | string
     workflowId?: StringFilter<"WorkflowVersion"> | string
     version?: IntFilter<"WorkflowVersion"> | number
-    status?: EnumWorkflowStatusFilter<"WorkflowVersion"> | $Enums.WorkflowStatus
     definition?: JsonFilter<"WorkflowVersion">
     createdAt?: DateTimeFilter<"WorkflowVersion"> | Date | string
     updatedAt?: DateTimeFilter<"WorkflowVersion"> | Date | string
@@ -14647,7 +17119,6 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     version?: SortOrder
-    status?: SortOrder
     definition?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14663,7 +17134,6 @@ export namespace Prisma {
     NOT?: WorkflowVersionWhereInput | WorkflowVersionWhereInput[]
     workflowId?: StringFilter<"WorkflowVersion"> | string
     version?: IntFilter<"WorkflowVersion"> | number
-    status?: EnumWorkflowStatusFilter<"WorkflowVersion"> | $Enums.WorkflowStatus
     definition?: JsonFilter<"WorkflowVersion">
     createdAt?: DateTimeFilter<"WorkflowVersion"> | Date | string
     updatedAt?: DateTimeFilter<"WorkflowVersion"> | Date | string
@@ -14675,7 +17145,6 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     version?: SortOrder
-    status?: SortOrder
     definition?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14693,7 +17162,6 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"WorkflowVersion"> | string
     workflowId?: StringWithAggregatesFilter<"WorkflowVersion"> | string
     version?: IntWithAggregatesFilter<"WorkflowVersion"> | number
-    status?: EnumWorkflowStatusWithAggregatesFilter<"WorkflowVersion"> | $Enums.WorkflowStatus
     definition?: JsonWithAggregatesFilter<"WorkflowVersion">
     createdAt?: DateTimeWithAggregatesFilter<"WorkflowVersion"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"WorkflowVersion"> | Date | string
@@ -14775,6 +17243,7 @@ export namespace Prisma {
     status?: EnumExecutionStatusFilter<"ExecutionStep"> | $Enums.ExecutionStatus
     output?: JsonNullableFilter<"ExecutionStep">
     error?: StringNullableFilter<"ExecutionStep"> | string | null
+    retryCount?: IntFilter<"ExecutionStep"> | number
     startedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
     execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
@@ -14787,6 +17256,7 @@ export namespace Prisma {
     status?: SortOrder
     output?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
+    retryCount?: SortOrder
     startedAt?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     execution?: ExecutionOrderByWithRelationInput
@@ -14803,6 +17273,7 @@ export namespace Prisma {
     status?: EnumExecutionStatusFilter<"ExecutionStep"> | $Enums.ExecutionStatus
     output?: JsonNullableFilter<"ExecutionStep">
     error?: StringNullableFilter<"ExecutionStep"> | string | null
+    retryCount?: IntFilter<"ExecutionStep"> | number
     startedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
     execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
@@ -14815,11 +17286,14 @@ export namespace Prisma {
     status?: SortOrder
     output?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
+    retryCount?: SortOrder
     startedAt?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
     _count?: ExecutionStepCountOrderByAggregateInput
+    _avg?: ExecutionStepAvgOrderByAggregateInput
     _max?: ExecutionStepMaxOrderByAggregateInput
     _min?: ExecutionStepMinOrderByAggregateInput
+    _sum?: ExecutionStepSumOrderByAggregateInput
   }
 
   export type ExecutionStepScalarWhereWithAggregatesInput = {
@@ -14832,6 +17306,7 @@ export namespace Prisma {
     status?: EnumExecutionStatusWithAggregatesFilter<"ExecutionStep"> | $Enums.ExecutionStatus
     output?: JsonNullableWithAggregatesFilter<"ExecutionStep">
     error?: StringNullableWithAggregatesFilter<"ExecutionStep"> | string | null
+    retryCount?: IntWithAggregatesFilter<"ExecutionStep"> | number
     startedAt?: DateTimeNullableWithAggregatesFilter<"ExecutionStep"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"ExecutionStep"> | Date | string | null
   }
@@ -15027,8 +17502,10 @@ export namespace Prisma {
     id?: StringFilter<"ExecutionLog"> | string
     executionId?: StringFilter<"ExecutionLog"> | string
     nodeId?: StringFilter<"ExecutionLog"> | string
+    pluginType?: StringNullableFilter<"ExecutionLog"> | string | null
     status?: StringFilter<"ExecutionLog"> | string
     message?: StringNullableFilter<"ExecutionLog"> | string | null
+    retryCount?: IntFilter<"ExecutionLog"> | number
     timestamp?: DateTimeFilter<"ExecutionLog"> | Date | string
     execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
   }
@@ -15037,8 +17514,10 @@ export namespace Prisma {
     id?: SortOrder
     executionId?: SortOrder
     nodeId?: SortOrder
+    pluginType?: SortOrderInput | SortOrder
     status?: SortOrder
     message?: SortOrderInput | SortOrder
+    retryCount?: SortOrder
     timestamp?: SortOrder
     execution?: ExecutionOrderByWithRelationInput
   }
@@ -15050,8 +17529,10 @@ export namespace Prisma {
     NOT?: ExecutionLogWhereInput | ExecutionLogWhereInput[]
     executionId?: StringFilter<"ExecutionLog"> | string
     nodeId?: StringFilter<"ExecutionLog"> | string
+    pluginType?: StringNullableFilter<"ExecutionLog"> | string | null
     status?: StringFilter<"ExecutionLog"> | string
     message?: StringNullableFilter<"ExecutionLog"> | string | null
+    retryCount?: IntFilter<"ExecutionLog"> | number
     timestamp?: DateTimeFilter<"ExecutionLog"> | Date | string
     execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
   }, "id">
@@ -15060,12 +17541,16 @@ export namespace Prisma {
     id?: SortOrder
     executionId?: SortOrder
     nodeId?: SortOrder
+    pluginType?: SortOrderInput | SortOrder
     status?: SortOrder
     message?: SortOrderInput | SortOrder
+    retryCount?: SortOrder
     timestamp?: SortOrder
     _count?: ExecutionLogCountOrderByAggregateInput
+    _avg?: ExecutionLogAvgOrderByAggregateInput
     _max?: ExecutionLogMaxOrderByAggregateInput
     _min?: ExecutionLogMinOrderByAggregateInput
+    _sum?: ExecutionLogSumOrderByAggregateInput
   }
 
   export type ExecutionLogScalarWhereWithAggregatesInput = {
@@ -15075,8 +17560,10 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ExecutionLog"> | string
     executionId?: StringWithAggregatesFilter<"ExecutionLog"> | string
     nodeId?: StringWithAggregatesFilter<"ExecutionLog"> | string
+    pluginType?: StringNullableWithAggregatesFilter<"ExecutionLog"> | string | null
     status?: StringWithAggregatesFilter<"ExecutionLog"> | string
     message?: StringNullableWithAggregatesFilter<"ExecutionLog"> | string | null
+    retryCount?: IntWithAggregatesFilter<"ExecutionLog"> | number
     timestamp?: DateTimeWithAggregatesFilter<"ExecutionLog"> | Date | string
   }
 
@@ -15138,6 +17625,136 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"ReplayHistory"> | string
     message?: StringNullableWithAggregatesFilter<"ReplayHistory"> | string | null
     replayedAt?: DateTimeWithAggregatesFilter<"ReplayHistory"> | Date | string
+  }
+
+  export type ApiKeyWhereInput = {
+    AND?: ApiKeyWhereInput | ApiKeyWhereInput[]
+    OR?: ApiKeyWhereInput[]
+    NOT?: ApiKeyWhereInput | ApiKeyWhereInput[]
+    id?: StringFilter<"ApiKey"> | string
+    tenantId?: StringFilter<"ApiKey"> | string
+    name?: StringFilter<"ApiKey"> | string
+    keyHash?: StringFilter<"ApiKey"> | string
+    keyPrefix?: StringFilter<"ApiKey"> | string
+    lastUsedAt?: DateTimeNullableFilter<"ApiKey"> | Date | string | null
+    revoked?: BoolFilter<"ApiKey"> | boolean
+    createdAt?: DateTimeFilter<"ApiKey"> | Date | string
+    updatedAt?: DateTimeFilter<"ApiKey"> | Date | string
+  }
+
+  export type ApiKeyOrderByWithRelationInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    keyPrefix?: SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    revoked?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApiKeyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    keyHash?: string
+    AND?: ApiKeyWhereInput | ApiKeyWhereInput[]
+    OR?: ApiKeyWhereInput[]
+    NOT?: ApiKeyWhereInput | ApiKeyWhereInput[]
+    tenantId?: StringFilter<"ApiKey"> | string
+    name?: StringFilter<"ApiKey"> | string
+    keyPrefix?: StringFilter<"ApiKey"> | string
+    lastUsedAt?: DateTimeNullableFilter<"ApiKey"> | Date | string | null
+    revoked?: BoolFilter<"ApiKey"> | boolean
+    createdAt?: DateTimeFilter<"ApiKey"> | Date | string
+    updatedAt?: DateTimeFilter<"ApiKey"> | Date | string
+  }, "id" | "keyHash">
+
+  export type ApiKeyOrderByWithAggregationInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    keyPrefix?: SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    revoked?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ApiKeyCountOrderByAggregateInput
+    _max?: ApiKeyMaxOrderByAggregateInput
+    _min?: ApiKeyMinOrderByAggregateInput
+  }
+
+  export type ApiKeyScalarWhereWithAggregatesInput = {
+    AND?: ApiKeyScalarWhereWithAggregatesInput | ApiKeyScalarWhereWithAggregatesInput[]
+    OR?: ApiKeyScalarWhereWithAggregatesInput[]
+    NOT?: ApiKeyScalarWhereWithAggregatesInput | ApiKeyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ApiKey"> | string
+    tenantId?: StringWithAggregatesFilter<"ApiKey"> | string
+    name?: StringWithAggregatesFilter<"ApiKey"> | string
+    keyHash?: StringWithAggregatesFilter<"ApiKey"> | string
+    keyPrefix?: StringWithAggregatesFilter<"ApiKey"> | string
+    lastUsedAt?: DateTimeNullableWithAggregatesFilter<"ApiKey"> | Date | string | null
+    revoked?: BoolWithAggregatesFilter<"ApiKey"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"ApiKey"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ApiKey"> | Date | string
+  }
+
+  export type SecretWhereInput = {
+    AND?: SecretWhereInput | SecretWhereInput[]
+    OR?: SecretWhereInput[]
+    NOT?: SecretWhereInput | SecretWhereInput[]
+    id?: StringFilter<"Secret"> | string
+    tenantId?: StringFilter<"Secret"> | string
+    name?: StringFilter<"Secret"> | string
+    value?: StringFilter<"Secret"> | string
+    createdAt?: DateTimeFilter<"Secret"> | Date | string
+    updatedAt?: DateTimeFilter<"Secret"> | Date | string
+  }
+
+  export type SecretOrderByWithRelationInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    name?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SecretWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    tenantId_name?: SecretTenantIdNameCompoundUniqueInput
+    AND?: SecretWhereInput | SecretWhereInput[]
+    OR?: SecretWhereInput[]
+    NOT?: SecretWhereInput | SecretWhereInput[]
+    tenantId?: StringFilter<"Secret"> | string
+    name?: StringFilter<"Secret"> | string
+    value?: StringFilter<"Secret"> | string
+    createdAt?: DateTimeFilter<"Secret"> | Date | string
+    updatedAt?: DateTimeFilter<"Secret"> | Date | string
+  }, "id" | "tenantId_name">
+
+  export type SecretOrderByWithAggregationInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    name?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SecretCountOrderByAggregateInput
+    _max?: SecretMaxOrderByAggregateInput
+    _min?: SecretMinOrderByAggregateInput
+  }
+
+  export type SecretScalarWhereWithAggregatesInput = {
+    AND?: SecretScalarWhereWithAggregatesInput | SecretScalarWhereWithAggregatesInput[]
+    OR?: SecretScalarWhereWithAggregatesInput[]
+    NOT?: SecretScalarWhereWithAggregatesInput | SecretScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Secret"> | string
+    tenantId?: StringWithAggregatesFilter<"Secret"> | string
+    name?: StringWithAggregatesFilter<"Secret"> | string
+    value?: StringWithAggregatesFilter<"Secret"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Secret"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Secret"> | Date | string
   }
 
   export type TenantCreateInput = {
@@ -15289,6 +17906,10 @@ export namespace Prisma {
     name: string
     description?: string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.WorkflowStatus
+    triggerType?: $Enums.TriggerType
+    cronSummary?: string | null
+    activeVersionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutWorkflowsInput
@@ -15301,6 +17922,10 @@ export namespace Prisma {
     description?: string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId: string
+    status?: $Enums.WorkflowStatus
+    triggerType?: $Enums.TriggerType
+    cronSummary?: string | null
+    activeVersionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     versions?: WorkflowVersionUncheckedCreateNestedManyWithoutWorkflowInput
@@ -15311,6 +17936,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
+    cronSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutWorkflowsNestedInput
@@ -15323,6 +17952,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId?: StringFieldUpdateOperationsInput | string
+    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
+    cronSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     versions?: WorkflowVersionUncheckedUpdateManyWithoutWorkflowNestedInput
@@ -15334,6 +17967,10 @@ export namespace Prisma {
     description?: string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId: string
+    status?: $Enums.WorkflowStatus
+    triggerType?: $Enums.TriggerType
+    cronSummary?: string | null
+    activeVersionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15343,6 +17980,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
+    cronSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15353,6 +17994,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId?: StringFieldUpdateOperationsInput | string
+    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
+    cronSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15360,7 +18005,6 @@ export namespace Prisma {
   export type WorkflowVersionCreateInput = {
     id?: string
     version: number
-    status?: $Enums.WorkflowStatus
     definition: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15372,7 +18016,6 @@ export namespace Prisma {
     id?: string
     workflowId: string
     version: number
-    status?: $Enums.WorkflowStatus
     definition: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15382,7 +18025,6 @@ export namespace Prisma {
   export type WorkflowVersionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
     definition?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15394,7 +18036,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
     definition?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15405,7 +18046,6 @@ export namespace Prisma {
     id?: string
     workflowId: string
     version: number
-    status?: $Enums.WorkflowStatus
     definition: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15414,7 +18054,6 @@ export namespace Prisma {
   export type WorkflowVersionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
     definition?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15424,7 +18063,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
     definition?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15506,6 +18144,7 @@ export namespace Prisma {
     status?: $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    retryCount?: number
     startedAt?: Date | string | null
     completedAt?: Date | string | null
     execution: ExecutionCreateNestedOneWithoutStepsInput
@@ -15518,6 +18157,7 @@ export namespace Prisma {
     status?: $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    retryCount?: number
     startedAt?: Date | string | null
     completedAt?: Date | string | null
   }
@@ -15528,6 +18168,7 @@ export namespace Prisma {
     status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     execution?: ExecutionUpdateOneRequiredWithoutStepsNestedInput
@@ -15540,6 +18181,7 @@ export namespace Prisma {
     status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -15551,6 +18193,7 @@ export namespace Prisma {
     status?: $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    retryCount?: number
     startedAt?: Date | string | null
     completedAt?: Date | string | null
   }
@@ -15561,6 +18204,7 @@ export namespace Prisma {
     status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -15572,6 +18216,7 @@ export namespace Prisma {
     status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -15778,8 +18423,10 @@ export namespace Prisma {
   export type ExecutionLogCreateInput = {
     id?: string
     nodeId: string
+    pluginType?: string | null
     status: string
     message?: string | null
+    retryCount?: number
     timestamp?: Date | string
     execution: ExecutionCreateNestedOneWithoutLogsInput
   }
@@ -15788,16 +18435,20 @@ export namespace Prisma {
     id?: string
     executionId: string
     nodeId: string
+    pluginType?: string | null
     status: string
     message?: string | null
+    retryCount?: number
     timestamp?: Date | string
   }
 
   export type ExecutionLogUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     nodeId?: StringFieldUpdateOperationsInput | string
+    pluginType?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     execution?: ExecutionUpdateOneRequiredWithoutLogsNestedInput
   }
@@ -15806,8 +18457,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     executionId?: StringFieldUpdateOperationsInput | string
     nodeId?: StringFieldUpdateOperationsInput | string
+    pluginType?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -15815,16 +18468,20 @@ export namespace Prisma {
     id?: string
     executionId: string
     nodeId: string
+    pluginType?: string | null
     status: string
     message?: string | null
+    retryCount?: number
     timestamp?: Date | string
   }
 
   export type ExecutionLogUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     nodeId?: StringFieldUpdateOperationsInput | string
+    pluginType?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -15832,8 +18489,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     executionId?: StringFieldUpdateOperationsInput | string
     nodeId?: StringFieldUpdateOperationsInput | string
+    pluginType?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -15897,6 +18556,153 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     replayedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiKeyCreateInput = {
+    id?: string
+    tenantId: string
+    name: string
+    keyHash: string
+    keyPrefix: string
+    lastUsedAt?: Date | string | null
+    revoked?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApiKeyUncheckedCreateInput = {
+    id?: string
+    tenantId: string
+    name: string
+    keyHash: string
+    keyPrefix: string
+    lastUsedAt?: Date | string | null
+    revoked?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApiKeyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    keyPrefix?: StringFieldUpdateOperationsInput | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revoked?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiKeyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    keyPrefix?: StringFieldUpdateOperationsInput | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revoked?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiKeyCreateManyInput = {
+    id?: string
+    tenantId: string
+    name: string
+    keyHash: string
+    keyPrefix: string
+    lastUsedAt?: Date | string | null
+    revoked?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApiKeyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    keyPrefix?: StringFieldUpdateOperationsInput | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revoked?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiKeyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    keyPrefix?: StringFieldUpdateOperationsInput | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revoked?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecretCreateInput = {
+    id?: string
+    tenantId: string
+    name: string
+    value: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SecretUncheckedCreateInput = {
+    id?: string
+    tenantId: string
+    name: string
+    value: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SecretUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecretUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecretCreateManyInput = {
+    id?: string
+    tenantId: string
+    name: string
+    value: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SecretUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SecretUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -16104,6 +18910,20 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type EnumWorkflowStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkflowStatus | EnumWorkflowStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkflowStatusFilter<$PrismaModel> | $Enums.WorkflowStatus
+  }
+
+  export type EnumTriggerTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TriggerType | EnumTriggerTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TriggerType[] | ListEnumTriggerTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TriggerType[] | ListEnumTriggerTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTriggerTypeFilter<$PrismaModel> | $Enums.TriggerType
+  }
+
   export type WorkflowVersionListRelationFilter = {
     every?: WorkflowVersionWhereInput
     some?: WorkflowVersionWhereInput
@@ -16125,6 +18945,10 @@ export namespace Prisma {
     description?: SortOrder
     definition?: SortOrder
     tenantId?: SortOrder
+    status?: SortOrder
+    triggerType?: SortOrder
+    cronSummary?: SortOrder
+    activeVersionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16134,6 +18958,10 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     tenantId?: SortOrder
+    status?: SortOrder
+    triggerType?: SortOrder
+    cronSummary?: SortOrder
+    activeVersionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16143,6 +18971,10 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     tenantId?: SortOrder
+    status?: SortOrder
+    triggerType?: SortOrder
+    cronSummary?: SortOrder
+    activeVersionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16191,6 +19023,26 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
+  export type EnumWorkflowStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkflowStatus | EnumWorkflowStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkflowStatusWithAggregatesFilter<$PrismaModel> | $Enums.WorkflowStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkflowStatusFilter<$PrismaModel>
+    _max?: NestedEnumWorkflowStatusFilter<$PrismaModel>
+  }
+
+  export type EnumTriggerTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TriggerType | EnumTriggerTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TriggerType[] | ListEnumTriggerTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TriggerType[] | ListEnumTriggerTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTriggerTypeWithAggregatesFilter<$PrismaModel> | $Enums.TriggerType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTriggerTypeFilter<$PrismaModel>
+    _max?: NestedEnumTriggerTypeFilter<$PrismaModel>
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -16200,13 +19052,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntFilter<$PrismaModel> | number
-  }
-
-  export type EnumWorkflowStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.WorkflowStatus | EnumWorkflowStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumWorkflowStatusFilter<$PrismaModel> | $Enums.WorkflowStatus
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -16256,7 +19101,6 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     version?: SortOrder
-    status?: SortOrder
     definition?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16270,7 +19114,6 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     version?: SortOrder
-    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16279,7 +19122,6 @@ export namespace Prisma {
     id?: SortOrder
     workflowId?: SortOrder
     version?: SortOrder
-    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -16302,16 +19144,6 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type EnumWorkflowStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.WorkflowStatus | EnumWorkflowStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumWorkflowStatusWithAggregatesFilter<$PrismaModel> | $Enums.WorkflowStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumWorkflowStatusFilter<$PrismaModel>
-    _max?: NestedEnumWorkflowStatusFilter<$PrismaModel>
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -16451,8 +19283,13 @@ export namespace Prisma {
     status?: SortOrder
     output?: SortOrder
     error?: SortOrder
+    retryCount?: SortOrder
     startedAt?: SortOrder
     completedAt?: SortOrder
+  }
+
+  export type ExecutionStepAvgOrderByAggregateInput = {
+    retryCount?: SortOrder
   }
 
   export type ExecutionStepMaxOrderByAggregateInput = {
@@ -16461,6 +19298,7 @@ export namespace Prisma {
     nodeId?: SortOrder
     status?: SortOrder
     error?: SortOrder
+    retryCount?: SortOrder
     startedAt?: SortOrder
     completedAt?: SortOrder
   }
@@ -16471,8 +19309,13 @@ export namespace Prisma {
     nodeId?: SortOrder
     status?: SortOrder
     error?: SortOrder
+    retryCount?: SortOrder
     startedAt?: SortOrder
     completedAt?: SortOrder
+  }
+
+  export type ExecutionStepSumOrderByAggregateInput = {
+    retryCount?: SortOrder
   }
 
   export type ProcessedEventCountOrderByAggregateInput = {
@@ -16592,17 +19435,25 @@ export namespace Prisma {
     id?: SortOrder
     executionId?: SortOrder
     nodeId?: SortOrder
+    pluginType?: SortOrder
     status?: SortOrder
     message?: SortOrder
+    retryCount?: SortOrder
     timestamp?: SortOrder
+  }
+
+  export type ExecutionLogAvgOrderByAggregateInput = {
+    retryCount?: SortOrder
   }
 
   export type ExecutionLogMaxOrderByAggregateInput = {
     id?: SortOrder
     executionId?: SortOrder
     nodeId?: SortOrder
+    pluginType?: SortOrder
     status?: SortOrder
     message?: SortOrder
+    retryCount?: SortOrder
     timestamp?: SortOrder
   }
 
@@ -16610,9 +19461,15 @@ export namespace Prisma {
     id?: SortOrder
     executionId?: SortOrder
     nodeId?: SortOrder
+    pluginType?: SortOrder
     status?: SortOrder
     message?: SortOrder
+    retryCount?: SortOrder
     timestamp?: SortOrder
+  }
+
+  export type ExecutionLogSumOrderByAggregateInput = {
+    retryCount?: SortOrder
   }
 
   export type DeadLetterQueueScalarRelationFilter = {
@@ -16645,6 +19502,74 @@ export namespace Prisma {
     status?: SortOrder
     message?: SortOrder
     replayedAt?: SortOrder
+  }
+
+  export type ApiKeyCountOrderByAggregateInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    keyPrefix?: SortOrder
+    lastUsedAt?: SortOrder
+    revoked?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApiKeyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    keyPrefix?: SortOrder
+    lastUsedAt?: SortOrder
+    revoked?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApiKeyMinOrderByAggregateInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    keyPrefix?: SortOrder
+    lastUsedAt?: SortOrder
+    revoked?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SecretTenantIdNameCompoundUniqueInput = {
+    tenantId: string
+    name: string
+  }
+
+  export type SecretCountOrderByAggregateInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    name?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SecretMaxOrderByAggregateInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    name?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SecretMinOrderByAggregateInput = {
+    id?: SortOrder
+    tenantId?: SortOrder
+    name?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserCreateNestedManyWithoutTenantInput = {
@@ -16823,6 +19748,14 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type EnumWorkflowStatusFieldUpdateOperationsInput = {
+    set?: $Enums.WorkflowStatus
+  }
+
+  export type EnumTriggerTypeFieldUpdateOperationsInput = {
+    set?: $Enums.TriggerType
+  }
+
   export type TenantUpdateOneRequiredWithoutWorkflowsNestedInput = {
     create?: XOR<TenantCreateWithoutWorkflowsInput, TenantUncheckedCreateWithoutWorkflowsInput>
     connectOrCreate?: TenantCreateOrConnectWithoutWorkflowsInput
@@ -16885,10 +19818,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type EnumWorkflowStatusFieldUpdateOperationsInput = {
-    set?: $Enums.WorkflowStatus
   }
 
   export type WorkflowUpdateOneRequiredWithoutVersionsNestedInput = {
@@ -17233,6 +20162,20 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedEnumWorkflowStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkflowStatus | EnumWorkflowStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkflowStatusFilter<$PrismaModel> | $Enums.WorkflowStatus
+  }
+
+  export type NestedEnumTriggerTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TriggerType | EnumTriggerTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TriggerType[] | ListEnumTriggerTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TriggerType[] | ListEnumTriggerTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTriggerTypeFilter<$PrismaModel> | $Enums.TriggerType
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -17284,11 +20227,24 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type NestedEnumWorkflowStatusFilter<$PrismaModel = never> = {
+  export type NestedEnumWorkflowStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.WorkflowStatus | EnumWorkflowStatusFieldRefInput<$PrismaModel>
     in?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumWorkflowStatusFilter<$PrismaModel> | $Enums.WorkflowStatus
+    not?: NestedEnumWorkflowStatusWithAggregatesFilter<$PrismaModel> | $Enums.WorkflowStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkflowStatusFilter<$PrismaModel>
+    _max?: NestedEnumWorkflowStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTriggerTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TriggerType | EnumTriggerTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TriggerType[] | ListEnumTriggerTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TriggerType[] | ListEnumTriggerTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTriggerTypeWithAggregatesFilter<$PrismaModel> | $Enums.TriggerType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTriggerTypeFilter<$PrismaModel>
+    _max?: NestedEnumTriggerTypeFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -17316,16 +20272,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type NestedEnumWorkflowStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.WorkflowStatus | EnumWorkflowStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.WorkflowStatus[] | ListEnumWorkflowStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumWorkflowStatusWithAggregatesFilter<$PrismaModel> | $Enums.WorkflowStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumWorkflowStatusFilter<$PrismaModel>
-    _max?: NestedEnumWorkflowStatusFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -17439,6 +20385,10 @@ export namespace Prisma {
     name: string
     description?: string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.WorkflowStatus
+    triggerType?: $Enums.TriggerType
+    cronSummary?: string | null
+    activeVersionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     versions?: WorkflowVersionCreateNestedManyWithoutWorkflowInput
@@ -17449,6 +20399,10 @@ export namespace Prisma {
     name: string
     description?: string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.WorkflowStatus
+    triggerType?: $Enums.TriggerType
+    cronSummary?: string | null
+    activeVersionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     versions?: WorkflowVersionUncheckedCreateNestedManyWithoutWorkflowInput
@@ -17546,6 +20500,10 @@ export namespace Prisma {
     description?: StringNullableFilter<"Workflow"> | string | null
     definition?: JsonNullableFilter<"Workflow">
     tenantId?: StringFilter<"Workflow"> | string
+    status?: EnumWorkflowStatusFilter<"Workflow"> | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFilter<"Workflow"> | $Enums.TriggerType
+    cronSummary?: StringNullableFilter<"Workflow"> | string | null
+    activeVersionId?: StringNullableFilter<"Workflow"> | string | null
     createdAt?: DateTimeFilter<"Workflow"> | Date | string
     updatedAt?: DateTimeFilter<"Workflow"> | Date | string
   }
@@ -17669,7 +20627,6 @@ export namespace Prisma {
   export type WorkflowVersionCreateWithoutWorkflowInput = {
     id?: string
     version: number
-    status?: $Enums.WorkflowStatus
     definition: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17679,7 +20636,6 @@ export namespace Prisma {
   export type WorkflowVersionUncheckedCreateWithoutWorkflowInput = {
     id?: string
     version: number
-    status?: $Enums.WorkflowStatus
     definition: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17752,7 +20708,6 @@ export namespace Prisma {
     id?: StringFilter<"WorkflowVersion"> | string
     workflowId?: StringFilter<"WorkflowVersion"> | string
     version?: IntFilter<"WorkflowVersion"> | number
-    status?: EnumWorkflowStatusFilter<"WorkflowVersion"> | $Enums.WorkflowStatus
     definition?: JsonFilter<"WorkflowVersion">
     createdAt?: DateTimeFilter<"WorkflowVersion"> | Date | string
     updatedAt?: DateTimeFilter<"WorkflowVersion"> | Date | string
@@ -17763,6 +20718,10 @@ export namespace Prisma {
     name: string
     description?: string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.WorkflowStatus
+    triggerType?: $Enums.TriggerType
+    cronSummary?: string | null
+    activeVersionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutWorkflowsInput
@@ -17774,6 +20733,10 @@ export namespace Prisma {
     description?: string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId: string
+    status?: $Enums.WorkflowStatus
+    triggerType?: $Enums.TriggerType
+    cronSummary?: string | null
+    activeVersionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17829,6 +20792,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
+    cronSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutWorkflowsNestedInput
@@ -17840,6 +20807,10 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
     tenantId?: StringFieldUpdateOperationsInput | string
+    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
+    cronSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17875,7 +20846,6 @@ export namespace Prisma {
   export type WorkflowVersionCreateWithoutExecutionsInput = {
     id?: string
     version: number
-    status?: $Enums.WorkflowStatus
     definition: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17886,7 +20856,6 @@ export namespace Prisma {
     id?: string
     workflowId: string
     version: number
-    status?: $Enums.WorkflowStatus
     definition: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17903,6 +20872,7 @@ export namespace Prisma {
     status?: $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    retryCount?: number
     startedAt?: Date | string | null
     completedAt?: Date | string | null
   }
@@ -17913,6 +20883,7 @@ export namespace Prisma {
     status?: $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    retryCount?: number
     startedAt?: Date | string | null
     completedAt?: Date | string | null
   }
@@ -17930,16 +20901,20 @@ export namespace Prisma {
   export type ExecutionLogCreateWithoutExecutionInput = {
     id?: string
     nodeId: string
+    pluginType?: string | null
     status: string
     message?: string | null
+    retryCount?: number
     timestamp?: Date | string
   }
 
   export type ExecutionLogUncheckedCreateWithoutExecutionInput = {
     id?: string
     nodeId: string
+    pluginType?: string | null
     status: string
     message?: string | null
+    retryCount?: number
     timestamp?: Date | string
   }
 
@@ -17967,7 +20942,6 @@ export namespace Prisma {
   export type WorkflowVersionUpdateWithoutExecutionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
     definition?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17978,7 +20952,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     workflowId?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
     definition?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18010,6 +20983,7 @@ export namespace Prisma {
     status?: EnumExecutionStatusFilter<"ExecutionStep"> | $Enums.ExecutionStatus
     output?: JsonNullableFilter<"ExecutionStep">
     error?: StringNullableFilter<"ExecutionStep"> | string | null
+    retryCount?: IntFilter<"ExecutionStep"> | number
     startedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"ExecutionStep"> | Date | string | null
   }
@@ -18037,8 +21011,10 @@ export namespace Prisma {
     id?: StringFilter<"ExecutionLog"> | string
     executionId?: StringFilter<"ExecutionLog"> | string
     nodeId?: StringFilter<"ExecutionLog"> | string
+    pluginType?: StringNullableFilter<"ExecutionLog"> | string | null
     status?: StringFilter<"ExecutionLog"> | string
     message?: StringNullableFilter<"ExecutionLog"> | string | null
+    retryCount?: IntFilter<"ExecutionLog"> | number
     timestamp?: DateTimeFilter<"ExecutionLog"> | Date | string
   }
 
@@ -18342,6 +21318,10 @@ export namespace Prisma {
     name: string
     description?: string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.WorkflowStatus
+    triggerType?: $Enums.TriggerType
+    cronSummary?: string | null
+    activeVersionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18387,6 +21367,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
+    cronSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     versions?: WorkflowVersionUpdateManyWithoutWorkflowNestedInput
@@ -18397,6 +21381,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
+    cronSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     versions?: WorkflowVersionUncheckedUpdateManyWithoutWorkflowNestedInput
@@ -18407,6 +21395,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     definition?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
+    triggerType?: EnumTriggerTypeFieldUpdateOperationsInput | $Enums.TriggerType
+    cronSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    activeVersionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18441,7 +21433,6 @@ export namespace Prisma {
   export type WorkflowVersionCreateManyWorkflowInput = {
     id?: string
     version: number
-    status?: $Enums.WorkflowStatus
     definition: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18450,7 +21441,6 @@ export namespace Prisma {
   export type WorkflowVersionUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
     definition?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18460,7 +21450,6 @@ export namespace Prisma {
   export type WorkflowVersionUncheckedUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
     definition?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18470,7 +21459,6 @@ export namespace Prisma {
   export type WorkflowVersionUncheckedUpdateManyWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     version?: IntFieldUpdateOperationsInput | number
-    status?: EnumWorkflowStatusFieldUpdateOperationsInput | $Enums.WorkflowStatus
     definition?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18518,6 +21506,7 @@ export namespace Prisma {
     status?: $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: string | null
+    retryCount?: number
     startedAt?: Date | string | null
     completedAt?: Date | string | null
   }
@@ -18525,8 +21514,10 @@ export namespace Prisma {
   export type ExecutionLogCreateManyExecutionInput = {
     id?: string
     nodeId: string
+    pluginType?: string | null
     status: string
     message?: string | null
+    retryCount?: number
     timestamp?: Date | string
   }
 
@@ -18536,6 +21527,7 @@ export namespace Prisma {
     status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -18546,6 +21538,7 @@ export namespace Prisma {
     status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -18556,6 +21549,7 @@ export namespace Prisma {
     status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
     output?: NullableJsonNullValueInput | InputJsonValue
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -18563,24 +21557,30 @@ export namespace Prisma {
   export type ExecutionLogUpdateWithoutExecutionInput = {
     id?: StringFieldUpdateOperationsInput | string
     nodeId?: StringFieldUpdateOperationsInput | string
+    pluginType?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ExecutionLogUncheckedUpdateWithoutExecutionInput = {
     id?: StringFieldUpdateOperationsInput | string
     nodeId?: StringFieldUpdateOperationsInput | string
+    pluginType?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ExecutionLogUncheckedUpdateManyWithoutExecutionInput = {
     id?: StringFieldUpdateOperationsInput | string
     nodeId?: StringFieldUpdateOperationsInput | string
+    pluginType?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
+    retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

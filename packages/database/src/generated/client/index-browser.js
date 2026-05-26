@@ -145,6 +145,10 @@ exports.Prisma.WorkflowScalarFieldEnum = {
   description: 'description',
   definition: 'definition',
   tenantId: 'tenantId',
+  status: 'status',
+  triggerType: 'triggerType',
+  cronSummary: 'cronSummary',
+  activeVersionId: 'activeVersionId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -153,7 +157,6 @@ exports.Prisma.WorkflowVersionScalarFieldEnum = {
   id: 'id',
   workflowId: 'workflowId',
   version: 'version',
-  status: 'status',
   definition: 'definition',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -175,6 +178,7 @@ exports.Prisma.ExecutionStepScalarFieldEnum = {
   status: 'status',
   output: 'output',
   error: 'error',
+  retryCount: 'retryCount',
   startedAt: 'startedAt',
   completedAt: 'completedAt'
 };
@@ -211,8 +215,10 @@ exports.Prisma.ExecutionLogScalarFieldEnum = {
   id: 'id',
   executionId: 'executionId',
   nodeId: 'nodeId',
+  pluginType: 'pluginType',
   status: 'status',
   message: 'message',
+  retryCount: 'retryCount',
   timestamp: 'timestamp'
 };
 
@@ -223,6 +229,27 @@ exports.Prisma.ReplayHistoryScalarFieldEnum = {
   status: 'status',
   message: 'message',
   replayedAt: 'replayedAt'
+};
+
+exports.Prisma.ApiKeyScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  name: 'name',
+  keyHash: 'keyHash',
+  keyPrefix: 'keyPrefix',
+  lastUsedAt: 'lastUsedAt',
+  revoked: 'revoked',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SecretScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  name: 'name',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -265,6 +292,12 @@ exports.WorkflowStatus = exports.$Enums.WorkflowStatus = {
   ARCHIVED: 'ARCHIVED'
 };
 
+exports.TriggerType = exports.$Enums.TriggerType = {
+  MANUAL: 'MANUAL',
+  WEBHOOK: 'WEBHOOK',
+  CRON: 'CRON'
+};
+
 exports.ExecutionStatus = exports.$Enums.ExecutionStatus = {
   PENDING: 'PENDING',
   RUNNING: 'RUNNING',
@@ -283,7 +316,9 @@ exports.Prisma.ModelName = {
   DeadLetterQueue: 'DeadLetterQueue',
   Invitation: 'Invitation',
   ExecutionLog: 'ExecutionLog',
-  ReplayHistory: 'ReplayHistory'
+  ReplayHistory: 'ReplayHistory',
+  ApiKey: 'ApiKey',
+  Secret: 'Secret'
 };
 
 /**

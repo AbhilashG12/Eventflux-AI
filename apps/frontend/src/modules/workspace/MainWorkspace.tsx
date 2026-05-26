@@ -9,7 +9,7 @@ const DLQDashboard = lazy(() => import('../dashboard/components/DLQDashboard').t
 const AnalyticsDashboard = lazy(() => import('../dashboard/components/AnalyticsDashboard').then(m => ({ default: m.AnalyticsDashboard })));
 
 export const GlobalLoader = () => (
-  <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#090514] z-[9999]">
+  <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#090514] z-9999">
     <div className="relative w-32 h-32 flex items-center justify-center">
       <motion.div 
         animate={{ rotate: 360 }} 
@@ -32,7 +32,7 @@ export const GlobalLoader = () => (
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2, duration: 0.8 }}
-      className="mt-8 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 tracking-[0.2em] uppercase"
+      className="mt-8 text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-purple-400 tracking-[0.2em] uppercase"
     >
       EventFlux
     </motion.h1>
@@ -78,12 +78,12 @@ export const MainWorkspace = () => {
       <motion.div 
         animate={{ x: [0, 50, -50, 0], y: [0, -50, 50, 0] }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none z-0" 
+        className="absolute top-[-10%] left-[-10%] w-100 h-100 bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none z-0" 
       />
       <motion.div 
         animate={{ x: [0, -60, 60, 0], y: [0, 60, -60, 0] }}
         transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-        className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-purple-600/20 rounded-full blur-[120px] pointer-events-none z-0" 
+        className="absolute bottom-[-10%] right-[-10%] w-100 h-100 bg-purple-600/20 rounded-full blur-[120px] pointer-events-none z-0" 
       />
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjA1KSIvPjwvc3ZnPg==')] opacity-[0.15] pointer-events-none z-0" />
 
@@ -99,7 +99,7 @@ export const MainWorkspace = () => {
           >
             <Suspense fallback={<LocalLoader />}>
               {activeView === 'BUILDER' && (
-                <div className="w-full h-[calc(100vh-125px)] relative">
+                <div className="w-full h-screen relative -mt-px">
                   <WorkflowBuilder />
                 </div>
               )}
