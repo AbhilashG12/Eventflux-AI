@@ -23,6 +23,7 @@ enum ExecutionStatus {
   RUNNING
   COMPLETED
   FAILED
+  CANCELLED
 }
 
 enum TriggerType {

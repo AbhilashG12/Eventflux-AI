@@ -125,7 +125,7 @@ async function startSystem() {
     });
   });
 
-  registerHandler('execution-events', async (payload) => {
+ registerHandler('execution-events', async (payload) => {
     const execId = payload.executionId || (payload.eventName ? payload.eventName.split('-')[0] : null);
     const nodeId = payload.nodeId || (payload.eventName ? payload.eventName.split('-')[1] : null);
     const status = payload.status || (payload.eventName ? payload.eventName.split('-')[2] : null);
@@ -139,7 +139,23 @@ async function startSystem() {
 
     await EventHardenerService.processIdempotent(idempotentEventId, 'execution-events', payload, async () => {
       try {
-        const targetTenant = payload.tenantId || 'default';
+        let targetTenant = payload.tenantId;
+        let currentStatus = null;
+        
+        if (execId) {
+          const executionRecord = await db.execution.findUnique({
+            where: { id: execId },
+            include: { workflowVersion: { include: { workflow: true } } }
+          });
+          targetTenant = targetTenant || executionRecord?.workflowVersion?.workflow?.tenantId || 'default';
+          currentStatus = executionRecord?.status;
+        }
+
+        if (currentStatus === 'CANCELLED' && status.toUpperCase() !== 'CANCELLED') {
+          console.log(`🛑 [KAFKA] Ignoring trailing ${status.toUpperCase()} event for node [${nodeId}]. Execution was CANCELLED.`);
+          return; 
+        }
+
         await db.executionLog.create({
           data: {
             executionId: execId,

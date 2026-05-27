@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Activity } from 'lucide-react';
 
 interface BuilderHeaderProps {
   onSave: () => void;
@@ -7,6 +8,7 @@ interface BuilderHeaderProps {
   isPublishing: boolean;
   workflowStatus: string;
   onTestRun: () => void;
+  onToggleLogs?: () => void;
 }
 
 export const BuilderHeader = ({ 
@@ -15,7 +17,8 @@ export const BuilderHeader = ({
   onPublish, 
   isPublishing, 
   workflowStatus, 
-  onTestRun 
+  onTestRun,
+  onToggleLogs 
 }: BuilderHeaderProps) => {
   return (
     <div className="h-14 bg-[#0B061A]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-6 z-50">
@@ -34,6 +37,17 @@ export const BuilderHeader = ({
         }`}>
           {workflowStatus}
         </div>
+
+        {onToggleLogs && (
+          <button 
+            onClick={onToggleLogs}
+            className="flex items-center gap-2 px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-sm font-semibold text-gray-300 hover:text-white hover:bg-black/60 hover:border-white/20 transition-all"
+          >
+            <Activity size={16} className="text-blue-400" />
+            View Logs
+          </button>
+        )}
+
         <button 
           onClick={onSave}
           disabled={isSaving}
@@ -42,6 +56,7 @@ export const BuilderHeader = ({
           {isSaving ? <span className="animate-spin text-purple-500">⌛</span> : '💾'} 
           Save Draft
         </button>
+
         <motion.button 
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}

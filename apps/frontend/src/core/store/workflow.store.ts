@@ -10,6 +10,8 @@ import {
   applyEdgeChanges 
 } from 'reactflow';
 
+export type NodeStatus = 'IDLE' | 'RUNNING' | 'COMPLETED' | 'FAILED';
+
 interface WorkflowState {
   workflowId: string | null;
   nodes: Node[];
@@ -23,6 +25,7 @@ interface WorkflowState {
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
   updateNodeData: (nodeId: string, data: any) => void;
+  updateNodeStatus: (nodeId: string, status: NodeStatus) => void;
 }
 
 export const useWorkflowStore = create<WorkflowState>((set, get) => ({
@@ -50,6 +53,14 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   updateNodeData: (nodeId, data) => set({
     nodes: get().nodes.map((node) => 
       node.id === nodeId ? { ...node, data: { ...node.data, ...data } } : node
+    ),
+  }),
+
+  updateNodeStatus: (nodeId, status) => set({
+    nodes: get().nodes.map((node) => 
+      node.id === nodeId 
+        ? { ...node, data: { ...node.data, status } } 
+        : node
     ),
   }),
 }));

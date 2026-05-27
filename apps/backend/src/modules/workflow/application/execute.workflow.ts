@@ -62,6 +62,12 @@ export class ExecuteWorkflowUseCase {
       };
 
       for (const node of nodes) {
+        const preCheck = await db.execution.findUnique({ where: { id: executionId }, select: { status: true } });
+        if (preCheck?.status === 'CANCELLED') {
+          console.log(`🛑 [Execution Engine] Aborting at node [${node.id}] - User activated kill switch.`);
+          break;
+        }
+
         await publishEvent('execution-events', `${executionId}-${node.id}-running`, {
           tenantId,
           executionId,
@@ -82,8 +88,11 @@ export class ExecuteWorkflowUseCase {
           if (node.type === 'TRIGGER') {
             stepOutput = initialPayload || {};
           } else {
-            const pluginType = node.data?.pluginType || node.type;
+            const pluginType = node.data?.actionType || node.data?.pluginType || node.type;
             const executor = pluginRegistry.getExecutor(pluginType);
+
+            console.log(`⏳ [TEST] Freezing node ${node.id} for 10s so you can hit cancel!`);
+            await new Promise(resolve => setTimeout(resolve, 10000));
             
             stepOutput = await executor.execute(interpolatedNode, context);
           }
@@ -94,6 +103,12 @@ export class ExecuteWorkflowUseCase {
           console.error(`\n❌ [Execution Engine] Node ${node.id} FAILED:`, error.message);
         }
         
+        const postCheck = await db.execution.findUnique({ where: { id: executionId }, select: { status: true } });
+        if (postCheck?.status === 'CANCELLED') {
+          console.log(`🛑 [Execution Engine] Trailing output dropped for [${node.id}] - Execution was cancelled mid-flight.`);
+          break;
+        }
+
         executionState[node.id] = stepOutput;
 
         await publishEvent('execution-events', `${executionId}-${node.id}-${stepStatus.toLowerCase()}`, {
