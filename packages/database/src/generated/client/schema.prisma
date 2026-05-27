@@ -163,6 +163,7 @@ model ExecutionLog {
   message     String?
   retryCount  Int       @default(0)
   timestamp   DateTime  @default(now())
+  output      Json?
 
   @@index([executionId])
 }

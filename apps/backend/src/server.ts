@@ -19,6 +19,7 @@ import { dlqRoutes } from './modules/dlq/dlq.routes.js';
 import { analyticsRoutes } from './modules/analytics/analytics.routes.js';
 import { secretsRoutes } from "./modules/secrets/secrets.routes.js";
 import {webhookRoutes} from "./modules/webhooks/webhooks.routes.js";
+import {CronService} from "./core/cron/cron.service.js"
 
 const executeUseCase = new ExecuteWorkflowUseCase();
 const app = express();
@@ -144,7 +145,8 @@ async function startSystem() {
             executionId: execId,
             nodeId: nodeId,
             status: status.toUpperCase(),
-            message: `Step [${nodeId}] is ${status.toUpperCase()}`
+            message: `Step [${nodeId}] is ${status.toUpperCase()}`,
+            output: payload.output ? (typeof payload.output === 'string' ? JSON.parse(payload.output) : payload.output) : undefined
           }
         });
 
@@ -175,6 +177,8 @@ async function startSystem() {
   });
 
   await startConsumer();
+
+  await CronService.init();
 
   httpServer.listen(config.backend.port, () => {
     logger.info(`🚀 EventFlux Backend & WebSockets running on port ${config.backend.port}`);

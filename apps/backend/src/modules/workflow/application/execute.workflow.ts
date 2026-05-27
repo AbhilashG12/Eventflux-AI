@@ -1,5 +1,7 @@
 import { db } from '@eventflux/database';
 import { publishEvent } from '@eventflux/kafka';
+import { pluginRegistry } from '../../execution/registry.js';
+import { ExecutionContext } from '../../execution/nodes/nodes.interface.js';
 
 export class ExecuteWorkflowUseCase {
 
@@ -17,6 +19,19 @@ export class ExecuteWorkflowUseCase {
     });
   }
 
+  private interpolateNodeData(data: any, state: Record<string, any>): any {
+    if (typeof data === 'string') return this.interpolate(data, state);
+    if (Array.isArray(data)) return data.map(item => this.interpolateNodeData(item, state));
+    if (data !== null && typeof data === 'object') {
+      const result: any = {};
+      for (const key in data) {
+        result[key] = this.interpolateNodeData(data[key], state);
+      }
+      return result;
+    }
+    return data;
+  }
+
   async trigger(workflowId: string, initialPayload: any, forcedExecutionId?: string) {
     try {
       const workflow = await db.workflow.findUnique({
@@ -24,7 +39,6 @@ export class ExecuteWorkflowUseCase {
       });
 
       if (!workflow || !workflow.definition) {
-        console.error(`[Execution Engine] Workflow ${workflowId} not found.`);
         return;
       }
 
@@ -38,15 +52,21 @@ export class ExecuteWorkflowUseCase {
         trigger: initialPayload || {}
       };
 
-      console.log(`[Execution Engine] Starting Execution ${executionId}`);
+      const context: ExecutionContext = {
+        executionId,
+        workflowId,
+        tenantId,
+        initialPayload: initialPayload || {},
+        previousResults: executionState,
+        secrets: {} 
+      };
 
       for (const node of nodes) {
         await publishEvent('execution-events', `${executionId}-${node.id}-running`, {
           tenantId,
           executionId,
           nodeId: node.id,
-          status: 'RUNNING',
-          logs: `> Starting ${node.type}...\n> Resolving variables...`
+          status: 'RUNNING'
         });
 
         let stepOutput: any = {};
@@ -54,41 +74,26 @@ export class ExecuteWorkflowUseCase {
         let stepLogs = '';
 
         try {
-          switch (node.type) {
+          const interpolatedNode = {
+            ...node,
+            data: this.interpolateNodeData(node.data || {}, executionState)
+          };
+
+          if (node.type === 'TRIGGER') {
+            stepOutput = initialPayload || {};
+          } else {
+            const pluginType = node.data?.pluginType || node.type;
+            const executor = pluginRegistry.getExecutor(pluginType);
             
-            case 'HTTP_REQUEST': {
-              const urlTemplate = node.data?.url || 'https://jsonplaceholder.typicode.com/todos/1';
-              const resolvedUrl = this.interpolate(urlTemplate, executionState);
-              
-              stepLogs += `> Executing HTTP GET to: ${resolvedUrl}\n`;
-              await new Promise(res => setTimeout(res, 1000));
-              
-              stepOutput = { status: 200, data: { message: "Mock response from API" }, requestedUrl: resolvedUrl };
-              stepLogs += `> Response 200 OK received.`;
-              break;
-            }
-
-            case 'DATA_TRANSFORM': {
-              stepLogs += `> Transforming payload data...\n`;
-              // Example: Taking data from a previous step and altering it
-              const sourceData = executionState[node.data?.sourceNodeId || 'trigger'];
-              stepOutput = { transformed: true, originalSize: JSON.stringify(sourceData).length };
-              stepLogs += `> Transformation complete.`;
-              break;
-            }
-
-            default: {
-              // Fallback for UI nodes or unsupported types
-              stepLogs += `> Executing standard node logic...\n`;
-              await new Promise(res => setTimeout(res, 800));
-              stepOutput = { message: "Standard execution complete" };
-            }
+            stepOutput = await executor.execute(interpolatedNode, context);
           }
 
         } catch (error: any) {
           stepStatus = 'FAILED';
           stepLogs += `\n> CRITICAL ERROR: ${error.message}`;
+          console.error(`\n❌ [Execution Engine] Node ${node.id} FAILED:`, error.message);
         }
+        
         executionState[node.id] = stepOutput;
 
         await publishEvent('execution-events', `${executionId}-${node.id}-${stepStatus.toLowerCase()}`, {
@@ -101,15 +106,12 @@ export class ExecuteWorkflowUseCase {
         });
 
         if (stepStatus === 'FAILED') {
-          console.error(`[Execution Engine] Halting execution ${executionId} at node ${node.id}`);
           break; 
         }
       }
-
-      console.log(`[Execution Engine] Execution ${executionId} finished.`);
       
     } catch (error) {
-      console.error("[Execution Engine] Execution failed:", error);
+      throw error;
     }
   }
 }

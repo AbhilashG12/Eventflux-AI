@@ -219,7 +219,8 @@ exports.Prisma.ExecutionLogScalarFieldEnum = {
   status: 'status',
   message: 'message',
   retryCount: 'retryCount',
-  timestamp: 'timestamp'
+  timestamp: 'timestamp',
+  output: 'output'
 };
 
 exports.Prisma.ReplayHistoryScalarFieldEnum = {

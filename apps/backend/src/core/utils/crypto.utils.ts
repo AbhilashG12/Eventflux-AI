@@ -1,7 +1,8 @@
 import crypto from 'crypto';
+import { config } from '@eventflux/config';
 
 const ALGORITHM = 'aes-256-gcm';
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || crypto.randomBytes(32).toString('hex');
+const ENCRYPTION_KEY = config.backend.encryptionKey;
 
 export const encryptSecret = (text: string): string => {
   const iv = crypto.randomBytes(16);

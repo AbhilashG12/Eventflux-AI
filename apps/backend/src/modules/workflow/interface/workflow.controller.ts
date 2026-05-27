@@ -5,6 +5,7 @@ import { ExecuteWorkflowUseCase } from '../application/execute.workflow.js';
 import { randomUUID } from 'crypto';
 import { publishEvent } from '@eventflux/kafka';
 import { db } from '@eventflux/database';
+import { CronService } from '../../../core/cron/cron.service.js';
 
 export class WorkflowController {
   private saveDraftUseCase = new SaveDraftUseCase();
@@ -94,6 +95,8 @@ export class WorkflowController {
 
         return newVersion;
       });
+
+      await CronService.reloadAll();
 
       return res.json({ 
         success: true, 

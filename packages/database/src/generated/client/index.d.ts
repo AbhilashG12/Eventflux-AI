@@ -12282,6 +12282,7 @@ export namespace Prisma {
     message: number
     retryCount: number
     timestamp: number
+    output: number
     _all: number
   }
 
@@ -12325,6 +12326,7 @@ export namespace Prisma {
     message?: true
     retryCount?: true
     timestamp?: true
+    output?: true
     _all?: true
   }
 
@@ -12423,6 +12425,7 @@ export namespace Prisma {
     message: string | null
     retryCount: number
     timestamp: Date
+    output: JsonValue | null
     _count: ExecutionLogCountAggregateOutputType | null
     _avg: ExecutionLogAvgAggregateOutputType | null
     _sum: ExecutionLogSumAggregateOutputType | null
@@ -12453,6 +12456,7 @@ export namespace Prisma {
     message?: boolean
     retryCount?: boolean
     timestamp?: boolean
+    output?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["executionLog"]>
 
@@ -12465,6 +12469,7 @@ export namespace Prisma {
     message?: boolean
     retryCount?: boolean
     timestamp?: boolean
+    output?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["executionLog"]>
 
@@ -12477,6 +12482,7 @@ export namespace Prisma {
     message?: boolean
     retryCount?: boolean
     timestamp?: boolean
+    output?: boolean
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["executionLog"]>
 
@@ -12489,9 +12495,10 @@ export namespace Prisma {
     message?: boolean
     retryCount?: boolean
     timestamp?: boolean
+    output?: boolean
   }
 
-  export type ExecutionLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "executionId" | "nodeId" | "pluginType" | "status" | "message" | "retryCount" | "timestamp", ExtArgs["result"]["executionLog"]>
+  export type ExecutionLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "executionId" | "nodeId" | "pluginType" | "status" | "message" | "retryCount" | "timestamp" | "output", ExtArgs["result"]["executionLog"]>
   export type ExecutionLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     execution?: boolean | ExecutionDefaultArgs<ExtArgs>
   }
@@ -12516,6 +12523,7 @@ export namespace Prisma {
       message: string | null
       retryCount: number
       timestamp: Date
+      output: Prisma.JsonValue | null
     }, ExtArgs["result"]["executionLog"]>
     composites: {}
   }
@@ -12948,6 +12956,7 @@ export namespace Prisma {
     readonly message: FieldRef<"ExecutionLog", 'String'>
     readonly retryCount: FieldRef<"ExecutionLog", 'Int'>
     readonly timestamp: FieldRef<"ExecutionLog", 'DateTime'>
+    readonly output: FieldRef<"ExecutionLog", 'Json'>
   }
     
 
@@ -16648,7 +16657,8 @@ export namespace Prisma {
     status: 'status',
     message: 'message',
     retryCount: 'retryCount',
-    timestamp: 'timestamp'
+    timestamp: 'timestamp',
+    output: 'output'
   };
 
   export type ExecutionLogScalarFieldEnum = (typeof ExecutionLogScalarFieldEnum)[keyof typeof ExecutionLogScalarFieldEnum]
@@ -17507,6 +17517,7 @@ export namespace Prisma {
     message?: StringNullableFilter<"ExecutionLog"> | string | null
     retryCount?: IntFilter<"ExecutionLog"> | number
     timestamp?: DateTimeFilter<"ExecutionLog"> | Date | string
+    output?: JsonNullableFilter<"ExecutionLog">
     execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
   }
 
@@ -17519,6 +17530,7 @@ export namespace Prisma {
     message?: SortOrderInput | SortOrder
     retryCount?: SortOrder
     timestamp?: SortOrder
+    output?: SortOrderInput | SortOrder
     execution?: ExecutionOrderByWithRelationInput
   }
 
@@ -17534,6 +17546,7 @@ export namespace Prisma {
     message?: StringNullableFilter<"ExecutionLog"> | string | null
     retryCount?: IntFilter<"ExecutionLog"> | number
     timestamp?: DateTimeFilter<"ExecutionLog"> | Date | string
+    output?: JsonNullableFilter<"ExecutionLog">
     execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
   }, "id">
 
@@ -17546,6 +17559,7 @@ export namespace Prisma {
     message?: SortOrderInput | SortOrder
     retryCount?: SortOrder
     timestamp?: SortOrder
+    output?: SortOrderInput | SortOrder
     _count?: ExecutionLogCountOrderByAggregateInput
     _avg?: ExecutionLogAvgOrderByAggregateInput
     _max?: ExecutionLogMaxOrderByAggregateInput
@@ -17565,6 +17579,7 @@ export namespace Prisma {
     message?: StringNullableWithAggregatesFilter<"ExecutionLog"> | string | null
     retryCount?: IntWithAggregatesFilter<"ExecutionLog"> | number
     timestamp?: DateTimeWithAggregatesFilter<"ExecutionLog"> | Date | string
+    output?: JsonNullableWithAggregatesFilter<"ExecutionLog">
   }
 
   export type ReplayHistoryWhereInput = {
@@ -18428,6 +18443,7 @@ export namespace Prisma {
     message?: string | null
     retryCount?: number
     timestamp?: Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
     execution: ExecutionCreateNestedOneWithoutLogsInput
   }
 
@@ -18440,6 +18456,7 @@ export namespace Prisma {
     message?: string | null
     retryCount?: number
     timestamp?: Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionLogUpdateInput = {
@@ -18450,6 +18467,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
     execution?: ExecutionUpdateOneRequiredWithoutLogsNestedInput
   }
 
@@ -18462,6 +18480,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionLogCreateManyInput = {
@@ -18473,6 +18492,7 @@ export namespace Prisma {
     message?: string | null
     retryCount?: number
     timestamp?: Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionLogUpdateManyMutationInput = {
@@ -18483,6 +18503,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionLogUncheckedUpdateManyInput = {
@@ -18494,6 +18515,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ReplayHistoryCreateInput = {
@@ -19440,6 +19462,7 @@ export namespace Prisma {
     message?: SortOrder
     retryCount?: SortOrder
     timestamp?: SortOrder
+    output?: SortOrder
   }
 
   export type ExecutionLogAvgOrderByAggregateInput = {
@@ -20906,6 +20929,7 @@ export namespace Prisma {
     message?: string | null
     retryCount?: number
     timestamp?: Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionLogUncheckedCreateWithoutExecutionInput = {
@@ -20916,6 +20940,7 @@ export namespace Prisma {
     message?: string | null
     retryCount?: number
     timestamp?: Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionLogCreateOrConnectWithoutExecutionInput = {
@@ -21016,6 +21041,7 @@ export namespace Prisma {
     message?: StringNullableFilter<"ExecutionLog"> | string | null
     retryCount?: IntFilter<"ExecutionLog"> | number
     timestamp?: DateTimeFilter<"ExecutionLog"> | Date | string
+    output?: JsonNullableFilter<"ExecutionLog">
   }
 
   export type ExecutionCreateWithoutStepsInput = {
@@ -21519,6 +21545,7 @@ export namespace Prisma {
     message?: string | null
     retryCount?: number
     timestamp?: Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionStepUpdateWithoutExecutionInput = {
@@ -21562,6 +21589,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionLogUncheckedUpdateWithoutExecutionInput = {
@@ -21572,6 +21600,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionLogUncheckedUpdateManyWithoutExecutionInput = {
@@ -21582,6 +21611,7 @@ export namespace Prisma {
     message?: NullableStringFieldUpdateOperationsInput | string | null
     retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    output?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ReplayHistoryCreateManyDlqInput = {
