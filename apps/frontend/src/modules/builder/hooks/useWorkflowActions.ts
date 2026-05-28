@@ -8,8 +8,7 @@ export const useWorkflowActions = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [workflowStatus, setWorkflowStatus] = useState<'DRAFT' | 'PUBLISHED'>('DRAFT');
-  
-  const { nodes, edges, workflowId, setWorkflowId, setNodes, setEdges } = useWorkflowStore();
+  const { setWorkflowId, setNodes, setEdges } = useWorkflowStore();
   
   const showError = useErrorStore((state) => state.showError);
   const showSuccess = useSuccessStore((state) => state.showSuccess);
@@ -35,16 +34,21 @@ export const useWorkflowActions = () => {
   const onSave = async () => {
     setIsSaving(true);
     try {
+      const freshState = useWorkflowStore.getState();
+      const freshNodes = freshState.nodes;
+      const freshEdges = freshState.edges;
+      const currentWorkflowId = freshState.workflowId;
+
       const payload = {
         name: "My Canvas Workflow",
         definition: {
-          nodes: nodes.map(n => ({ id: n.id, type: n.type, data: n.data, position: n.position })),
-          edges: edges.map(e => ({ source: e.source, target: e.target }))
+          nodes: freshNodes.map(n => ({ id: n.id, type: n.type, data: n.data, position: n.position })),
+          edges: freshEdges.map(e => ({ source: e.source, target: e.target }))
         }
       };
 
-      if (workflowId) {
-        await apiClient.patch(`/workflows/${workflowId}/draft`, payload);
+      if (currentWorkflowId) {
+        await apiClient.patch(`/workflows/${currentWorkflowId}/draft`, payload);
         showSuccess("Draft saved successfully!");
       } else {
         const { data } = await apiClient.post('/workflows', payload);
@@ -66,14 +70,24 @@ export const useWorkflowActions = () => {
   };
 
   const onPublish = async () => {
-    if (!workflowId) {
+    const currentWorkflowId = useWorkflowStore.getState().workflowId;
+
+    if (!currentWorkflowId) {
       showError("Please save a draft first before publishing!");
       return;
     }
 
     setIsPublishing(true);
     try {
-      await apiClient.post(`/workflows/${workflowId}/publish`);
+      const freshState = useWorkflowStore.getState();
+      await apiClient.patch(`/workflows/${currentWorkflowId}/draft`, {
+        definition: {
+          nodes: freshState.nodes.map(n => ({ id: n.id, type: n.type, data: n.data, position: n.position })),
+          edges: freshState.edges.map(e => ({ source: e.source, target: e.target }))
+        }
+      });
+
+      await apiClient.post(`/workflows/${currentWorkflowId}/publish`);
       showSuccess("Workflow published successfully!");
       setWorkflowStatus('PUBLISHED');
     } catch (error: any) {
@@ -84,12 +98,15 @@ export const useWorkflowActions = () => {
   };
 
   const onTestRun = async () => {
-    if (!workflowId) {
+    const currentWorkflowId = useWorkflowStore.getState().workflowId;
+    
+    if (!currentWorkflowId) {
       showError("Please publish the workflow before testing!");
       return;
     }
+    
     try {
-      await apiClient.post(`/workflows/${workflowId}/execute`, {
+      await apiClient.post(`/workflows/${currentWorkflowId}/execute`, {
         payload: { source: "manual_frontend_test" }
       });
       showSuccess("Execution Queued! Switch to Telemetry.");

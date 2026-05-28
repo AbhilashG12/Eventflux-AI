@@ -17,12 +17,17 @@ export const ConfigPanel = () => {
 
   const handleConfigChange = (key: string, value: any) => {
     updateNodeData(selectedNode.id, {
-      config: { ...config, [key]: value }
+      ...selectedNode.data,
+      config: { 
+        ...config, 
+        [key]: value 
+      }
     });
   };
 
   const handleActionTypeChange = (newType: string) => {
     updateNodeData(selectedNode.id, {
+      ...selectedNode.data,
       actionType: newType,
       label: newType === 'webhook_trigger' ? 'Webhook Trigger' : 
              newType === 'cron_trigger' ? 'Cron Schedule' : 
@@ -99,6 +104,7 @@ export const ConfigPanel = () => {
             </p>
           </div>
         )}
+
         {actionType === 'ai_generate' && (
           <div className="space-y-4">
             <div>
@@ -109,6 +115,36 @@ export const ConfigPanel = () => {
                 className="w-full h-40 bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-purple-500 focus:outline-none resize-none placeholder-gray-600 font-mono"
                 placeholder="You are a helpful AI assistant..."
               />
+            </div>
+          </div>
+        )}
+
+        {selectedNode.type === 'ACTION' && actionType !== '' && (
+          <div className="mt-6 pt-6 border-t border-white/10 space-y-4">
+            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Retry Policy</h4>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[10px] text-gray-500 mb-1">Max Retries</label>
+                <input 
+                  type="number"
+                  min="0"
+                  max="10"
+                  value={config.maxRetries || 0}
+                  onChange={(e) => handleConfigChange('maxRetries', parseInt(e.target.value) || 0)}
+                  className="w-full bg-[#141414] border border-white/10 rounded px-2 py-1.5 text-sm text-white focus:border-blue-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] text-gray-500 mb-1">Delay (ms)</label>
+                <input 
+                  type="number"
+                  min="1000"
+                  step="1000"
+                  value={config.retryDelayMs || 2000}
+                  onChange={(e) => handleConfigChange('retryDelayMs', parseInt(e.target.value) || 2000)}
+                  className="w-full bg-[#141414] border border-white/10 rounded px-2 py-1.5 text-sm text-white focus:border-blue-500 focus:outline-none"
+                />
+              </div>
             </div>
           </div>
         )}

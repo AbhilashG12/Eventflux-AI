@@ -124,8 +124,7 @@ async function startSystem() {
       }
     });
   });
-
- registerHandler('execution-events', async (payload) => {
+registerHandler('execution-events', async (payload) => {
     const execId = payload.executionId || (payload.eventName ? payload.eventName.split('-')[0] : null);
     const nodeId = payload.nodeId || (payload.eventName ? payload.eventName.split('-')[1] : null);
     const status = payload.status || (payload.eventName ? payload.eventName.split('-')[2] : null);
@@ -166,13 +165,7 @@ async function startSystem() {
           }
         });
 
-        if (status.toLowerCase() === 'completed') {
-          await db.execution.update({ 
-            where: { id: execId }, 
-            data: { status: 'COMPLETED', completedAt: new Date() }
-          }).catch(() => {});
-          wsManager.broadcastToTenant(targetTenant, 'analytics-pulse', { status: 'COMPLETED' });
-        } else if (status.toLowerCase() === 'failed') {
+        if (status.toLowerCase() === 'failed') {
           await db.execution.update({ 
             where: { id: execId }, 
             data: { status: 'FAILED', completedAt: new Date() }
@@ -191,7 +184,7 @@ async function startSystem() {
       }
     });
   });
-
+  
   await startConsumer();
 
   await CronService.init();

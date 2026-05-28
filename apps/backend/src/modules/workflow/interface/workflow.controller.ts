@@ -35,8 +35,14 @@ export class WorkflowController {
 
   async updateWorkflow(req: Request, res: Response): Promise<any> {
     const id = req.params.id as string;
-    const { definition } = req.body;
     const tenantId = (req as any).tenantId;
+
+    // 🔥 CRITICAL FIX: Safely parse either a { definition } object or raw { nodes, edges } 
+    // coming directly from the React Flow frontend canvas.
+    const definition = req.body.definition || {
+      nodes: req.body.nodes || [],
+      edges: req.body.edges || []
+    };
 
     try {
       const workflow = await db.workflow.findFirst({

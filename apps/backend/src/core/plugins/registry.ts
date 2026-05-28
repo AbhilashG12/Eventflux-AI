@@ -1,8 +1,9 @@
+import { ExecutionContext } from "../../modules/execution/nodes/nodes.interface.js"
 
 export interface WorkflowPlugin {
   id: string;          
   name: string;        
-  execute: (config: any, inputs: any) => Promise<any>;
+  execute: (node: any, context: ExecutionContext) => Promise<any>;
 }
 
 class PluginRegistry {
@@ -13,7 +14,7 @@ class PluginRegistry {
     console.log(`🔌 [Plugin Registry] Registered: ${plugin.name}`);
   }
 
-  get(id: string): WorkflowPlugin {
+  getExecutor(id: string): WorkflowPlugin {
     const plugin = this.plugins.get(id);
     if (!plugin) {
       throw new Error(`Plugin ${id} not found in registry.`);
@@ -22,23 +23,56 @@ class PluginRegistry {
   }
 }
 
-export const registry = new PluginRegistry();
+export const pluginRegistry = new PluginRegistry();
 
-registry.register({
+pluginRegistry.register({
   id: 'ai_generate',
   name: 'Groq AI Generator',
-  execute: async (config, inputs) => {
-    console.log('🧠 [PLUGIN] AI Registry module invoked! Simulating 10s delay...');
-    await new Promise(resolve => setTimeout(resolve, 10000)); 
+  execute: async (node, context) => {
+    const apiKey = context.secrets['GROQ_API_KEY']; 
+    const prompt = node.data?.config?.prompt;
+
+    console.log(`🧠 [PLUGIN] AI executing for workflow: ${context.workflowId}`);
     
-    console.log('🧠 [PLUGIN] AI finished generating!');
-    return { generated_text: "Here is your joke..." };
+    if (!apiKey) {
+      throw new Error("CRITICAL: GROQ_API_KEY is missing from the Secrets Vault.");
+    }
+
+    if (!prompt) {
+      throw new Error("CRITICAL: AI Prompt is empty. Please configure the node in the UI.");
+    }
+
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant', 
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`Groq API Rate Limit or Error: ${response.status} - ${errorBody}`);
+    }
+
+    const data = await response.json();
+    return { 
+      generated_text: data.choices[0]?.message?.content || "No response generated.",
+      model_used: data.model,
+      tokens_used: data.usage?.total_tokens
+    };
   }
 });
-registry.register({
+
+pluginRegistry.register({
   id: 'http_request',
   name: 'REST API Caller',
-  execute: async (config, inputs) => {
-    return { status: 200, data: {} };
+  execute: async (node, context) => {
+    console.log(`🌐 [PLUGIN] HTTP Request executing to: ${node.data?.config?.url}`);
+    return { status: 200, data: { message: "Success" } };
   }
 });
