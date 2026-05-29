@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useWorkflowStore } from '../../../core/store/workflow.store';
 
 export const ConfigPanel = () => {
   const { selectedNodeId, nodes, updateNodeData } = useWorkflowStore();
+  const [pickerTarget, setPickerTarget] = useState<string | null>(null);
   
   const selectedNode = nodes.find(n => n.id === selectedNodeId);
 
@@ -31,8 +33,17 @@ export const ConfigPanel = () => {
       actionType: newType,
       label: newType === 'webhook_trigger' ? 'Webhook Trigger' : 
              newType === 'cron_trigger' ? 'Cron Schedule' : 
-             newType === 'manual_trigger' ? 'Manual Trigger' : label
+             newType === 'manual_trigger' ? 'Manual Trigger' : 
+             newType === 'slack_message' ? 'Slack Output' : label
     });
+  };
+
+  const insertVariable = (variablePath: string) => {
+    if (!pickerTarget) return;
+    const currentVal = config[pickerTarget] || '';
+    const needsSpace = currentVal.length > 0 && !currentVal.endsWith(' ') && !currentVal.endsWith('\n');
+    handleConfigChange(pickerTarget, currentVal + (needsSpace ? ' ' : '') + `{{${variablePath}}}`);
+    setPickerTarget(null);
   };
 
   return (
@@ -64,6 +75,7 @@ export const ConfigPanel = () => {
             {selectedNode.type === 'ACTION' && (
               <optgroup label="⚙️ Actions (Process Data)">
                 <option value="ai_generate">Llama 3.1 (8B Fast)</option>
+                <option value="slack_message">Send Slack Message</option>
                 <option value="http_request">HTTP Request</option>
               </optgroup>
             )}
@@ -108,12 +120,113 @@ export const ConfigPanel = () => {
         {actionType === 'ai_generate' && (
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">System Prompt</label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">System Prompt</label>
+                
+                <div className="relative">
+                  <button 
+                    onClick={() => setPickerTarget(pickerTarget === 'prompt' ? null : 'prompt')}
+                    className="text-[10px] bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 px-2 py-1 rounded transition-colors"
+                  >
+                    + Insert Data `{ }`
+                  </button>
+
+                  {pickerTarget === 'prompt' && (
+                    <div className="absolute right-0 top-full mt-1 w-48 bg-[#1a1a1a] border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden">
+                      <div className="px-3 py-2 text-[10px] font-bold text-gray-500 uppercase bg-black/40 border-b border-white/5">
+                        Available Variables
+                      </div>
+                      <div className="max-h-48 overflow-y-auto">
+                        <button 
+                          onClick={() => insertVariable('trigger.body.message')}
+                          className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-indigo-500/20 hover:text-indigo-300 transition-colors border-b border-white/5"
+                        >
+                          ⚡ Webhook: Message Field
+                        </button>
+                        <button 
+                          onClick={() => insertVariable('trigger.body')}
+                          className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-indigo-500/20 hover:text-indigo-300 transition-colors border-b border-white/5"
+                        >
+                          ⚡ Webhook: Full Body
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <textarea 
                 value={config.prompt || ''}
                 onChange={(e) => handleConfigChange('prompt', e.target.value)}
-                className="w-full h-40 bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-purple-500 focus:outline-none resize-none placeholder-gray-600 font-mono"
+                className="w-full h-40 bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none resize-none placeholder-gray-600 font-mono"
                 placeholder="You are a helpful AI assistant..."
+              />
+            </div>
+          </div>
+        )}
+
+        {actionType === 'slack_message' && (
+          <div className="space-y-4 animate-in fade-in">
+            <div>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                Slack Webhook URL
+              </label>
+              <input
+                type="text"
+                placeholder="https://hooks.slack.com/services/..."
+                value={config.webhookUrl || ''}
+                onChange={(e) => handleConfigChange('webhookUrl', e.target.value)}
+                className="w-full bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-pink-500 focus:outline-none transition-colors"
+              />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Message Body</label>
+                
+                <div className="relative">
+                  <button 
+                    onClick={() => setPickerTarget(pickerTarget === 'message' ? null : 'message')}
+                    className="text-[10px] bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20 px-2 py-1 rounded transition-colors"
+                  >
+                    + Insert Data `{ }`
+                  </button>
+
+                  {pickerTarget === 'message' && (
+                    <div className="absolute right-0 top-full mt-1 w-48 bg-[#1a1a1a] border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden">
+                      <div className="px-3 py-2 text-[10px] font-bold text-gray-500 uppercase bg-black/40 border-b border-white/5">
+                        Available Variables
+                      </div>
+                      <div className="max-h-48 overflow-y-auto">
+                        <button 
+                          onClick={() => insertVariable('groq.reply')}
+                          className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-pink-500/20 hover:text-pink-300 transition-colors border-b border-white/5"
+                        >
+                          🧠 AI: Generated Output
+                        </button>
+                        <button 
+                          onClick={() => insertVariable('trigger.body.message')}
+                          className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-pink-500/20 hover:text-pink-300 transition-colors border-b border-white/5"
+                        >
+                          ⚡ Webhook: Message Field
+                        </button>
+                        <button 
+                          onClick={() => insertVariable('trigger.body')}
+                          className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-pink-500/20 hover:text-pink-300 transition-colors border-b border-white/5"
+                        >
+                          ⚡ Webhook: Full Body
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <textarea 
+                value={config.message || ''}
+                onChange={(e) => handleConfigChange('message', e.target.value)}
+                className="w-full h-32 bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-pink-500 focus:outline-none resize-none placeholder-gray-600 font-mono"
+                placeholder="New Feedback Sentiment: {{groq.reply}}"
               />
             </div>
           </div>

@@ -32,7 +32,6 @@ export const NodePalette = () => {
           
           <div 
             className="bg-[#0a0a0a] border border-white/10 rounded-lg p-3 mb-2 cursor-grab hover:border-purple-500/50 hover:bg-purple-500/10 transition-all flex items-center gap-3 shadow-lg"
-            // 🔥 Changed 'action' to 'ACTION'
             onDragStart={(e) => onDragStart(e, 'ACTION', 'ai_generate', 'AI Generation')}
             draggable
           >
@@ -41,16 +40,23 @@ export const NodePalette = () => {
           </div>
 
           <div 
-            className="bg-[#0a0a0a] border border-white/10 rounded-lg p-3 cursor-grab hover:border-blue-500/50 hover:bg-blue-500/10 transition-all flex items-center gap-3 shadow-lg"
-            // 🔥 Changed 'action' to 'ACTION'
+            className="bg-[#0a0a0a] border border-white/10 rounded-lg p-3 mb-2 cursor-grab hover:border-blue-500/50 hover:bg-blue-500/10 transition-all flex items-center gap-3 shadow-lg"
             onDragStart={(e) => onDragStart(e, 'ACTION', 'http_request', 'HTTP Request')}
             draggable
           >
             <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
             <span className="text-sm text-gray-200 font-medium">External API Call</span>
           </div>
-        </div>
+          <div 
+            className="bg-[#0a0a0a] border border-white/10 rounded-lg p-3 cursor-grab hover:border-pink-500/50 hover:bg-pink-500/10 transition-all flex items-center gap-3 shadow-lg"
+            onDragStart={(e) => onDragStart(e, 'ACTION', 'slack_message', 'Send Slack Message')}
+            draggable
+          >
+            <div className="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.5)]" />
+            <span className="text-sm text-gray-200 font-medium">Slack Message</span>
+          </div>
 
+        </div>
       </div>
     </div>
   );

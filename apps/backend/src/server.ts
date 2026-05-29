@@ -20,6 +20,7 @@ import { analyticsRoutes } from './modules/analytics/analytics.routes.js';
 import { secretsRoutes } from "./modules/secrets/secrets.routes.js";
 import {webhookRoutes} from "./modules/webhooks/webhooks.routes.js";
 import {CronService} from "./core/cron/cron.service.js"
+import {tenantRoutes} from "./modules/tenant/interface/tenant.routes.js";
 
 const executeUseCase = new ExecuteWorkflowUseCase();
 const app = express();
@@ -35,6 +36,7 @@ app.use(apiLimiter);
 app.use('/api/auth', authRoutes);
 app.use('/auth', authRoutes);
 app.use('/api/invites', inviteRoutes);
+app.use('/api/tenant', tenantRoutes);
 
 app.use('/api/webhooks', webhookRoutes);
 

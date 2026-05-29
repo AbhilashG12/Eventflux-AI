@@ -11,11 +11,13 @@ import { useWorkflowDragDrop } from '../hooks/useWorkflowDragDrop';
 import { useTelemetry } from '../../../hooks/useTelemetry';
 import { useAuthStore } from "../../../core/store/auth.store";
 import { ExecutionLogsDrawer } from '../../../components/ExecutionLogsDrawer';
+import { SlackNode } from '../components/nodes/SlackNode';
 
 const nodeTypes = { 
   ACTION: ActionNode,
   TRIGGER: ActionNode,
-  CONDITION: ActionNode 
+  CONDITION: ActionNode,
+  slack : SlackNode, 
 };
 
 const BuilderCore = () => {

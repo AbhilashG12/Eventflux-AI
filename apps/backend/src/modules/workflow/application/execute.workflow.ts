@@ -152,6 +152,10 @@ export class ExecuteWorkflowUseCase {
 
         executionState[node.id] = stepOutput;
 
+        if (node.data?.actionType === 'ai_generate') {
+            executionState['groq'] = stepOutput;
+          }
+
         await publishEvent('execution-events', `${executionId}-${node.id}-${stepStatus.toLowerCase()}`, {
           tenantId,
           executionId,

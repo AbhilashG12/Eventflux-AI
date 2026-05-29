@@ -3,10 +3,10 @@ import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { useWorkflowStore } from '../../core/store/workflow.store';
 
 const WorkflowBuilder = lazy(() => import('../builder/pages/WorkflowBuilder').then(m => ({ default: m.WorkflowBuilder })));
-const ExecutionDashboard = lazy(() => import('../dashboard/components/ExecutionDashboard').then(m => ({ default: m.ExecutionDashboard })));
+const ObservabilityDashboard = lazy(() => import('../dashboard/components/ObservabilityDashboard').then(m => ({ default: m.ObservabilityDashboard })));
+const AnalyticsDashboard = lazy(() => import('../dashboard/components/AnalyticsDashboard').then(m => ({ default: m.AnalyticsDashboard })));
 const TenantDashboard = lazy(() => import('../builder/pages/TenantDashboard').then(m => ({ default: m.TenantDashboard })));
 const DLQDashboard = lazy(() => import('../dashboard/components/DLQDashboard').then(m => ({ default: m.DLQDashboard })));
-const AnalyticsDashboard = lazy(() => import('../dashboard/components/AnalyticsDashboard').then(m => ({ default: m.AnalyticsDashboard })));
 
 export const GlobalLoader = () => (
   <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#090514] z-9999">
@@ -103,7 +103,7 @@ export const MainWorkspace = () => {
                   <WorkflowBuilder />
                 </div>
               )}
-              {activeView === 'DASHBOARD' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><ExecutionDashboard workflowNodes={nodes} /></div>}
+              {activeView === 'DASHBOARD' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><ObservabilityDashboard /></div>}
               {activeView === 'ANALYTICS' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><AnalyticsDashboard /></div>}
               {activeView === 'TENANT' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><TenantDashboard /></div>}
               {activeView === 'DLQ' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><DLQDashboard /></div>}
@@ -120,7 +120,7 @@ export const MainWorkspace = () => {
       >
         <button
           onClick={() => setActiveView('BUILDER')}
-          className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
+          className={`px-6 py-2.5 cursor-pointer rounded-full text-sm font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
             activeView === 'BUILDER' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/10'
           }`}
         >
@@ -129,7 +129,7 @@ export const MainWorkspace = () => {
 
         <button
           onClick={() => setActiveView('DASHBOARD')}
-          className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 whitespace-nowrap shrink-0 ${
+          className={`px-6 py-2.5 cursor-pointer rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 whitespace-nowrap shrink-0 ${
             activeView === 'DASHBOARD' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/10'
           }`}
         >
@@ -139,7 +139,7 @@ export const MainWorkspace = () => {
 
         <button
           onClick={() => setActiveView('ANALYTICS')}
-          className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 whitespace-nowrap shrink-0 ${
+          className={`px-6 py-2.5 cursor-pointer rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 whitespace-nowrap shrink-0 ${
             activeView === 'ANALYTICS' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/10'
           }`}
         >
@@ -148,7 +148,7 @@ export const MainWorkspace = () => {
 
         <button
           onClick={() => setActiveView('TENANT')}
-          className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
+          className={`px-6 py-2.5 cursor-pointer rounded-full text-sm font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
             activeView === 'TENANT' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/10'
           }`}
         >
@@ -157,7 +157,7 @@ export const MainWorkspace = () => {
 
         <button
           onClick={() => setActiveView('DLQ')}
-          className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
+          className={`px-6 py-2.5 cursor-pointer rounded-full text-sm font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
             activeView === 'DLQ' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/10'
           }`}
         >

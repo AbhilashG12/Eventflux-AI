@@ -18,57 +18,93 @@ export const AnalyticsDashboard = () => {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-xl">
+        <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-xl shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <span className="text-gray-400 text-sm font-medium">Total Executions</span>
             <Activity className="w-5 h-5 text-indigo-400" />
           </div>
-          <span className="text-3xl font-bold text-white">{metrics.totalRuns.toLocaleString()}</span>
+          <span className="text-3xl font-bold text-white">{metrics?.totalRuns?.toLocaleString() || 0}</span>
         </div>
 
-        <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-xl">
+        <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-xl shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <span className="text-gray-400 text-sm font-medium">Success Rate</span>
             <CheckCircle2 className="w-5 h-5 text-emerald-400" />
           </div>
-          <span className="text-3xl font-bold text-white">{metrics.successRate}%</span>
+          <span className="text-3xl font-bold text-white">{metrics?.successRate || 0}%</span>
         </div>
 
-        <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-xl">
+        <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-xl shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <span className="text-gray-400 text-sm font-medium">Avg Duration</span>
             <Clock className="w-5 h-5 text-blue-400" />
           </div>
-          <span className="text-3xl font-bold text-white">{metrics.avgDuration}s</span>
+          <span className="text-3xl font-bold text-white">{metrics?.avgDuration || 0}s</span>
         </div>
 
-        <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-xl">
+        <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-xl shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <span className="text-gray-400 text-sm font-medium">Active Workflows</span>
             <Zap className="w-5 h-5 text-amber-400" />
           </div>
-          <span className="text-3xl font-bold text-white">{metrics.activeWorkflows}</span>
+          <span className="text-3xl font-bold text-white">{metrics?.activeWorkflows || 0}</span>
         </div>
       </div>
 
-      {/* Real-Time Chart */}
-      <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-xl h-100">
+      <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-xl h-100 shadow-lg flex flex-col">
         <h3 className="text-white font-semibold mb-6 flex items-center gap-2">
           <Activity className="w-4 h-4 text-emerald-500" /> Live Execution Volume
         </h3>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-            <XAxis dataKey="time" stroke="#666" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis stroke="#666" fontSize={12} tickLine={false} axisLine={false} />
-            <Tooltip 
-              contentStyle={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-              itemStyle={{ color: '#fff' }}
-            />
-            <Line type="monotone" dataKey="success" stroke="#10b981" strokeWidth={3} dot={{ fill: '#10b981', r: 4 }} activeDot={{ r: 6 }} name="Successful Runs" />
-            <Line type="monotone" dataKey="failed" stroke="#ef4444" strokeWidth={3} dot={{ fill: '#ef4444', r: 4 }} activeDot={{ r: 6 }} name="Failed Runs" />
-          </LineChart>
-        </ResponsiveContainer>
+        <div className="flex-1 w-full min-h-0">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData || []}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+              <XAxis 
+                dataKey="time" 
+                stroke="#666" 
+                fontSize={12} 
+                tickLine={false} 
+                axisLine={false} 
+                dy={10} 
+              />
+              <YAxis 
+                stroke="#666" 
+                fontSize={12} 
+                tickLine={false} 
+                axisLine={false} 
+                dx={-10} 
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: '#0f0f0f', 
+                  border: '1px solid rgba(255,255,255,0.1)', 
+                  borderRadius: '8px',
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5)'
+                }}
+                itemStyle={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}
+                labelStyle={{ color: '#888', marginBottom: '4px' }}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="success" 
+                stroke="#10b981" 
+                strokeWidth={3} 
+                dot={false}
+                activeDot={{ r: 6, fill: '#10b981', stroke: '#0a0a0a', strokeWidth: 2 }} 
+                name="Successful Runs" 
+              />
+              <Line 
+                type="monotone" 
+                dataKey="failed" 
+                stroke="#ef4444" 
+                strokeWidth={3} 
+                dot={false}
+                activeDot={{ r: 6, fill: '#ef4444', stroke: '#0a0a0a', strokeWidth: 2 }} 
+                name="Failed Runs" 
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

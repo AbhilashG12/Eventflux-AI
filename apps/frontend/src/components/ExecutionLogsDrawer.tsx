@@ -23,6 +23,7 @@ interface ExecutionLog {
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  executionId?: string|null;
 }
 
 export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
@@ -102,8 +103,8 @@ export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
             </button>
           )}
           
-          <button onClick={fetchExecutions} className="text-xs text-blue-400 hover:text-blue-300">Refresh</button>
-          <button onClick={onClose} className="text-gray-400 hover:text-white"><X size={18} /></button>
+          <button onClick={fetchExecutions} className="text-xs cursor-pointer text-blue-400 hover:text-blue-300">Refresh</button>
+          <button onClick={onClose} className="text-gray-400 cursor-pointer hover:text-white"><X size={18} /></button>
         </div>
       </div>
 
