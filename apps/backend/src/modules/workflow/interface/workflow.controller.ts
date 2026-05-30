@@ -37,7 +37,7 @@ export class WorkflowController {
     const id = req.params.id as string;
     const tenantId = (req as any).tenantId;
 
-    // 🔥 CRITICAL FIX: Safely parse either a { definition } object or raw { nodes, edges } 
+    // Safely parse either a { definition } object or raw { nodes, edges } 
     // coming directly from the React Flow frontend canvas.
     const definition = req.body.definition || {
       nodes: req.body.nodes || [],
@@ -80,6 +80,22 @@ export class WorkflowController {
         return res.status(400).json({ error: "Cannot publish an empty workflow" });
       }
 
+      const definition = workflow.definition as any;
+      const nodes = definition.nodes || [];
+      const triggerNode = nodes.find((n: any) => n.type === 'TRIGGER');
+
+      let dbTriggerType: 'MANUAL' | 'WEBHOOK' | 'CRON' = 'MANUAL';
+      let dbCronSummary = null;
+
+      if (triggerNode) {
+        const actionType = triggerNode.data?.actionType;
+        if (actionType === 'webhook_trigger') dbTriggerType = 'WEBHOOK';
+        if (actionType === 'cron_trigger') {
+          dbTriggerType = 'CRON';
+          dbCronSummary = triggerNode.data?.config?.cronString || null;
+        }
+      }
+
       const nextVersionNum = workflow.versions.length > 0 ? workflow.versions[0].version + 1 : 1;
 
       const result = await db.$transaction(async (tx) => {
@@ -90,12 +106,13 @@ export class WorkflowController {
             definition: workflow.definition as any,
           }
         });
-
         await tx.workflow.update({
           where: { id },
           data: {
             activeVersionId: newVersion.id,
-            status: 'PUBLISHED'
+            status: 'PUBLISHED',
+            triggerType: dbTriggerType,
+            cronSummary: dbCronSummary
           }
         });
 

@@ -34,5 +34,8 @@ export const config = {
   },
   redis: {
     url: process.env.REDIS_URL || 'redis://localhost:6379',
+  },
+  resend:{
+    api : process.env.RESEND_API_KEY || "re_Rj5vso9N_JG9pGywfsHVHx4Kd2tZhXQ4i",
   }
 };

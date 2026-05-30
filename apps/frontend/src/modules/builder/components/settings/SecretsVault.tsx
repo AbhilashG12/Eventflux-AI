@@ -24,6 +24,30 @@ export const SecretsVault = () => {
       <p className="text-sm text-gray-400 mb-6">
         Manage your encrypted integration keys and environment variables. These are never exposed in plain text.
       </p>
+      <div className="flex items-center gap-3 mb-4">
+        <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Common Integrations:</span>
+        <button 
+          type="button"
+          onClick={() => setName('RESEND_API_KEY')}
+          className="text-[11px] bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 border border-orange-500/20 px-2.5 py-1 rounded-full transition-colors"
+        >
+          + Resend Email
+        </button>
+        <button 
+          type="button"
+          onClick={() => setName('GROQ_API_KEY')}
+          className="text-[11px] bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 border border-purple-500/20 px-2.5 py-1 rounded-full transition-colors"
+        >
+          + Groq AI
+        </button>
+        <button 
+          type="button"
+          onClick={() => setName('SLACK_WEBHOOK_URL')}
+          className="text-[11px] bg-pink-500/10 text-pink-400 hover:bg-pink-500/20 border border-pink-500/20 px-2.5 py-1 rounded-full transition-colors"
+        >
+          + Slack Webhook
+        </button>
+      </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 items-end mb-8">
         <div className="flex-1 w-full">
@@ -32,7 +56,7 @@ export const SecretsVault = () => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, ''))}
-            placeholder="OPENAI_API_KEY"
+            placeholder="RESEND_API_KEY"
             className="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"
           />
         </div>
@@ -42,7 +66,7 @@ export const SecretsVault = () => {
             type="password"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            placeholder="sk-..."
+            placeholder="re_..."
             className="w-full bg-[#0a0a0a] border border-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500"
           />
         </div>

@@ -2,6 +2,7 @@ import { NodeExecutor } from './nodes/nodes.interface.js';
 import { HttpNode } from './nodes/http.node.js';
 import { AiNode } from './nodes/ai.node.js'; 
 import { SlackExecutor } from './nodes/slack.executor.js'; 
+import {EmailExecutor} from './nodes/email.executor.js';
 
 class PluginRegistry {
   private executors: Map<string, NodeExecutor> = new Map();
@@ -10,6 +11,7 @@ class PluginRegistry {
     this.register('HTTP_REQUEST', new HttpNode());
     this.register('ai_generate', new AiNode()); 
     this.register('slack_message', new SlackExecutor());
+    this.register('email_send', new EmailExecutor());
   }
 
   register(type: string, executor: NodeExecutor) {

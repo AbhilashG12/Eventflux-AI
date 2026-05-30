@@ -25,25 +25,49 @@ export class CronService {
       });
 
       for (const workflow of cronWorkflows) {
-        if (workflow.cronSummary && cron.validate(workflow.cronSummary)) {
-          const task = cron.schedule(workflow.cronSummary, async () => {
-            const eventId = `cron_${randomUUID()}`;
-            
-            await publishEvent('workflow-events', eventId, {
-              workflowId: workflow.id,
-              tenantId: workflow.tenantId,
-              initialPayload: { source: 'cron_scheduler', timestamp: new Date().toISOString() }
-            });
-            
-          });
-          
-          this.scheduledTasks.set(workflow.id, task);
-        }
+        this.scheduleWorkflow(workflow.id, workflow.tenantId, workflow.cronSummary!);
       }
       
       logger.info(`⏰ CronService: Scheduled ${this.scheduledTasks.size} active cron workflows.`);
     } catch (error: any) {
       logger.error(error, 'Failed to initialize CronService');
+    }
+  }
+
+  static scheduleWorkflow(workflowId: string, tenantId: string, cronSummary: string) {
+    this.unscheduleWorkflow(workflowId);
+
+    if (!cron.validate(cronSummary)) {
+      logger.warn(`⚠️ Invalid cron expression for workflow ${workflowId}: ${cronSummary}`);
+      return;
+    }
+
+    const task = cron.schedule(cronSummary, async () => {
+      try {
+        const eventId = `cron_${randomUUID()}`;
+        
+        await publishEvent('workflow-events', eventId, {
+          workflowId: workflowId,
+          tenantId: tenantId,
+          initialPayload: { source: 'cron_scheduler', timestamp: new Date().toISOString() }
+        });
+        
+        logger.info(`⏰ Cron triggered and published to Kafka: ${workflowId}`);
+      } catch (error) {
+        logger.error(error, `❌ Failed to publish cron event for workflow ${workflowId}`);
+      }
+    }, {
+      timezone: "UTC" 
+    });
+
+    this.scheduledTasks.set(workflowId, task);
+  }
+
+  static unscheduleWorkflow(workflowId: string) {
+    const existingTask = this.scheduledTasks.get(workflowId);
+    if (existingTask) {
+      existingTask.stop();
+      this.scheduledTasks.delete(workflowId);
     }
   }
 }

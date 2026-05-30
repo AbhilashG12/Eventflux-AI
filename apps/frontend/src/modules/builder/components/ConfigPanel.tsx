@@ -1,9 +1,13 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useWorkflowStore } from '../../../core/store/workflow.store';
 
 export const ConfigPanel = () => {
+  const { workflowId } = useParams(); 
+  
   const { selectedNodeId, nodes, updateNodeData } = useWorkflowStore();
   const [pickerTarget, setPickerTarget] = useState<string | null>(null);
+  const [activeInput, setActiveInput] = useState<{ field: string, cursorIndex: number } | null>(null);
   
   const selectedNode = nodes.find(n => n.id === selectedNodeId);
 
@@ -40,11 +44,50 @@ export const ConfigPanel = () => {
 
   const insertVariable = (variablePath: string) => {
     if (!pickerTarget) return;
+    
     const currentVal = config[pickerTarget] || '';
-    const needsSpace = currentVal.length > 0 && !currentVal.endsWith(' ') && !currentVal.endsWith('\n');
-    handleConfigChange(pickerTarget, currentVal + (needsSpace ? ' ' : '') + `{{${variablePath}}}`);
+    
+    if (activeInput && activeInput.field === pickerTarget) {
+      const insertion = `{{${variablePath}}}`;
+      const newVal = currentVal.slice(0, activeInput.cursorIndex) + insertion + currentVal.slice(activeInput.cursorIndex);
+      handleConfigChange(pickerTarget, newVal);
+    } else {
+      const needsSpace = currentVal.length > 0 && !currentVal.endsWith(' ') && !currentVal.endsWith('\n');
+      handleConfigChange(pickerTarget, currentVal + (needsSpace ? ' ' : '') + `{{${variablePath}}}`);
+    }
+    
     setPickerTarget(null);
   };
+
+  const getAvailableVariables = () => {
+    const vars: { path: string, label: string, icon: string }[] = [];
+    
+    nodes.forEach(n => {
+
+      if (n.id === selectedNode.id) return; 
+
+      if (n.type === 'TRIGGER') {
+        vars.push({ path: 'trigger.body', label: 'Trigger: Full Data', icon: '⚡' });
+        if (n.data?.actionType === 'webhook_trigger') {
+          vars.push({ path: 'trigger.body.email', label: 'Webhook: Email', icon: '📧' });
+          vars.push({ path: 'trigger.body.name', label: 'Webhook: Name', icon: '👤' });
+        }
+      }
+      
+      if (n.type === 'ACTION') {
+        if (n.data?.actionType === 'ai_generate') {
+          vars.push({ path: 'groq.reply', label: 'AI: Generated Output', icon: '🧠' });
+        }
+        if (n.data?.actionType === 'http_request') {
+          vars.push({ path: `${n.id}.data`, label: 'API: Response Data', icon: '🌐' });
+        }
+      }
+    });
+
+    return vars;
+  };
+
+  const availableVars = getAvailableVariables();
 
   return (
     <div className="w-80 bg-[#0a0a0a] border-l border-white/10 flex flex-col shadow-2xl relative z-20">
@@ -77,19 +120,31 @@ export const ConfigPanel = () => {
                 <option value="ai_generate">Llama 3.1 (8B Fast)</option>
                 <option value="slack_message">Send Slack Message</option>
                 <option value="http_request">HTTP Request</option>
+                <option value="email_send">Send Email</option>
               </optgroup>
             )}
           </select>
         </div>
         
         {actionType === 'webhook_trigger' && (
-          <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex flex-col gap-2">
+          <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex flex-col gap-2 animate-in fade-in">
             <span className="text-xs text-emerald-400 font-semibold uppercase tracking-wider">Webhook URL</span>
-            <div className="bg-black/50 p-2 rounded border border-emerald-500/20 overflow-x-auto scrollbar-thin scrollbar-thumb-emerald-900">
-              <code className="text-[11px] text-emerald-300 whitespace-nowrap select-all font-mono">
-                https://api.yourdomain.com/webhooks/{selectedNode.id}
+            
+            <div className="bg-black/50 p-2 rounded border border-emerald-500/20 flex items-center justify-between gap-2">
+              <code className="text-[11px] text-emerald-300 overflow-hidden text-ellipsis font-mono">
+                https://YOUR_NGROK_URL/api/webhooks/{workflowId || 'save-to-generate'}
               </code>
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(`https://YOUR_NGROK_URL/api/webhooks/${workflowId}`);
+                  alert("Copied to clipboard!");
+                }}
+                className="text-[10px] bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-300 px-2 py-1 rounded transition-colors whitespace-nowrap"
+              >
+                Copy
+              </button>
             </div>
+            
             <p className="text-[10px] text-emerald-500/70 mt-1">Send a POST request to this URL to trigger the workflow.</p>
           </div>
         )}
@@ -155,9 +210,11 @@ export const ConfigPanel = () => {
                 </div>
               </div>
 
+              {/* 👈 Added onSelect to track cursor position */}
               <textarea 
                 value={config.prompt || ''}
                 onChange={(e) => handleConfigChange('prompt', e.target.value)}
+                onSelect={(e) => setActiveInput({ field: 'prompt', cursorIndex: e.currentTarget.selectionStart })}
                 className="w-full h-40 bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none resize-none placeholder-gray-600 font-mono"
                 placeholder="You are a helpful AI assistant..."
               />
@@ -222,9 +279,11 @@ export const ConfigPanel = () => {
                 </div>
               </div>
 
+              {/* 👈 Added onSelect to track cursor position */}
               <textarea 
                 value={config.message || ''}
                 onChange={(e) => handleConfigChange('message', e.target.value)}
+                onSelect={(e) => setActiveInput({ field: 'message', cursorIndex: e.currentTarget.selectionStart })}
                 className="w-full h-32 bg-[#141414] border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-pink-500 focus:outline-none resize-none placeholder-gray-600 font-mono"
                 placeholder="New Feedback Sentiment: {{groq.reply}}"
               />
@@ -258,6 +317,48 @@ export const ConfigPanel = () => {
                   className="w-full bg-[#141414] border border-white/10 rounded px-2 py-1.5 text-sm text-white focus:border-blue-500 focus:outline-none"
                 />
               </div>
+            </div>
+          </div>
+        )}
+
+        {actionType === 'email_send' && (
+          <div className="space-y-4 mt-4 animate-in fade-in">
+            <div>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                To Email
+              </label>
+              <input
+                type="text"
+                placeholder="{{trigger.body.email}} or test@example.com"
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded p-2 text-sm text-gray-200 focus:border-orange-500 outline-none"
+                value={config.to || ''}
+                onChange={(e) => handleConfigChange('to', e.target.value)} 
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                Subject
+              </label>
+              <input
+                type="text"
+                placeholder="Welcome to the platform!"
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded p-2 text-sm text-gray-200 focus:border-orange-500 outline-none"
+                value={config.subject || ''}
+                onChange={(e) => handleConfigChange('subject', e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                Body Message
+              </label>
+              <textarea
+                placeholder="Write your email here... Use {{variables}} to inject data."
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded p-2 text-sm text-gray-200 focus:border-orange-500 outline-none h-32 resize-none"
+                value={config.body || ''}
+                onChange={(e) => handleConfigChange('body', e.target.value)}
+              />
             </div>
           </div>
         )}

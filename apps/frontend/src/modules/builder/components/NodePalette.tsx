@@ -55,6 +55,14 @@ export const NodePalette = () => {
             <div className="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.5)]" />
             <span className="text-sm text-gray-200 font-medium">Slack Message</span>
           </div>
+          <div 
+            className="bg-[#0a0a0a] border border-white/10 rounded-lg p-3 cursor-grab hover:border-orange-500/50 hover:bg-orange-500/10 transition-all flex items-center gap-3 shadow-lg mt-2"
+            onDragStart={(e) => onDragStart(e, 'ACTION', 'email_send', 'Send Email')}
+            draggable
+          >
+            <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
+            <span className="text-sm text-gray-200 font-medium">Send Email</span>
+          </div>
 
         </div>
       </div>

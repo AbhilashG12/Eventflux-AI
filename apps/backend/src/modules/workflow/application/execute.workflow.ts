@@ -65,7 +65,7 @@ export class ExecuteWorkflowUseCase {
           }
         }
       } catch (err) {
-        console.warn("⚠️ Could not fetch secrets from database. Make sure your schema includes TenantSecret.", err);
+        // console.warn("⚠️ Could not fetch secrets from database. Make sure your schema includes TenantSecret.", err);
       }
 
       const context: ExecutionContext = {
