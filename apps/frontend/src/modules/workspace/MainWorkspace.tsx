@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { useWorkflowStore } from '../../core/store/workflow.store';
+import { LayoutGrid, Activity, BarChart2, Settings, Database } from 'lucide-react';
 
 const WorkflowBuilder = lazy(() => import('../builder/pages/WorkflowBuilder').then(m => ({ default: m.WorkflowBuilder })));
 const ObservabilityDashboard = lazy(() => import('../dashboard/components/ObservabilityDashboard').then(m => ({ default: m.ObservabilityDashboard })));
@@ -8,23 +8,31 @@ const AnalyticsDashboard = lazy(() => import('../dashboard/components/AnalyticsD
 const TenantDashboard = lazy(() => import('../builder/pages/TenantDashboard').then(m => ({ default: m.TenantDashboard })));
 const DLQDashboard = lazy(() => import('../dashboard/components/DLQDashboard').then(m => ({ default: m.DLQDashboard })));
 
+const TABS = [
+  { id: 'BUILDER', label: 'Canvas', icon: LayoutGrid,dot:false },
+  { id: 'DASHBOARD', label: 'Telemetry', icon: Activity, dot: true },
+  { id: 'ANALYTICS', label: 'Analytics', icon: BarChart2,dot:false },
+  { id: 'TENANT', label: 'Settings', icon: Settings,dot:false },
+  { id: 'DLQ', label: 'Operations', icon: Database,dot:false }
+] as const;
+
 export const GlobalLoader = () => (
-  <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#090514] z-9999">
-    <div className="relative w-32 h-32 flex items-center justify-center">
+  <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#050505] z-9999">
+    <div className="relative w-24 h-24 flex items-center justify-center">
       <motion.div 
         animate={{ rotate: 360 }} 
-        transition={{ repeat: Infinity, duration: 4, ease: "linear" }} 
-        className="absolute inset-0 border border-indigo-500/20 border-t-indigo-500 rounded-full shadow-[0_0_20px_rgba(99,102,241,0.3)]" 
+        transition={{ repeat: Infinity, duration: 3, ease: "linear" }} 
+        className="absolute inset-0 border border-indigo-500/10 border-t-indigo-500/80 rounded-full blur-[1px]" 
       />
       <motion.div 
         animate={{ rotate: -360 }} 
-        transition={{ repeat: Infinity, duration: 3, ease: "linear" }} 
-        className="absolute inset-4 border border-purple-500/20 border-b-purple-500 rounded-full shadow-[0_0_20px_rgba(168,85,247,0.3)]" 
+        transition={{ repeat: Infinity, duration: 2, ease: "linear" }} 
+        className="absolute inset-3 border border-purple-500/10 border-b-purple-500/80 rounded-full blur-[1px]" 
       />
       <motion.div 
-        animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.5, 1, 0.5] }} 
+        animate={{ scale: [0.9, 1.1, 0.9], opacity: [0.7, 1, 0.7] }} 
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} 
-        className="w-10 h-10 bg-white rounded-full shadow-[0_0_30px_rgba(255,255,255,0.8)]" 
+        className="w-6 h-6 bg-white rounded-full shadow-[0_0_20px_rgba(255,255,255,1)]" 
       />
     </div>
     
@@ -32,7 +40,7 @@ export const GlobalLoader = () => (
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2, duration: 0.8 }}
-      className="mt-8 text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-purple-400 tracking-[0.2em] uppercase"
+      className="mt-8 text-xl font-bold text-transparent bg-clip-text bg-linear-to-r from-indigo-300 to-purple-300 tracking-[0.25em] uppercase"
     >
       EventFlux
     </motion.h1>
@@ -41,22 +49,22 @@ export const GlobalLoader = () => (
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.6, duration: 0.8 }}
-      className="mt-3 text-xs text-gray-500 tracking-[0.3em] uppercase"
+      className="mt-2 text-[10px] text-gray-500 tracking-[0.3em] uppercase font-mono"
     >
-      Initializing Workspace...
+      Initializing Workspace
     </motion.p>
   </div>
 );
 
 const LocalLoader = () => (
   <div className="flex items-center justify-center w-full h-full min-h-[50vh]">
-    <div className="flex gap-2">
+    <div className="flex items-center gap-2 p-4 bg-white/2 border border-white/5 backdrop-blur-md rounded-2xl shadow-2xl">
       {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
-          animate={{ y: [0, -10, 0], opacity: [0.3, 1, 0.3] }}
-          transition={{ duration: 1, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }}
-          className="w-2.5 h-2.5 bg-purple-500/80 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.4)]"
+          animate={{ scale: [0.5, 1, 0.5], opacity: [0.3, 1, 0.3] }}
+          transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }}
+          className="w-2 h-2 bg-indigo-400 rounded-full shadow-[0_0_10px_rgba(129,140,248,0.5)]"
         />
       ))}
     </div>
@@ -64,29 +72,32 @@ const LocalLoader = () => (
 );
 
 export const MainWorkspace = () => {
-  const [activeView, setActiveView] = useState<'BUILDER' | 'DASHBOARD' | 'TENANT' | 'DLQ' | 'ANALYTICS'>('BUILDER');
-  const nodes = useWorkflowStore((state) => state.nodes);
-
+  const [activeView, setActiveView] = useState<typeof TABS[number]['id']>('BUILDER');
+  
+  // Premium Blur-Fade Transitions
   const pageVariants: Variants = {
-    initial: { opacity: 0, y: 15, scale: 0.98 },
-    animate: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: "easeOut" as const } },
-    exit: { opacity: 0, y: -15, scale: 0.98, transition: { duration: 0.2, ease: "easeIn" as const } }
+    initial: { opacity: 0, y: 10, filter: 'blur(8px)' },
+    animate: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1] } },
+    exit: { opacity: 0, y: -10, filter: 'blur(8px)', transition: { duration: 0.3, ease: "easeInOut" } }
   };
 
   return (
-    <div className="relative w-full h-screen bg-[#090514] overflow-hidden font-sans text-gray-100 flex flex-col">
+    <div className="relative w-full h-screen bg-[#050505] overflow-hidden font-sans text-gray-100 flex flex-col">
+      
+      {/* Ambient Background Orbs */}
       <motion.div 
-        animate={{ x: [0, 50, -50, 0], y: [0, -50, 50, 0] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[-10%] left-[-10%] w-100 h-100 bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none z-0" 
+        animate={{ x: [0, 30, -30, 0], y: [0, -30, 30, 0] }}
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none z-0" 
       />
       <motion.div 
-        animate={{ x: [0, -60, 60, 0], y: [0, 60, -60, 0] }}
-        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-        className="absolute bottom-[-10%] right-[-10%] w-100 h-100 bg-purple-600/20 rounded-full blur-[120px] pointer-events-none z-0" 
+        animate={{ x: [0, -40, 40, 0], y: [0, 40, -40, 0] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none z-0" 
       />
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjA1KSIvPjwvc3ZnPg==')] opacity-[0.15] pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjA1KSIvPjwvc3ZnPg==')] opacity-10 pointer-events-none z-0" />
 
+      {/* Main Content Area */}
       <div className="relative grow w-full h-full z-10 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -112,57 +123,46 @@ export const MainWorkspace = () => {
         </AnimatePresence>
       </div>
 
+      {/* The Floating Dock */}
       <motion.div 
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 20 }}
-        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center p-1.5 bg-white/3 backdrop-blur-2xl border border-white/8 rounded-full shadow-[0_0_40px_rgba(0,0,0,0.5)] max-w-[95vw] overflow-x-auto overflow-y-hidden scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        transition={{ type: "spring", stiffness: 200, damping: 25, delay: 0.2 }}
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center p-1.5 bg-[#111111]/80 backdrop-blur-3xl border border-white/10 rounded-full shadow-[0_20px_40px_rgba(0,0,0,0.5)] max-w-[95vw] overflow-x-auto overflow-y-hidden scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       >
-        <button
-          onClick={() => setActiveView('BUILDER')}
-          className={`px-6 py-2.5 cursor-pointer rounded-full text-sm font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
-            activeView === 'BUILDER' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/10'
-          }`}
-        >
-          Canvas
-        </button>
+        {TABS.map((tab) => {
+          const isActive = activeView === tab.id;
+          const Icon = tab.icon;
 
-        <button
-          onClick={() => setActiveView('DASHBOARD')}
-          className={`px-6 py-2.5 cursor-pointer rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 whitespace-nowrap shrink-0 ${
-            activeView === 'DASHBOARD' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/10'
-          }`}
-        >
-          Telemetry
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-        </button>
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveView(tab.id)}
+              className="relative px-5 py-2.5 cursor-pointer rounded-full text-xs font-semibold transition-colors duration-300 flex items-center gap-2 whitespace-nowrap shrink-0 group focus:outline-none"
+            >
+              {/* Sliding Active Background (The Magic) */}
+              {isActive && (
+                <motion.div
+                  layoutId="activeTabIndicator"
+                  className="absolute inset-0 bg-white/10 border border-white/10 rounded-full shadow-inner"
+                  initial={false}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
 
-        <button
-          onClick={() => setActiveView('ANALYTICS')}
-          className={`px-6 py-2.5 cursor-pointer rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 whitespace-nowrap shrink-0 ${
-            activeView === 'ANALYTICS' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/10'
-          }`}
-        >
-          Analytics
-        </button>
-
-        <button
-          onClick={() => setActiveView('TENANT')}
-          className={`px-6 py-2.5 cursor-pointer rounded-full text-sm font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
-            activeView === 'TENANT' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/10'
-          }`}
-        >
-          Settings
-        </button>
-
-        <button
-          onClick={() => setActiveView('DLQ')}
-          className={`px-6 py-2.5 cursor-pointer rounded-full text-sm font-semibold transition-all duration-300 whitespace-nowrap shrink-0 ${
-            activeView === 'DLQ' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/10'
-          }`}
-        >
-          Operations
-        </button>
+              {/* Text & Icon Content */}
+              <div className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'}`}>
+                <Icon size={14} className={isActive ? "text-indigo-400" : "opacity-70"} />
+                {tab.label}
+                
+                {/* Optional Pulse Dot */}
+                {tab.dot && (
+                  <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'bg-emerald-500/50'} transition-all duration-300`} />
+                )}
+              </div>
+            </button>
+          );
+        })}
       </motion.div>
     </div>
   );

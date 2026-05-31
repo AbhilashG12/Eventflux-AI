@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Activity, LogOut } from 'lucide-react';
+import { Activity, LogOut, Save, Rocket, Play, Loader2 } from 'lucide-react';
 import { useAuthStore } from '../../../core/store/auth.store';
 
 interface BuilderHeaderProps {
@@ -21,72 +21,114 @@ export const BuilderHeader = ({
   onTestRun,
   onToggleLogs 
 }: BuilderHeaderProps) => {
-  const logout = useAuthStore((state) => state.logout);
+  const logout = useAuthStore((state: any) => state.logout);
+
+  const isPublished = workflowStatus === 'PUBLISHED';
 
   return (
-    <div className="h-14 bg-[#0B061A]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-6 z-50">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
-          <span className="text-white font-bold text-sm">EF</span>
+    <header className="h-16 bg-[#0a0a0a]/40 backdrop-blur-2xl border-b border-white/8 flex items-center justify-between px-6 z-50 sticky top-0">
+      
+      {/* Left side: Branding */}
+      <div className="flex items-center gap-4">
+        <div className="relative group cursor-default">
+          <div className="absolute inset-0 bg-indigo-500/20 rounded-xl blur-md group-hover:bg-indigo-500/40 transition-colors duration-500" />
+          <div className="relative w-9 h-9 rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center border border-white/10 shadow-lg">
+            <span className="text-white font-bold text-xs tracking-wider">EF</span>
+          </div>
         </div>
-        <h1 className="text-sm font-semibold tracking-wide text-gray-200">New Workflow</h1>
+        <div className="flex flex-col cursor-default">
+          <h1 className="text-sm font-medium text-gray-200 leading-tight">New Workflow</h1>
+          <span className="text-[10px] text-gray-500 font-mono tracking-wide">Workspace / Canvas</span>
+        </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
-          workflowStatus === 'PUBLISHED' 
-            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
-            : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+      {/* Right side: Actions */}
+      <div className="flex items-center gap-3">
+        
+        {/* Status Badge with Pulse */}
+        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-widest border cursor-default ${
+          isPublished 
+            ? 'bg-emerald-500/5 text-emerald-400 border-emerald-500/20' 
+            : 'bg-amber-500/5 text-amber-400 border-amber-500/20'
         }`}>
-          {workflowStatus}
+          {isPublished && (
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+            </span>
+          )}
+          {!isPublished && <span className="w-1.5 h-1.5 rounded-full bg-amber-500/50" />}
+          {workflowStatus || 'DRAFT'}
         </div>
 
+        <div className="w-px h-5 bg-white/10 mx-1" />
+
+        {/* View Logs Button */}
         {onToggleLogs && (
-          <button 
+          <motion.button 
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.97 }}
             onClick={onToggleLogs}
-            className="flex items-center cursor-pointer gap-2 px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-sm font-semibold text-gray-300 hover:text-white hover:bg-black/60 hover:border-white/20 transition-all"
+            className="cursor-pointer flex items-center gap-2 px-3 py-1.5 bg-transparent border border-white/10 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-white/5 hover:border-white/20 transition-colors"
           >
-            <Activity size={16} className="text-blue-400" />
-            View Logs
-          </button>
+            <Activity size={14} className="text-blue-400" />
+            Logs
+          </motion.button>
         )}
 
-        <button 
+        {/* Save Draft Button */}
+        <motion.button 
+          whileHover={{ y: -1 }}
+          whileTap={{ scale: 0.97 }}
           onClick={onSave}
           disabled={isSaving}
-          className="px-4 py-2 cursor-pointer text-sm font-semibold text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+          className="cursor-pointer flex items-center gap-2 px-4 py-1.5 bg-transparent rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSaving ? <span className="animate-spin text-purple-500">⌛</span> : '💾'} 
+          {isSaving ? <Loader2 size={14} className="animate-spin text-indigo-400" /> : <Save size={14} />} 
           Save Draft
-        </button>
+        </motion.button>
 
+        {/* Test Run Button */}
         <motion.button 
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ y: -1, backgroundColor: 'rgba(99, 102, 241, 0.15)' }}
+          whileTap={{ scale: 0.97 }}
+          onClick={onTestRun}
+          className="cursor-pointer flex items-center gap-2 px-4 py-1.5 text-xs font-medium text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 rounded-lg transition-colors"
+        >
+          <Play size={12} className="fill-indigo-400 text-indigo-400" />
+          Test Run
+        </motion.button>
+
+        {/* Publish Button */}
+        <motion.button 
+          whileHover={{ y: -1, filter: 'brightness(1.1)' }}
+          whileTap={{ scale: 0.97 }}
           onClick={onPublish}
           disabled={isPublishing}
-          className="px-6 py-2 cursor-pointer text-sm font-bold text-white bg-linear-to-r from-indigo-500 to-purple-600 rounded-lg shadow-[0_0_15px_rgba(99,102,241,0.3)] hover:shadow-[0_0_25px_rgba(99,102,241,0.5)] transition-all flex items-center gap-2"
+          className="cursor-pointer relative group flex items-center gap-2 px-5 py-1.5 text-xs font-semibold text-white bg-linear-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden border border-white/10"
         >
-          {isPublishing ? 'Publishing...' : '🚀 Publish Version'}
+          {/* Subtle inner highlight */}
+          <div className="absolute inset-0 bg-linear-to-b from-white/20 to-transparent opacity-50" />
+          <span className="relative flex items-center gap-2">
+            {isPublishing ? <Loader2 size={14} className="animate-spin" /> : <Rocket size={14} />}
+            Publish
+          </span>
         </motion.button>
         
-        <button 
-          onClick={onTestRun}
-          className="ml-2 cursor-pointer px-4 py-2 text-sm font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 hover:bg-indigo-500/20 rounded-lg transition-colors flex items-center gap-2"
-        >
-          ▶ Test Run
-        </button>
-
-        <div className="w-px h-6 bg-white/10 mx-1" />
-        <button 
+        <div className="w-px h-5 bg-white/10 mx-1" />
+        
+        {/* Logout */}
+        <motion.button 
+          whileHover={{ scale: 1.05, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
+          whileTap={{ scale: 0.95 }}
           onClick={logout}
           title="Sign Out"
-          className="p-2 cursor-pointer text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors flex items-center justify-center"
+          className="cursor-pointer p-1.5 text-gray-500 hover:text-red-400 rounded-lg transition-colors flex items-center justify-center"
         >
-          <LogOut size={18} />
-        </button>
+          <LogOut size={16} />
+        </motion.button>
 
       </div>
-    </div>
+    </header>
   );
 };

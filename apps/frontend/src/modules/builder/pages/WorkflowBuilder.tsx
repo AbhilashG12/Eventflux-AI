@@ -1,42 +1,47 @@
 import { useRef, useState } from 'react';
-import ReactFlow, { Background, Controls, ReactFlowProvider } from 'reactflow';
+import ReactFlow, { Background, Controls, ReactFlowProvider, BackgroundVariant } from 'reactflow';
+
 import 'reactflow/dist/style.css';
+
 import { useWorkflowStore } from '../../../core/store/workflow.store';
-import { ActionNode } from '../components/ActionNode';
-import { NodePalette } from '../components/NodePalette';
-import { ConfigPanel } from '../components/ConfigPanel';
-import { BuilderHeader } from '../components/BuilderHeader';
+import { useAuthStore } from "../../../core/store/auth.store";
 import { useWorkflowActions } from '../hooks/useWorkflowActions';
 import { useWorkflowDragDrop } from '../hooks/useWorkflowDragDrop';
 import { useTelemetry } from '../../../hooks/useTelemetry';
-import { useAuthStore } from "../../../core/store/auth.store";
-import { ExecutionLogsDrawer } from '../../../components/ExecutionLogsDrawer';
+
+import { ActionNode } from '../components/ActionNode';
 import { SlackNode } from '../components/nodes/SlackNode';
+import { NodePalette } from '../components/NodePalette';
+import { ConfigPanel } from '../components/ConfigPanel';
+import { BuilderHeader } from '../components/BuilderHeader';
+import { ExecutionLogsDrawer } from '../../../components/ExecutionLogsDrawer';
 
 const nodeTypes = { 
   ACTION: ActionNode,
   TRIGGER: ActionNode,
   CONDITION: ActionNode,
-  slack : SlackNode, 
+  slack: SlackNode, 
 };
 
 const BuilderCore = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [isLogsOpen, setIsLogsOpen] = useState(false);
+  
   const { 
     nodes, edges, onNodesChange, onEdgesChange, onConnect, setSelectedNodeId 
   } = useWorkflowStore();
 
-  const token = useAuthStore((state) => state.token);
+  const token = useAuthStore((state: any) => state.token);
   useTelemetry(token); 
 
   const { isSaving, isPublishing, workflowStatus, onSave, onPublish, onTestRun } = useWorkflowActions();
+  
   const { onDragOver, onDrop } = useWorkflowDragDrop(
     reactFlowWrapper as React.RefObject<HTMLDivElement>
   );
 
   return (
-    <div className="w-full h-full flex flex-col relative z-10 overflow-hidden">
+    <div className="w-full h-full flex flex-col relative z-10 overflow-hidden bg-[#050505]">
       <BuilderHeader 
         onSave={onSave} 
         isSaving={isSaving} 
@@ -50,7 +55,10 @@ const BuilderCore = () => {
       <div className="flex-1 w-full flex overflow-hidden relative">
         <NodePalette />
         
-        <div className="flex-1 relative" ref={reactFlowWrapper}>
+        <div className="flex-1 relative bg-[#050505]" ref={reactFlowWrapper}>
+          
+          <div className="absolute inset-0 bg-linear-to-br from-indigo-500/10 via-transparent to-purple-500/10 pointer-events-none z-0 mix-blend-screen" />
+          
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -63,13 +71,34 @@ const BuilderCore = () => {
             onPaneClick={() => setSelectedNodeId(null)}
             nodeTypes={nodeTypes}
             style={{ background: 'transparent' }}
+            proOptions={{ hideAttribution: true }}
           >
-            <Background color="rgba(255,255,255,0.05)" gap={16} size={1.5} />
-            <Controls className="fill-white bg-black/50 border-white/10 backdrop-blur-md shadow-2xl" />
+            <Background 
+              id="major-grid"
+              variant={BackgroundVariant.Lines} 
+              gap={96} 
+              color="rgba(255,255,255,0.08)" 
+              lineWidth={1} 
+            />
+            <Background 
+              id="minor-grid"
+              variant={BackgroundVariant.Lines} 
+              gap={24} 
+              color="rgba(255,255,255,0.03)" 
+              lineWidth={1} 
+            />
+            
+            <Controls 
+              className="fill-gray-400 bg-black/60 border border-white/10 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-xl overflow-hidden [&>button]:border-b [&>button]:border-white/5 [&>button:hover]:bg-white/10 [&>button:hover]:fill-white transition-all" 
+              showInteractive={false} 
+            />
           </ReactFlow>
+
+          <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_150px_40px_#050505] z-10" />
         </div>
 
         <ConfigPanel />
+        
         <ExecutionLogsDrawer 
           isOpen={isLogsOpen} 
           onClose={() => setIsLogsOpen(false)} 

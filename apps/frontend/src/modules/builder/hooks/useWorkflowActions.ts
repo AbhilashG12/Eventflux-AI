@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../../../core/api/client';
 import { useWorkflowStore } from '../../../core/store/workflow.store';
 import { useErrorStore } from '../../../core/store/error.store';
 import { useSuccessStore } from '../../../core/store/success.store';
 
 export const useWorkflowActions = () => {
+  const navigate = useNavigate(); 
+
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [workflowStatus, setWorkflowStatus] = useState<'DRAFT' | 'PUBLISHED'>('DRAFT');
-  const { setWorkflowId, setNodes, setEdges } = useWorkflowStore();
   
+  const { setWorkflowId, setNodes, setEdges } = useWorkflowStore();
   const showError = useErrorStore((state) => state.showError);
   const showSuccess = useSuccessStore((state) => state.showSuccess);
 
@@ -57,6 +60,8 @@ export const useWorkflowActions = () => {
         if (newId) {
           setWorkflowId(newId);
           showSuccess("Draft created successfully!");
+
+          navigate(`/builder/${newId}`, { replace: true });
         } else {
           showError("Workflow saved, but backend didn't return an ID.");
         }
