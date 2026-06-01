@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { apiClient } from '../../../core/api/client';
 import { useSocketStore } from '../../../core/store/socket.store';
 
@@ -23,49 +23,74 @@ export const useExecutionTelemetry = (workflowId: string) => {
   const [logs, setLogs] = useState<ExecutionLog[]>([]);
   
   const lastMessage = useSocketStore(state => state.lastMessage);
-  const fetchHistory = useCallback(async () => {
+  
+  const processedLogsRef = useRef<Set<string>>(new Set());
+  const fetchHistory = useCallback(async (isInitial = false) => {
     if (!workflowId) return;
     try {
       const { data } = await apiClient.get(`/executions/workflow/${workflowId}`);
       setExecutions(data);
-      setSelectedExecutionId(current => current || (data.length > 0 ? data[0].id : null));
+      
+      if (isInitial && data.length > 0) {
+        setSelectedExecutionId(data[0].id);
+      }
     } catch (err) {
-      console.error("Failed to fetch history");
+      console.error("Failed to sync execution history");
     }
   }, [workflowId]);
 
   useEffect(() => {
-    fetchHistory();
-    const interval = setInterval(fetchHistory, 3000);
+    fetchHistory(true);
+    const interval = setInterval(() => fetchHistory(false), 30000); 
     return () => clearInterval(interval);
   }, [fetchHistory]);
 
   useEffect(() => {
-    if (!selectedExecutionId) return;
+    if (!selectedExecutionId) {
+      setLogs([]);
+      processedLogsRef.current.clear();
+      return;
+    }
+
     const fetchLogs = async () => {
-      const { data } = await apiClient.get(`/executions/${selectedExecutionId}/logs`);
-      setLogs(data);
+      try {
+        const { data } = await apiClient.get(`/executions/${selectedExecutionId}/logs`);
+        setLogs(data);
+        processedLogsRef.current = new Set(data.map((l: ExecutionLog) => l.id));
+      } catch (err) {
+        setLogs([]);
+      }
     };
+
     fetchLogs();
   }, [selectedExecutionId]);
 
   useEffect(() => {
-    if (lastMessage && selectedExecutionId) {
-      const { executionId: wsExecId, nodeId, status, timestamp } = lastMessage as any;
-      if (wsExecId && wsExecId !== selectedExecutionId) return;
+    if (!lastMessage) return;
 
-      const newLog: ExecutionLog = {
-        id: Math.random().toString(),
-        nodeId,
-        status: status.toUpperCase(),
-        message: `Step [${nodeId}] is ${status.toUpperCase()}`,
-        timestamp: timestamp || new Date().toISOString()
-      };
+    const payload = lastMessage as any;
+    const { executionId: wsExecId, nodeId, status, timestamp, type } = payload;
+    if (type === 'EXECUTION_STARTED' || type === 'EXECUTION_FINISHED') {
+      fetchHistory();
+      return;
+    }
+    if (wsExecId === selectedExecutionId && nodeId) {
+      const logId = `${wsExecId}-${nodeId}-${status}`;
       
-      setLogs(prev => [...prev, newLog]);
+      if (!processedLogsRef.current.has(logId)) {
+        const newLog: ExecutionLog = {
+          id: logId,
+          nodeId,
+          status: status.toUpperCase(),
+          message: `Step [${nodeId}] marked as ${status.toUpperCase()}`,
+          timestamp: timestamp || new Date().toISOString()
+        };
 
-      if (status.toLowerCase() === 'completed' || status.toLowerCase() === 'failed') {
-         fetchHistory(); 
+        setLogs(prev => [...prev, newLog]);
+        processedLogsRef.current.add(logId);
+      }
+      if (['completed', 'failed'].includes(status.toLowerCase())) {
+        fetchHistory();
       }
     }
   }, [lastMessage, selectedExecutionId, fetchHistory]);

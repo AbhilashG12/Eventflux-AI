@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import ReactFlow, { Background, Controls, ReactFlowProvider, BackgroundVariant } from 'reactflow';
 
 import 'reactflow/dist/style.css';
@@ -8,20 +8,12 @@ import { useAuthStore } from "../../../core/store/auth.store";
 import { useWorkflowActions } from '../hooks/useWorkflowActions';
 import { useWorkflowDragDrop } from '../hooks/useWorkflowDragDrop';
 import { useTelemetry } from '../../../hooks/useTelemetry';
-
 import { ActionNode } from '../components/ActionNode';
 import { SlackNode } from '../components/nodes/SlackNode';
 import { NodePalette } from '../components/NodePalette';
 import { ConfigPanel } from '../components/ConfigPanel';
 import { BuilderHeader } from '../components/BuilderHeader';
 import { ExecutionLogsDrawer } from '../../../components/ExecutionLogsDrawer';
-
-const nodeTypes = { 
-  ACTION: ActionNode,
-  TRIGGER: ActionNode,
-  CONDITION: ActionNode,
-  slack: SlackNode, 
-};
 
 const BuilderCore = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
@@ -39,6 +31,23 @@ const BuilderCore = () => {
   const { onDragOver, onDrop } = useWorkflowDragDrop(
     reactFlowWrapper as React.RefObject<HTMLDivElement>
   );
+
+  // FIX 1: Bulletproof nodeTypes to prevent React Flow re-render warnings during HMR
+  const nodeTypes = useMemo(() => ({ 
+    ACTION: ActionNode,
+    TRIGGER: ActionNode,
+    CONDITION: ActionNode,
+    slack: SlackNode, 
+  }), []);
+
+  // FIX 2: Edge sanitizer to prevent the "missing key in EdgeRenderer" crash
+  const sanitizedEdges = useMemo(() => {
+    return edges.map((edge, index) => ({
+      ...edge,
+      // Fallback ID generation if your onConnect or onDrop forgets to add one
+      id: edge.id || `fallback-edge-${edge.source}-${edge.target}-${index}`
+    }));
+  }, [edges]);
 
   return (
     <div className="w-full h-full flex flex-col relative z-10 overflow-hidden bg-[#050505]">
@@ -61,7 +70,7 @@ const BuilderCore = () => {
           
           <ReactFlow
             nodes={nodes}
-            edges={edges}
+            edges={sanitizedEdges} // <-- Using the sanitized edges here
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}

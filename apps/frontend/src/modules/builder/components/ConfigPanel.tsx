@@ -71,7 +71,6 @@ export const ConfigPanel = () => {
     >
       <ConfigHeader label={label} nodeId={selectedNode.id} workflowId={workflowId || undefined} />
 
-      {/* Increased padding bottom to ensure dropdown doesn't get cut off */}
       <div className="p-5 flex-1 overflow-y-auto space-y-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent pb-32">
         
         <motion.div 
@@ -85,7 +84,6 @@ export const ConfigPanel = () => {
             {isTrigger ? 'Trigger Type' : 'Action Type'}
           </label>
           
-          {/* CUSTOM ANIMATED DROPDOWN */}
           <div className="relative">
             <motion.button
               whileHover={{ scale: 1.01 }}
@@ -154,7 +152,6 @@ export const ConfigPanel = () => {
           </div>
         </motion.div>
         
-        {/* The rest of the form components stay exactly the same */}
         <AnimatePresence mode="wait">
           
           {actionType === 'webhook_trigger' && (
@@ -361,6 +358,344 @@ export const ConfigPanel = () => {
                   className="w-full h-32 bg-black/40 border border-white/10 hover:border-white/20 rounded-xl px-3 py-2.5 text-xs text-gray-200 focus:border-pink-500 focus:ring-1 focus:ring-pink-500/30 focus:outline-none resize-none placeholder-gray-600 font-mono transition-all shadow-inner leading-relaxed"
                   placeholder="New Alert: {{trigger.body.message}}"
                   {...inputProps('message')}
+                />
+              </div>
+            </motion.div>
+          )}
+
+          {actionType === 'email_send' && (
+            <motion.div 
+              key="email"
+              initial={{ opacity: 0, y: 15, scale: 0.98 }} 
+              animate={{ opacity: 1, y: 0, scale: 1 }} 
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className="space-y-5"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    <Mail size={12} className="text-orange-400" /> Recipient (To)
+                  </label>
+                  
+                  <div className="relative">
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setPickerTarget(pickerTarget === 'email_to' ? null : 'email_to')}
+                      className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 px-2 py-1 rounded-md transition-colors"
+                    >
+                      <Plus size={10} /> Insert Data
+                    </motion.button>
+
+                    <AnimatePresence>
+                      {pickerTarget === 'email_to' && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }} 
+                          animate={{ opacity: 1, y: 0, scale: 1 }} 
+                          exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                          className="absolute right-0 top-full mt-2 w-56 bg-[#141414]/90 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-xl"
+                        >
+                          <div className="px-3 py-2 text-[9px] font-bold text-gray-500 uppercase tracking-widest bg-black/40 border-b border-white/5">
+                            Available Variables
+                          </div>
+                          <div className="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
+                            {availableVars.length === 0 ? (
+                              <div className="px-3 py-5 text-[10px] text-gray-500 text-center italic">Add upstream nodes to see data</div>
+                            ) : (
+                              availableVars.map((v, idx) => (
+                                <motion.button 
+                                  key={idx}
+                                  whileHover={{ backgroundColor: "rgba(249, 115, 22, 0.1)" }}
+                                  onClick={() => insertVariable(v.path)}
+                                  className="cursor-pointer w-full text-left px-3 py-2.5 text-[11px] text-gray-300 hover:text-orange-300 transition-colors border-b border-white/5 flex items-center gap-2"
+                                >
+                                  <span className="opacity-70">{v.icon}</span>
+                                  <span className="truncate font-mono">{v.label}</span>
+                                </motion.button>
+                              ))
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+                
+                <input
+                  type="text"
+                  placeholder="user@example.com or {{trigger.email}}"
+                  className="w-full bg-black/40 border border-white/10 hover:border-white/20 rounded-xl px-3 py-2.5 text-xs text-gray-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/30 focus:outline-none transition-all shadow-inner font-mono"
+                  {...inputProps('to')}
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Subject</label>
+                  
+                  <div className="relative">
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setPickerTarget(pickerTarget === 'email_subject' ? null : 'email_subject')}
+                      className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 px-2 py-1 rounded-md transition-colors"
+                    >
+                      <Plus size={10} /> Insert Data
+                    </motion.button>
+
+                    <AnimatePresence>
+                      {pickerTarget === 'email_subject' && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }} 
+                          animate={{ opacity: 1, y: 0, scale: 1 }} 
+                          exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                          className="absolute right-0 top-full mt-2 w-56 bg-[#141414]/90 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-xl"
+                        >
+                          <div className="px-3 py-2 text-[9px] font-bold text-gray-500 uppercase tracking-widest bg-black/40 border-b border-white/5">
+                            Available Variables
+                          </div>
+                          <div className="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
+                            {availableVars.length === 0 ? (
+                              <div className="px-3 py-5 text-[10px] text-gray-500 text-center italic">Add upstream nodes to see data</div>
+                            ) : (
+                              availableVars.map((v, idx) => (
+                                <motion.button 
+                                  key={idx}
+                                  whileHover={{ backgroundColor: "rgba(249, 115, 22, 0.1)" }}
+                                  onClick={() => insertVariable(v.path)}
+                                  className="cursor-pointer w-full text-left px-3 py-2.5 text-[11px] text-gray-300 hover:text-orange-300 transition-colors border-b border-white/5 flex items-center gap-2"
+                                >
+                                  <span className="opacity-70">{v.icon}</span>
+                                  <span className="truncate font-mono">{v.label}</span>
+                                </motion.button>
+                              ))
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+
+                <input
+                  type="text"
+                  placeholder="New Event: {{trigger.id}}"
+                  className="w-full bg-black/40 border border-white/10 hover:border-white/20 rounded-xl px-3 py-2.5 text-xs text-gray-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/30 focus:outline-none transition-all shadow-inner font-mono"
+                  {...inputProps('subject')}
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Message Body</label>
+                  
+                  <div className="relative">
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setPickerTarget(pickerTarget === 'email_body' ? null : 'email_body')}
+                      className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 px-2 py-1 rounded-md transition-colors"
+                    >
+                      <Plus size={10} /> Insert Data
+                    </motion.button>
+
+                    <AnimatePresence>
+                      {pickerTarget === 'email_body' && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }} 
+                          animate={{ opacity: 1, y: 0, scale: 1 }} 
+                          exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                          className="absolute right-0 top-full mt-2 w-56 bg-[#141414]/90 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-xl"
+                        >
+                          <div className="px-3 py-2 text-[9px] font-bold text-gray-500 uppercase tracking-widest bg-black/40 border-b border-white/5">
+                            Available Variables
+                          </div>
+                          <div className="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
+                            {availableVars.length === 0 ? (
+                              <div className="px-3 py-5 text-[10px] text-gray-500 text-center italic">Add upstream nodes to see data</div>
+                            ) : (
+                              availableVars.map((v, idx) => (
+                                <motion.button 
+                                  key={idx}
+                                  whileHover={{ backgroundColor: "rgba(249, 115, 22, 0.1)" }}
+                                  onClick={() => insertVariable(v.path)}
+                                  className="cursor-pointer w-full text-left px-3 py-2.5 text-[11px] text-gray-300 hover:text-orange-300 transition-colors border-b border-white/5 flex items-center gap-2"
+                                >
+                                  <span className="opacity-70">{v.icon}</span>
+                                  <span className="truncate font-mono">{v.label}</span>
+                                </motion.button>
+                              ))
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+
+                <textarea 
+                  className="w-full h-32 bg-black/40 border border-white/10 hover:border-white/20 rounded-xl px-3 py-2.5 text-xs text-gray-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/30 focus:outline-none resize-none placeholder-gray-600 font-mono transition-all shadow-inner leading-relaxed"
+                  placeholder="Hello,&#10;&#10;Here are the details: {{trigger.data}}"
+                  {...inputProps('body')}
+                />
+              </div>
+            </motion.div>
+          )}
+
+          {actionType === 'http_request' && (
+            <motion.div 
+              key="http"
+              initial={{ opacity: 0, y: 15, scale: 0.98 }} 
+              animate={{ opacity: 1, y: 0, scale: 1 }} 
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className="space-y-5"
+            >
+              {/* Method & URL Row */}
+              <div className="flex gap-2">
+                <div className="w-1/3">
+                  <label className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+                    Method
+                  </label>
+                  <select
+                    className="w-full bg-black/40 border border-white/10 hover:border-white/20 rounded-xl px-3 py-2.5 text-xs text-blue-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 focus:outline-none transition-all shadow-inner font-mono font-bold appearance-none cursor-pointer"
+                    value={config.method || 'GET'}
+                    onChange={(e) => handleConfigChange('method', e.target.value)}
+                  >
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="PATCH">PATCH</option>
+                    <option value="DELETE">DELETE</option>
+                  </select>
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                      <Globe size={12} className="text-blue-400" /> Endpoint URL
+                    </label>
+                    <div className="relative">
+                      <motion.button 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setPickerTarget(pickerTarget === 'http_url' ? null : 'http_url')}
+                        className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 px-2 py-1 rounded-md transition-colors"
+                      >
+                        <Plus size={10} /> Data
+                      </motion.button>
+                      <AnimatePresence>
+                        {pickerTarget === 'http_url' && (
+                          <motion.div 
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }} 
+                            animate={{ opacity: 1, y: 0, scale: 1 }} 
+                            exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                            className="absolute right-0 top-full mt-2 w-56 bg-[#141414]/90 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-xl"
+                          >
+                            <div className="px-3 py-2 text-[9px] font-bold text-gray-500 uppercase tracking-widest bg-black/40 border-b border-white/5">
+                              Available Variables
+                            </div>
+                            <div className="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
+                              {availableVars.length === 0 ? (
+                                <div className="px-3 py-5 text-[10px] text-gray-500 text-center italic">Add upstream nodes to see data</div>
+                              ) : (
+                                availableVars.map((v, idx) => (
+                                  <motion.button 
+                                    key={idx}
+                                    whileHover={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}
+                                    onClick={() => insertVariable(v.path)}
+                                    className="cursor-pointer w-full text-left px-3 py-2.5 text-[11px] text-gray-300 hover:text-blue-300 transition-colors border-b border-white/5 flex items-center gap-2"
+                                  >
+                                    <span className="opacity-70">{v.icon}</span>
+                                    <span className="truncate font-mono">{v.label}</span>
+                                  </motion.button>
+                                ))
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="https://api.example.com/v1/..."
+                    className="w-full bg-black/40 border border-white/10 hover:border-white/20 rounded-xl px-3 py-2.5 text-xs text-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 focus:outline-none transition-all shadow-inner font-mono"
+                    {...inputProps('url')}
+                  />
+                </div>
+              </div>
+
+              {/* Headers JSON Input */}
+              <div>
+                <label className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+                  Headers (JSON)
+                </label>
+                <textarea 
+                  className="w-full h-20 bg-black/40 border border-white/10 hover:border-white/20 rounded-xl px-3 py-2.5 text-xs text-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 focus:outline-none resize-none placeholder-gray-600 font-mono transition-all shadow-inner leading-relaxed"
+                  placeholder={`{\n  "Authorization": "Bearer token"\n}`}
+                  {...inputProps('headers')}
+                />
+              </div>
+
+              {/* Body Content Input */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Request Body</label>
+                  
+                  <div className="relative">
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setPickerTarget(pickerTarget === 'http_body' ? null : 'http_body')}
+                      className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 px-2 py-1 rounded-md transition-colors"
+                    >
+                      <Plus size={10} /> Insert Data
+                    </motion.button>
+
+                    <AnimatePresence>
+                      {pickerTarget === 'http_body' && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }} 
+                          animate={{ opacity: 1, y: 0, scale: 1 }} 
+                          exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                          className="absolute right-0 top-full mt-2 w-56 bg-[#141414]/90 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-xl"
+                        >
+                          <div className="px-3 py-2 text-[9px] font-bold text-gray-500 uppercase tracking-widest bg-black/40 border-b border-white/5">
+                            Available Variables
+                          </div>
+                          <div className="max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
+                            {availableVars.length === 0 ? (
+                              <div className="px-3 py-5 text-[10px] text-gray-500 text-center italic">Add upstream nodes to see data</div>
+                            ) : (
+                              availableVars.map((v, idx) => (
+                                <motion.button 
+                                  key={idx}
+                                  whileHover={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}
+                                  onClick={() => insertVariable(v.path)}
+                                  className="cursor-pointer w-full text-left px-3 py-2.5 text-[11px] text-gray-300 hover:text-blue-300 transition-colors border-b border-white/5 flex items-center gap-2"
+                                >
+                                  <span className="opacity-70">{v.icon}</span>
+                                  <span className="truncate font-mono">{v.label}</span>
+                                </motion.button>
+                              ))
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+
+                <textarea 
+                  className="w-full h-32 bg-black/40 border border-white/10 hover:border-white/20 rounded-xl px-3 py-2.5 text-xs text-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 focus:outline-none resize-none placeholder-gray-600 font-mono transition-all shadow-inner leading-relaxed"
+                  placeholder={`{\n  "status": "{{trigger.status}}"\n}`}
+                  {...inputProps('body')}
                 />
               </div>
             </motion.div>

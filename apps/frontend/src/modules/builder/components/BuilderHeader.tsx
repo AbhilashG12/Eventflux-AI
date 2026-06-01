@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
-import { Activity, LogOut, Save, Rocket, Play, Loader2 } from 'lucide-react';
+import { Activity, LogOut, Save, Rocket, Play, Loader2, Plus } from 'lucide-react';
 import { useAuthStore } from '../../../core/store/auth.store';
+import { useWorkflowStore } from '../../../core/store/workflow.store';
+import { WorkflowTitle } from '../../../components/WorkflowTitle';
 
 interface BuilderHeaderProps {
   onSave: () => void;
@@ -22,28 +24,29 @@ export const BuilderHeader = ({
   onToggleLogs 
 }: BuilderHeaderProps) => {
   const logout = useAuthStore((state: any) => state.logout);
+  const createNewWorkflow = useWorkflowStore((state: any) => state.createNewWorkflow);
 
   const isPublished = workflowStatus === 'PUBLISHED';
 
   return (
     <header className="h-16 bg-[#0a0a0a]/40 backdrop-blur-2xl border-b border-white/8 flex items-center justify-between px-6 z-50 sticky top-0">
       
-      {/* Left side: Branding */}
-      <div className="flex items-center gap-4">
-        <div className="relative group cursor-default">
+      {/* Left side: Branding & Editable Title */}
+      <div className="flex items-center gap-6">
+        <div className="relative group cursor-default shrink-0">
           <div className="absolute inset-0 bg-indigo-500/20 rounded-xl blur-md group-hover:bg-indigo-500/40 transition-colors duration-500" />
           <div className="relative w-9 h-9 rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center border border-white/10 shadow-lg">
             <span className="text-white font-bold text-xs tracking-wider">EF</span>
           </div>
         </div>
-        <div className="flex flex-col cursor-default">
-          <h1 className="text-sm font-medium text-gray-200 leading-tight">New Workflow</h1>
-          <span className="text-[10px] text-gray-500 font-mono tracking-wide">Workspace / Canvas</span>
-        </div>
+        
+        {/* Render the editable WorkflowTitle component here */}
+        <WorkflowTitle />
+        
       </div>
 
       {/* Right side: Actions */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 shrink-0">
         
         {/* Status Badge with Pulse */}
         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-widest border cursor-default ${
@@ -62,6 +65,17 @@ export const BuilderHeader = ({
         </div>
 
         <div className="w-px h-5 bg-white/10 mx-1" />
+
+        {/* New Workflow Button */}
+        <motion.button 
+          whileHover={{ y: -1 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={createNewWorkflow}
+          className="cursor-pointer flex items-center gap-2 px-3 py-1.5 bg-transparent border border-white/10 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-white/5 hover:border-white/20 transition-colors"
+        >
+          <Plus size={14} className="text-emerald-400" />
+          New
+        </motion.button>
 
         {/* View Logs Button */}
         {onToggleLogs && (
