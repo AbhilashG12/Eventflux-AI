@@ -10,11 +10,21 @@ export class ExecuteWorkflowUseCase {
     
     return text.replace(/\{\{([^}]+)\}\}/g, (_, path) => {
       const keys = path.split('.');
-      let current = state;
+      let current : any = state;
       for (const key of keys) {
         if (current[key] === undefined) return '';
         current = current[key];
       }
+      
+      // FIX: Safely escape strings so they don't break JSON payloads!
+      if (typeof current === 'string') {
+        return current
+          .replace(/\\/g, '\\\\') // Escape backslashes
+          .replace(/"/g, '\\"')   // Escape double quotes
+          .replace(/\n/g, '\\n')  // Escape newlines
+          .replace(/\r/g, '\\r'); // Escape carriage returns
+      }
+      
       return String(current);
     });
   }

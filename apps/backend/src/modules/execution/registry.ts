@@ -8,7 +8,7 @@ class PluginRegistry {
   private executors: Map<string, NodeExecutor> = new Map();
 
   constructor() {
-    this.register('HTTP_REQUEST', new HttpNode());
+    this.register('http_request', new HttpNode());
     this.register('ai_generate', new AiNode()); 
     this.register('slack_message', new SlackExecutor());
     this.register('email_send', new EmailExecutor());

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { apiClient } from '../../../core/api/client';
 import { useWorkflowStore } from '../../../core/store/workflow.store';
 import { useErrorStore } from '../../../core/store/error.store';
@@ -7,6 +7,7 @@ import { useSuccessStore } from '../../../core/store/success.store';
 
 export const useWorkflowActions = () => {
   const navigate = useNavigate(); 
+  const { id: urlWorkflowId } = useParams();
 
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -18,55 +19,76 @@ export const useWorkflowActions = () => {
 
   useEffect(() => {
     const loadWorkflow = async () => {
+      if (!urlWorkflowId) return; 
+
       try {
         const { data } = await apiClient.get('/workflows');
-        if (data && data.length > 0) {
-          const wf = data[0]; 
-          setWorkflowId(wf.id);
-          if (wf.status) setWorkflowStatus(wf.status);
-          if (wf.definition?.nodes) setNodes(wf.definition.nodes);
-          if (wf.definition?.edges) setEdges(wf.definition.edges);
+        const targetWorkflow = data.find((w: any) => w.id === urlWorkflowId);
+
+        if (targetWorkflow) {
+          setWorkflowId(targetWorkflow.id);
+          if (targetWorkflow.status) setWorkflowStatus(targetWorkflow.status);
+          if (targetWorkflow.definition?.nodes) setNodes(targetWorkflow.definition.nodes);
+          if (targetWorkflow.definition?.edges) setEdges(targetWorkflow.definition.edges); 
         }
       } catch (error) {
-        console.error("Failed to load workflows");
+        console.error("Failed to load workflow");
       }
     };
     loadWorkflow();
-  }, [setNodes, setEdges, setWorkflowId]);
+  }, [urlWorkflowId, setNodes, setEdges, setWorkflowId]);
 
   const onSave = async () => {
     setIsSaving(true);
+    
+    const freshState = useWorkflowStore.getState();
+    const freshNodes = freshState.nodes;
+    const freshEdges = freshState.edges;
+    const currentWorkflowId = freshState.workflowId;
+    const workflowName = freshState.name || "Untitled Workflow";
+
+    const payload = {
+      name: workflowName,
+      definition: {
+        nodes: freshNodes.map(n => ({ id: n.id, type: n.type, data: n.data, position: n.position })),
+        edges: freshEdges.map(e => ({ source: e.source, target: e.target }))
+      }
+    };
+
     try {
-      const freshState = useWorkflowStore.getState();
-      const freshNodes = freshState.nodes;
-      const freshEdges = freshState.edges;
-      const currentWorkflowId = freshState.workflowId;
-
-      const payload = {
-        name: "My Canvas Workflow",
-        definition: {
-          nodes: freshNodes.map(n => ({ id: n.id, type: n.type, data: n.data, position: n.position })),
-          edges: freshEdges.map(e => ({ source: e.source, target: e.target }))
-        }
-      };
-
+      // Step 1: Optimistically attempt a PATCH
       if (currentWorkflowId) {
-        await apiClient.patch(`/workflows/${currentWorkflowId}/draft`, payload);
-        showSuccess("Draft saved successfully!");
-      } else {
-        const { data } = await apiClient.post('/workflows', payload);
-        const newId = data.id || data.workflowId || data.workflow?.id; 
-        
-        if (newId) {
-          setWorkflowId(newId);
-          showSuccess("Draft created successfully!");
-
-          navigate(`/builder/${newId}`, { replace: true });
-        } else {
-          showError("Workflow saved, but backend didn't return an ID.");
+        try {
+          await apiClient.patch(`/workflows/${currentWorkflowId}/draft`, payload);
+          showSuccess("Draft saved successfully!");
+          setWorkflowStatus('DRAFT');
+          setIsSaving(false);
+          return; // Exit early if PATCH succeeds
+        } catch (patchError: any) {
+          if (patchError.response?.status !== 404) {
+             throw patchError; 
+          }
         }
       }
+      
+      // Step 2: POST to create a new workflow if PATCH fails or there's no current ID
+      const { data } = await apiClient.post('/workflows', payload);
+      const newId = data.id || data.workflowId || data.workflow?.id; 
+      
+      if (newId) {
+        setWorkflowId(newId);
+        showSuccess("New workflow created and saved!");
+        
+        // 🚀 THE FIX: Sync the URL with the newly created ID so subsequent saves PATCH instead of POST
+        // Update '/builder/' to whatever your actual URL path is for the workflow canvas
+        navigate(`/builder/${newId}`, { replace: true });
+        
+      } else {
+        showError("Workflow saved, but backend didn't return an ID.");
+      }
+      
       setWorkflowStatus('DRAFT');
+      
     } catch (error: any) {
       showError(`Failed to save: ${error.response?.data?.error || error.message}`);
     } finally {
@@ -75,23 +97,13 @@ export const useWorkflowActions = () => {
   };
 
   const onPublish = async () => {
+    await onSave();
+    
     const currentWorkflowId = useWorkflowStore.getState().workflowId;
-
-    if (!currentWorkflowId) {
-      showError("Please save a draft first before publishing!");
-      return;
-    }
+    if (!currentWorkflowId) return; 
 
     setIsPublishing(true);
     try {
-      const freshState = useWorkflowStore.getState();
-      await apiClient.patch(`/workflows/${currentWorkflowId}/draft`, {
-        definition: {
-          nodes: freshState.nodes.map(n => ({ id: n.id, type: n.type, data: n.data, position: n.position })),
-          edges: freshState.edges.map(e => ({ source: e.source, target: e.target }))
-        }
-      });
-
       await apiClient.post(`/workflows/${currentWorkflowId}/publish`);
       showSuccess("Workflow published successfully!");
       setWorkflowStatus('PUBLISHED');
@@ -106,7 +118,7 @@ export const useWorkflowActions = () => {
     const currentWorkflowId = useWorkflowStore.getState().workflowId;
     
     if (!currentWorkflowId) {
-      showError("Please publish the workflow before testing!");
+      showError("Please save and publish the workflow before testing!");
       return;
     }
     
