@@ -8,14 +8,23 @@ export const dlqRoutes: Router = Router();
 dlqRoutes.get('/', requireAuth, requireRole(['ADMIN']), async (req: Request, res: Response) => {
   try {
     const tenantId = (req as any).tenantId;
+    
     const allDlqItems = await db.deadLetterQueue.findMany({
       orderBy: { failedAt: 'desc' },
       include: { history: { orderBy: { replayedAt: 'desc' } } }
     });
-    const tenantDlqItems = allDlqItems.filter(item => {
-      const payload = item.payload as any;
-      return payload && payload.tenantId === tenantId;
-    });
+
+    const tenantDlqItems = allDlqItems
+      .map(item => {
+        const payload = typeof item.payload === 'string' ? JSON.parse(item.payload) : item.payload;
+        return {
+          ...item,
+          payload,
+          executionId: payload?.executionId,
+          workflowId: payload?.workflowId
+        };
+      })
+      .filter(item => item.payload?.tenantId === tenantId);
 
     res.json(tenantDlqItems);
   } catch (error) {
