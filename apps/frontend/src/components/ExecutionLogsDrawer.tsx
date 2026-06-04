@@ -27,7 +27,7 @@ interface Props {
   executionId?: string | null;
 }
 
-export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
+export const ExecutionLogsDrawer = ({ isOpen, onClose, executionId }: Props) => {
   const token = useAuthStore((state: any) => state.token);
   const workflowId = useWorkflowStore((state) => state.workflowId);
   
@@ -37,10 +37,16 @@ export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isOpen && workflowId && token) {
-      fetchExecutions();
+    if (isOpen && token) {
+      if (workflowId) {
+        fetchExecutions();
+      }
+      if (executionId) {
+        setSelectedExec(executionId);
+        fetchLogs(executionId);
+      }
     }
-  }, [isOpen, workflowId]);
+  }, [isOpen, workflowId, executionId, token]);
 
   const fetchExecutions = async () => {
     setLoading(true);
@@ -57,13 +63,7 @@ export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
     }
   };
 
-  const handleSelectExecution = async (execId: string) => {
-    if (selectedExec === execId) {
-      setSelectedExec(null);
-      return;
-    }
-    
-    setSelectedExec(execId);
+  const fetchLogs = async (execId: string) => {
     try {
       const res = await fetch(`http://localhost:3001/api/executions/${execId}/logs`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -75,7 +75,17 @@ export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
     }
   };
 
-  // Custom minimalist scrollbar styles
+  const handleSelectExecution = (execId: string) => {
+    if (selectedExec === execId) {
+      setSelectedExec(null);
+      setDetailedLogs([]);
+      return;
+    }
+    
+    setSelectedExec(execId);
+    fetchLogs(execId);
+  };
+
   const scrollbarStyles = "[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 hover:[&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full";
 
   return (
@@ -88,7 +98,6 @@ export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
           transition={{ type: "spring", stiffness: 350, damping: 30 }}
           className="absolute bottom-0 left-0 right-0 h-[45%] bg-[#050505]/80 backdrop-blur-3xl border-t border-white/10 z-100 flex flex-col shadow-[0_-20px_60px_rgba(0,0,0,0.6)]"
         >
-          {/* HEADER */}
           <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 bg-white/2">
             <div className="flex items-center gap-2 text-gray-200 font-bold uppercase tracking-widest text-xs">
               <div className="p-1.5 bg-indigo-500/10 rounded-lg">
@@ -138,7 +147,6 @@ export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
 
           <div className="flex flex-1 overflow-hidden">
             
-            {/* LEFT PANEL: Executions List */}
             <div className={`w-1/3 border-r border-white/5 overflow-y-auto ${scrollbarStyles}`}>
               {loading && (
                 <div className="p-8 flex flex-col items-center justify-center text-gray-500 gap-3">
@@ -147,7 +155,7 @@ export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
                 </div>
               )}
               
-              {!loading && executions.length === 0 && (
+              {!loading && executions.length === 0 && !executionId && (
                 <div className="p-8 flex flex-col items-center justify-center text-gray-500 gap-3 text-center">
                   <Terminal size={24} className="opacity-20" />
                   <span className="text-[10px] uppercase tracking-widest leading-relaxed">No executions found.<br/>Trigger the webhook!</span>
@@ -192,7 +200,6 @@ export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
               })}
             </div>
 
-            {/* RIGHT PANEL: Detailed Logs */}
             <div className={`flex-1 bg-black/40 p-6 overflow-y-auto relative ${scrollbarStyles}`}>
               {!selectedExec ? (
                 <div className="h-full flex flex-col items-center justify-center text-gray-600 gap-3">
@@ -209,6 +216,10 @@ export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
                     <Activity size={12} className="text-indigo-400" /> Pipeline Trace
                   </h3>
                   
+                  {detailedLogs.length === 0 && !loading && (
+                    <div className="text-[11px] text-gray-500 font-mono">No trace data available for this execution.</div>
+                  )}
+
                   {detailedLogs.map((log, i) => (
                     <motion.div 
                       initial={{ opacity: 0, x: 20 }}
@@ -225,6 +236,7 @@ export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
                         <span className={`text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-widest border ${
                           log.status === 'COMPLETED' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 
                           log.status === 'CANCELLED' ? 'text-gray-400 bg-gray-500/10 border-gray-500/20' : 
+                          log.status === 'RETRYING' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20' : 
                           'text-red-400 bg-red-500/10 border-red-500/20'
                         }`}>
                           {log.status}
@@ -235,13 +247,12 @@ export const ExecutionLogsDrawer = ({ isOpen, onClose }: Props) => {
                         <div className="mt-3">
                           <div className="text-[9px] text-gray-500 mb-1.5 uppercase tracking-widest font-bold">JSON Output</div>
                           <div className="relative group">
-                            {/* Terminal-like dots styling */}
                             <div className="absolute top-0 left-0 right-0 h-6 bg-black/60 rounded-t-lg border-b border-white/5 flex items-center px-3 gap-1.5">
                               <div className="w-2 h-2 rounded-full bg-red-500/50" />
                               <div className="w-2 h-2 rounded-full bg-amber-500/50" />
                               <div className="w-2 h-2 rounded-full bg-emerald-500/50" />
                             </div>
-                            <pre className="bg-black/40 pt-8 pb-3 px-4 rounded-lg text-[11px] text-emerald-300/90 font-mono overflow-x-auto border border-white/5 leading-relaxed shadow-inner">
+                            <pre className="bg-black/40 pt-8 pb-3 px-4 rounded-lg text-[11px] text-emerald-300/90 font-mono overflow-x-auto border border-white/5 leading-relaxed shadow-inner whitespace-pre-wrap">
                               {JSON.stringify(log.output, null, 2)}
                             </pre>
                           </div>
