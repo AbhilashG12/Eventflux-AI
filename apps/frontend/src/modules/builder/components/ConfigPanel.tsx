@@ -13,7 +13,6 @@ export const ConfigPanel = () => {
   const showError = useErrorStore((state: any) => state.showError);
   const showSuccess = useSuccessStore((state: any) => state.showSuccess);
   
-  // Custom Dropdown State
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const { 
@@ -47,6 +46,17 @@ export const ConfigPanel = () => {
     onChange: (e: any) => handleConfigChange(field, isNumber ? (parseInt(e.target.value) || 0) : e.target.value),
     onSelect: (e: any) => setActiveInput({ field, cursorIndex: e.currentTarget.selectionStart })
   });
+
+  // 🚀 THE FIX: Ensures the picker target perfectly matches the config field 
+  // and forces the input to become active so data inserts correctly every time.
+  const togglePicker = (field: string) => {
+    if (pickerTarget === field) {
+      setPickerTarget(null);
+    } else {
+      setPickerTarget(field);
+      setActiveInput({ field, cursorIndex: String(config[field] || '').length });
+    }
+  };
 
   const isTrigger = selectedNode.type === 'TRIGGER';
   const nodeOptions = isTrigger ? [
@@ -234,7 +244,7 @@ export const ConfigPanel = () => {
                     <motion.button 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => setPickerTarget(pickerTarget === 'prompt' ? null : 'prompt')}
+                      onClick={() => togglePicker('prompt')}
                       className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 px-2 py-1 rounded-md transition-colors"
                     >
                       <Plus size={10} /> Insert Data
@@ -313,7 +323,7 @@ export const ConfigPanel = () => {
                     <motion.button 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => setPickerTarget(pickerTarget === 'message' ? null : 'message')}
+                      onClick={() => togglePicker('message')}
                       className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20 px-2 py-1 rounded-md transition-colors"
                     >
                       <Plus size={10} /> Insert Data
@@ -382,14 +392,14 @@ export const ConfigPanel = () => {
                     <motion.button 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => setPickerTarget(pickerTarget === 'email_to' ? null : 'email_to')}
+                      onClick={() => togglePicker('to')}
                       className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 px-2 py-1 rounded-md transition-colors"
                     >
                       <Plus size={10} /> Insert Data
                     </motion.button>
 
                     <AnimatePresence>
-                      {pickerTarget === 'email_to' && (
+                      {pickerTarget === 'to' && (
                         <motion.div 
                           initial={{ opacity: 0, y: 10, scale: 0.95 }} 
                           animate={{ opacity: 1, y: 0, scale: 1 }} 
@@ -439,14 +449,14 @@ export const ConfigPanel = () => {
                     <motion.button 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => setPickerTarget(pickerTarget === 'email_subject' ? null : 'email_subject')}
+                      onClick={() => togglePicker('subject')}
                       className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 px-2 py-1 rounded-md transition-colors"
                     >
                       <Plus size={10} /> Insert Data
                     </motion.button>
 
                     <AnimatePresence>
-                      {pickerTarget === 'email_subject' && (
+                      {pickerTarget === 'subject' && (
                         <motion.div 
                           initial={{ opacity: 0, y: 10, scale: 0.95 }} 
                           animate={{ opacity: 1, y: 0, scale: 1 }} 
@@ -496,14 +506,14 @@ export const ConfigPanel = () => {
                     <motion.button 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => setPickerTarget(pickerTarget === 'email_body' ? null : 'email_body')}
+                      onClick={() => togglePicker('body')}
                       className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/20 px-2 py-1 rounded-md transition-colors"
                     >
                       <Plus size={10} /> Insert Data
                     </motion.button>
 
                     <AnimatePresence>
-                      {pickerTarget === 'email_body' && (
+                      {pickerTarget === 'body' && (
                         <motion.div 
                           initial={{ opacity: 0, y: 10, scale: 0.95 }} 
                           animate={{ opacity: 1, y: 0, scale: 1 }} 
@@ -555,7 +565,6 @@ export const ConfigPanel = () => {
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
               className="space-y-5"
             >
-              {/* Method & URL Row */}
               <div className="flex gap-2">
                 <div className="w-1/3">
                   <label className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
@@ -582,13 +591,13 @@ export const ConfigPanel = () => {
                       <motion.button 
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => setPickerTarget(pickerTarget === 'http_url' ? null : 'http_url')}
+                        onClick={() => togglePicker('url')}
                         className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 px-2 py-1 rounded-md transition-colors"
                       >
                         <Plus size={10} /> Data
                       </motion.button>
                       <AnimatePresence>
-                        {pickerTarget === 'http_url' && (
+                        {pickerTarget === 'url' && (
                           <motion.div 
                             initial={{ opacity: 0, y: 10, scale: 0.95 }} 
                             animate={{ opacity: 1, y: 0, scale: 1 }} 
@@ -630,7 +639,6 @@ export const ConfigPanel = () => {
                 </div>
               </div>
 
-              {/* Headers JSON Input */}
               <div>
                 <label className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
                   Headers (JSON)
@@ -642,7 +650,6 @@ export const ConfigPanel = () => {
                 />
               </div>
 
-              {/* Body Content Input */}
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Request Body</label>
@@ -651,14 +658,14 @@ export const ConfigPanel = () => {
                     <motion.button 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => setPickerTarget(pickerTarget === 'http_body' ? null : 'http_body')}
+                      onClick={() => togglePicker('body')}
                       className="cursor-pointer flex items-center gap-1 text-[9px] font-semibold bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 px-2 py-1 rounded-md transition-colors"
                     >
                       <Plus size={10} /> Insert Data
                     </motion.button>
 
                     <AnimatePresence>
-                      {pickerTarget === 'http_body' && (
+                      {pickerTarget === 'body' && (
                         <motion.div 
                           initial={{ opacity: 0, y: 10, scale: 0.95 }} 
                           animate={{ opacity: 1, y: 0, scale: 1 }} 

@@ -11,18 +11,12 @@ export const AppLoader = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050505] overflow-hidden font-mono">
-      
-      {/* Ambient Deep Core Glow */}
       <motion.div 
         animate={{ opacity: [0.2, 0.4, 0.2], scale: [0.8, 1.1, 0.8] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-indigo-600/15 blur-[120px] rounded-full pointer-events-none" 
       />
-
-      {/* Central Animated Node */}
       <div className="relative flex items-center justify-center mb-16">
-        
-        {/* Organic Flowing Ethereal Rings */}
         {[...Array(3)].map((_, i) => (
           <motion.div
             key={i}
@@ -38,12 +32,10 @@ export const AppLoader = () => {
               delay: i * 1.1 
             }}
             className="absolute w-20 h-20 border border-indigo-400/20"
-            // Gives the rings a slight organic, fluid shape instead of perfect circles
             style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%' }} 
           />
         ))}
 
-        {/* Solid Core Element */}
         <motion.div
           animate={{ boxShadow: ["0 0 20px rgba(99,102,241,0.1)", "0 0 50px rgba(99,102,241,0.4)", "0 0 20px rgba(99,102,241,0.1)"] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -57,8 +49,6 @@ export const AppLoader = () => {
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Typography / Branding */}
       <div className="flex flex-col items-center z-10">
         <motion.h1
           animate={{ opacity: [0.8, 1, 0.8] }}
@@ -67,8 +57,6 @@ export const AppLoader = () => {
         >
           EventFlux
         </motion.h1>
-
-        {/* Cinematic Blur Boot Sequence */}
         <div className="relative h-6 w-full flex justify-center items-center mt-2">
           {bootPhases.map((phase, i) => (
             <motion.div
@@ -82,12 +70,11 @@ export const AppLoader = () => {
               transition={{
                 duration: 3,
                 repeat: Infinity,
-                delay: i * 1, // Smooth spacing between phases
+                delay: i * 1, 
                 ease: "easeInOut"
               }}
               className="absolute flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-indigo-200/50 font-medium"
             >
-              {/* Little status indicator dot */}
               <span className="w-1 h-1 bg-indigo-500 rounded-full shadow-[0_0_8px_#6366f1]" />
               {phase}
             </motion.div>
