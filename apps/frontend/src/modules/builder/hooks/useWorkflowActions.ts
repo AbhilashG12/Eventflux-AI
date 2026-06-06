@@ -5,7 +5,7 @@ import { useWorkflowStore } from '../../../core/store/workflow.store';
 import { useErrorStore } from '../../../core/store/error.store';
 import { useSuccessStore } from '../../../core/store/success.store';
 
-export const useWorkflowActions = () => {
+export const useWorkflowActions = (onOpenLogs?: () => void) => {
   const navigate = useNavigate(); 
   const { id: urlWorkflowId } = useParams();
 
@@ -56,14 +56,13 @@ export const useWorkflowActions = () => {
     };
 
     try {
-      // Step 1: Optimistically attempt a PATCH
       if (currentWorkflowId) {
         try {
           await apiClient.patch(`/workflows/${currentWorkflowId}/draft`, payload);
           showSuccess("Draft saved successfully!");
           setWorkflowStatus('DRAFT');
           setIsSaving(false);
-          return; // Exit early if PATCH succeeds
+          return; 
         } catch (patchError: any) {
           if (patchError.response?.status !== 404) {
              throw patchError; 
@@ -71,18 +70,13 @@ export const useWorkflowActions = () => {
         }
       }
       
-      // Step 2: POST to create a new workflow if PATCH fails or there's no current ID
       const { data } = await apiClient.post('/workflows', payload);
       const newId = data.id || data.workflowId || data.workflow?.id; 
       
       if (newId) {
         setWorkflowId(newId);
         showSuccess("New workflow created and saved!");
-        
-        // 🚀 THE FIX: Sync the URL with the newly created ID so subsequent saves PATCH instead of POST
-        // Update '/builder/' to whatever your actual URL path is for the workflow canvas
         navigate(`/builder/${newId}`, { replace: true });
-        
       } else {
         showError("Workflow saved, but backend didn't return an ID.");
       }
@@ -126,7 +120,11 @@ export const useWorkflowActions = () => {
       await apiClient.post(`/workflows/${currentWorkflowId}/execute`, {
         payload: { source: "manual_frontend_test" }
       });
-      showSuccess("Execution Queued! Switch to Telemetry.");
+      showSuccess("Test execution started!");
+      
+      if (onOpenLogs) {
+        onOpenLogs();
+      }
     } catch (error: any) {
       showError(`Execution failed: ${error.response?.data?.error || error.message}`);
     }

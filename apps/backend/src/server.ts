@@ -66,7 +66,6 @@ app.get('/api/me', (req, res) => {
 app.delete('/api/tenant', requireRole(['ADMIN']), (req, res) => {
   res.json({ message: 'Tenant deletion requested', tenantId: (req as any).tenantId });
 });
-
 async function startSystem() {
   await producer.connect();
 
@@ -85,12 +84,20 @@ async function startSystem() {
 
         if (!latestVersion) {
           console.log(`⚠️ [KAFKA] Auto-creating Version 1 for workflow: ${payload.workflowId}`);
+          
           const parentWorkflow = await db.workflow.findUnique({ where: { id: payload.workflowId } });
+          
+          // 🚀 THE FIX: Safety check to prevent Prisma Foreign Key Crash!
+          if (!parentWorkflow) {
+            console.error(`❌ [KAFKA] FATAL: Parent Workflow ${payload.workflowId} does not exist in the database! Aborting execution.`);
+            return; // Stop processing immediately
+          }
+
           latestVersion = await db.workflowVersion.create({
             data: {
               workflowId: payload.workflowId,
               version: 1,
-              definition: parentWorkflow?.definition || {} 
+              definition: parentWorkflow.definition || {} 
             }
           });
         }
@@ -126,7 +133,8 @@ async function startSystem() {
       }
     });
   });
-registerHandler('execution-events', async (payload) => {
+
+  registerHandler('execution-events', async (payload) => {
     const execId = payload.executionId || (payload.eventName ? payload.eventName.split('-')[0] : null);
     const nodeId = payload.nodeId || (payload.eventName ? payload.eventName.split('-')[1] : null);
     const status = payload.status || (payload.eventName ? payload.eventName.split('-')[2] : null);

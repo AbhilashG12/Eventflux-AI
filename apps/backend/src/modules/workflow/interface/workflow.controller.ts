@@ -37,8 +37,6 @@ export class WorkflowController {
     const id = req.params.id as string;
     const tenantId = (req as any).tenantId;
 
-    // Safely parse either a { definition } object or raw { nodes, edges } 
-    // coming directly from the React Flow frontend canvas.
     const definition = req.body.definition || {
       nodes: req.body.nodes || [],
       edges: req.body.edges || []
@@ -131,24 +129,37 @@ export class WorkflowController {
     }
   }
 
-  async trigger(req: Request, res: Response) {
+  async trigger(req: Request, res: Response): Promise<any> {
     try {
       const id = req.params.id as string;
-      const payload = req.body;
+      const payload = req.body.payload || {};
+      const tenantId = (req as any).tenantId || 'default';
       const eventId = randomUUID();
       
+      const workflowExists = await db.workflow.findUnique({
+        where: { id: id }
+      });
+
+      if (!workflowExists) {
+        return res.status(404).json({ 
+          error: "Workflow not found in database. Please click 'Save Draft' and 'Publish' first!" 
+        });
+      }
+
       await publishEvent('workflow-events', eventId, {
         workflowId: id,
-        tenantId: (req as any).tenantId,
+        tenantId: tenantId,
         initialPayload: payload,
       });
 
       res.status(202).json({ 
+        success: true,
         message: "Workflow queued for execution", 
         eventId 
       });
     } catch (err: any) {
-      res.status(400).json({ error: err.message });
+      console.error("Failed to queue execution:", err);
+      res.status(500).json({ error: "Failed to queue execution" });
     }
   }
 }
