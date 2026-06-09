@@ -68,71 +68,93 @@ app.delete('/api/tenant', requireRole(['ADMIN']), (req, res) => {
 });
 async function startSystem() {
   await producer.connect();
+registerHandler('workflow-events', async (payload) => {
+      console.log(`\n📥 [KAFKA] Received trigger for workflow:`, payload.workflowId);
+      const safeExecId = `exec_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+      
+      await EventHardenerService.processIdempotent(safeExecId, 'workflow-events', payload, async () => {
+        try {
+          console.log(`🚀 [KAFKA] Database processing started for: ${safeExecId}`);
 
-  registerHandler('workflow-events', async (payload) => {
-    console.log(`\n📥 [KAFKA] Received trigger for workflow:`, payload.workflowId);
-    const safeExecId = `exec_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    
-    await EventHardenerService.processIdempotent(safeExecId, 'workflow-events', payload, async () => {
-      try {
-        console.log(`🚀 [KAFKA] Database processing started for: ${safeExecId}`);
+          let latestVersion = await db.workflowVersion.findFirst({
+            where: { workflowId: payload.workflowId },
+            orderBy: { version: 'desc' }
+          });
 
-        let latestVersion = await db.workflowVersion.findFirst({
-          where: { workflowId: payload.workflowId },
-          orderBy: { version: 'desc' }
-        });
+          if (!latestVersion) {
+            console.log(`⚠️ [KAFKA] Auto-creating Version 1 for workflow: ${payload.workflowId}`);
+            
+            const parentWorkflow = await db.workflow.findUnique({ where: { id: payload.workflowId } });
+            
+            // 🚀 THE FIX: Safety check to prevent Prisma Foreign Key Crash!
+            if (!parentWorkflow) {
+              console.error(`❌ [KAFKA] FATAL: Parent Workflow ${payload.workflowId} does not exist in the database! Aborting execution.`);
+              return; // Stop processing immediately
+            }
 
-        if (!latestVersion) {
-          console.log(`⚠️ [KAFKA] Auto-creating Version 1 for workflow: ${payload.workflowId}`);
-          
-          const parentWorkflow = await db.workflow.findUnique({ where: { id: payload.workflowId } });
-          
-          // 🚀 THE FIX: Safety check to prevent Prisma Foreign Key Crash!
-          if (!parentWorkflow) {
-            console.error(`❌ [KAFKA] FATAL: Parent Workflow ${payload.workflowId} does not exist in the database! Aborting execution.`);
-            return; // Stop processing immediately
+            latestVersion = await db.workflowVersion.create({
+              data: {
+                workflowId: payload.workflowId,
+                version: 1,
+                definition: parentWorkflow.definition || {} 
+              }
+            });
           }
 
-          latestVersion = await db.workflowVersion.create({
+          await db.execution.create({
             data: {
-              workflowId: payload.workflowId,
-              version: 1,
-              definition: parentWorkflow.definition || {} 
+              id: safeExecId,
+              workflowVersionId: latestVersion.id,
+              status: 'RUNNING',
+              startedAt: new Date()
             }
           });
-        }
 
-        await db.execution.create({
-          data: {
-            id: safeExecId,
-            workflowVersionId: latestVersion.id,
-            status: 'RUNNING',
-            startedAt: new Date()
-          }
-        });
+          console.log(`✅ [KAFKA] Execution ${safeExecId} saved to database! UI should update NOW.`);
+          
+          setTimeout(() => {
+            const enrichedPayload = {
+              ...(payload.initialPayload || {}),
+              executionId: safeExecId
+            };
 
-        console.log(`✅ [KAFKA] Execution ${safeExecId} saved to database! UI should update NOW.`);
-        
-        setTimeout(() => {
-          const enrichedPayload = {
-            ...(payload.initialPayload || {}),
-            executionId: safeExecId
-          };
+            executeUseCase.trigger(payload.workflowId, enrichedPayload).catch(async err => {
+              console.error(`❌ [KAFKA] Execution failed: ${err.message}`);
+              
+              // 1. Mark the execution as failed
+              await db.execution.update({ 
+                where: { id: safeExecId }, 
+                data: { status: 'FAILED', completedAt: new Date() } 
+              });
 
-          executeUseCase.trigger(payload.workflowId, enrichedPayload).catch(async err => {
-            console.error(`❌ [KAFKA] Execution failed: ${err.message}`);
-            await db.execution.update({ 
-              where: { id: safeExecId }, 
-              data: { status: 'FAILED', completedAt: new Date() } 
+              // 🚀 2. THE BULLETPROOF DLQ FALLBACK
+              // If the execution totally fails, guarantee it goes to the DLQ.
+              try {
+                await db.deadLetterQueue.create({
+                  data: {
+                    // ONLY use fields that actually exist in your Prisma schema here
+                    topic: 'workflow-events',
+                    error: err.message || "Catastrophic Node Failure",
+                    payload: {
+                      ...enrichedPayload,
+                      executionId: safeExecId, 
+                      workflowId: payload.workflowId,
+                      tenantId: payload.tenantId || 'default'
+                    }
+                  }
+                });
+                console.log(`📥 [KAFKA] Event safely routed to Dead Letter Queue.`);
+              } catch (dlqErr) {
+                console.error(`💥 [KAFKA] CRITICAL: Failed to write to DLQ:`, dlqErr);
+              }
             });
-          });
-        }, 0);
+          }, 0);
 
-      } catch (dbError) {
-        console.error(`💥 [KAFKA] Database error:`, dbError);
-      }
+        } catch (dbError) {
+          console.error(`💥 [KAFKA] Database error:`, dbError);
+        }
+      });
     });
-  });
 
   registerHandler('execution-events', async (payload) => {
     const execId = payload.executionId || (payload.eventName ? payload.eventName.split('-')[0] : null);

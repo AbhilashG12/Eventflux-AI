@@ -26,7 +26,7 @@ const BuilderCore = () => {
   const token = useAuthStore((state: any) => state.token);
   useTelemetry(token); 
 
-  const { isSaving, isPublishing, workflowStatus, onSave, onPublish, onTestRun } = useWorkflowActions();
+  const { isSaving, isPublishing, workflowStatus, onSave, onPublish, onTestRun } = useWorkflowActions(()=>setIsLogsOpen(true));
   
   const { onDragOver, onDrop } = useWorkflowDragDrop(
     reactFlowWrapper as React.RefObject<HTMLDivElement>

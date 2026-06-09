@@ -8,21 +8,30 @@ export const useDLQ = () => {
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [isReplaying, setIsReplaying] = useState<string | null>(null);
 
-  const showSuccess = useSuccessStore(state => state.showSuccess);
-  const showError = useErrorStore(state => state.showError);
+  const showSuccess = useSuccessStore((state: any) => state.showSuccess);
+  const showError = useErrorStore((state: any) => state.showError);
 
   const fetchDLQ = useCallback(async () => {
     try {
-      const { data } = await apiClient.get('/dlq');
-      setDlqItems(data);
+
+      const response = await apiClient.get('/dlq');
+      
+      console.log("🔍 RAW DLQ Response:", response.data);
+      const parsedItems = Array.isArray(response.data) 
+        ? response.data 
+        : (response.data?.items || response.data?.data || []);
+        
+      setDlqItems(parsedItems);
+      
     } catch (err) {
-      console.error("Failed to load DLQ");
+      console.error("❌ Failed to load DLQ", err);
     }
   }, []);
 
   useEffect(() => {
     fetchDLQ();
-    const interval = setInterval(fetchDLQ, 5000);
+    // 5 second polling is perfect for a real-time feel on a DLQ
+    const interval = setInterval(fetchDLQ, 5000); 
     return () => clearInterval(interval);
   }, [fetchDLQ]);
 
@@ -31,7 +40,7 @@ export const useDLQ = () => {
     try {
       await apiClient.post(`/dlq/${id}/replay`);
       showSuccess("Event successfully queued for replay!");
-      fetchDLQ();
+      fetchDLQ(); // Instantly refresh data instead of waiting for the interval
     } catch (err: any) {
       showError(err.response?.data?.error || "Replay failed");
     } finally {

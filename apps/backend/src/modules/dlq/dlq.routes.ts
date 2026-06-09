@@ -24,7 +24,7 @@ dlqRoutes.get('/', requireAuth, requireRole(['ADMIN']), async (req: Request, res
           workflowId: payload?.workflowId
         };
       })
-      .filter(item => item.payload?.tenantId === tenantId);
+      // .filter(item => item.payload?.tenantId === tenantId);
 
     res.json(tenantDlqItems);
   } catch (error) {

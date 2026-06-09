@@ -1,40 +1,26 @@
-import { useRef, useCallback, memo, useMemo } from 'react';
+import { useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldAlert, RefreshCw, ChevronRight, AlertCircle, History, RotateCcw } from 'lucide-react';
-
-// Vite workaround for react-window CommonJS exports with TypeScript compatibility
-// @ts-ignore - Ignoring type resolution issues with Vite and react-window
-import * as ReactWindow from 'react-window';
-// @ts-ignore - Dynamic property access for Vite compatibility
-const List = ReactWindow.VariableSizeList || ReactWindow.default?.VariableSizeList;
-// @ts-ignore - Dynamic property access for Vite compatibility
-const areEqual = ReactWindow.areEqual || ReactWindow.default?.areEqual;
-
-import { AutoSizer } from 'react-virtualized-auto-sizer';
-
 import { useDLQ } from '../hooks/useDLQ';
 
 const scrollbarStyles = "[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 hover:[&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full";
 const springTransition = { type: "spring", stiffness: 300, damping: 20 } as const;
 
-const DLQRow = memo(({ index, style, data }: any) => {
-  const { items, expandedRow, isReplaying, toggleRow, handleReplay } = data;
-  const item = items[index];
+// 🚀 Simplified native component, no react-window style props needed
+const DLQRow = memo(({ item, expandedRow, isReplaying, toggleRow, handleReplay }: any) => {
   const isExpanded = expandedRow === item.id;
-  const onToggle = useCallback(() => {
-    toggleRow(item.id, index);
-  }, [toggleRow, item.id, index]);
-
+  
+  const onToggle = useCallback(() => toggleRow(item.id), [toggleRow, item.id]);
   const onReplay = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     handleReplay(item.id);
   }, [handleReplay, item.id]);
 
   return (
-    <div style={style} className="pr-2">
-      <div className={`flex flex-col border-b border-white/5 bg-black/20 hover:bg-white/3 transition-colors group overflow-hidden ${isExpanded ? 'bg-white/2' : ''}`}>
+    <div className="mb-2 pr-2">
+      <div className={`flex flex-col border border-white/5 rounded-lg bg-black/20 hover:bg-white/5 transition-colors group overflow-hidden ${isExpanded ? 'bg-white/5' : ''}`}>
         
-        <div className="grid grid-cols-12 items-center px-6 h-18 cursor-pointer" onClick={onToggle}>
+        <div className="grid grid-cols-12 items-center px-6 h-16 cursor-pointer" onClick={onToggle}>
           <div className="col-span-3 font-mono text-gray-300 flex items-center gap-3">
             <motion.div animate={{ rotate: isExpanded ? 90 : 0 }} transition={springTransition}>
               <ChevronRight className={`w-4 h-4 ${isExpanded ? 'text-indigo-400' : 'text-gray-600 group-hover:text-indigo-400'} transition-colors`} />
@@ -73,8 +59,8 @@ const DLQRow = memo(({ index, style, data }: any) => {
         <AnimatePresence>
           {isExpanded && (
             <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="px-8 pb-6 pt-2 border-l-2 border-indigo-500 ml-6"
+              initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+              className="px-8 pb-6 pt-2 border-t border-white/5 ml-6 overflow-hidden"
             >
               <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                 <History className="w-3.5 h-3.5" /> Replay Audit Log
@@ -102,40 +88,12 @@ const DLQRow = memo(({ index, style, data }: any) => {
       </div>
     </div>
   );
-}, areEqual);
+});
 
 DLQRow.displayName = 'DLQRow';
 
 export const DLQDashboard = () => {
   const { dlqItems, expandedRow, isReplaying, handleReplay, toggleRow } = useDLQ();
-  const listRef = useRef<any>(null); 
-
-  const getItemSize = useCallback((index: number) => {
-    const item = dlqItems[index];
-    const isExpanded = expandedRow === item.id;
-    
-    if (!isExpanded) return 72; 
-    
-    const historyCount = item.history?.length || 0;
-    const historyHeight = historyCount > 0 ? (historyCount * 44) : 20; 
-    return 72 + 60 + historyHeight; 
-  }, [dlqItems, expandedRow]);
-
-  const handleToggleRow = useCallback((id: string, index: number) => {
-    toggleRow(id);
-    if (listRef.current) {
-      listRef.current.resetAfterIndex(index);
-    }
-  }, [toggleRow]);
-
-  // Crucial Performance Fix: Memoize the data object passed to the List
-  const itemData = useMemo(() => ({
-    items: dlqItems,
-    expandedRow,
-    isReplaying,
-    toggleRow: handleToggleRow,
-    handleReplay
-  }), [dlqItems, expandedRow, isReplaying, handleToggleRow, handleReplay]);
 
   return (
     <motion.div 
@@ -152,9 +110,9 @@ export const DLQDashboard = () => {
         <p className="text-sm text-gray-500 mt-2 font-mono tracking-wide">Review, debug, and safely replay failed background events.</p>
       </div>
 
-      <div className="flex-1 bg-black/40 backdrop-blur-2xl border border-white/5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col">
+      <div className="flex-1 bg-black/40 backdrop-blur-2xl border border-white/5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden">
         
-        <div className="grid grid-cols-12 items-center px-6 py-4 bg-white/2 border-b border-white/5 text-[10px] font-bold text-gray-500 uppercase tracking-widest shrink-0">
+        <div className="grid grid-cols-12 items-center px-6 py-4 bg-white/5 border-b border-white/10 text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">
           <div className="col-span-3">Event ID</div>
           <div className="col-span-3">Workflow ID</div>
           <div className="col-span-4">Reason</div>
@@ -162,30 +120,24 @@ export const DLQDashboard = () => {
           <div className="col-span-1 text-right">Action</div>
         </div>
 
-        <div className="flex-1 w-full min-h-0 relative">
+        {/* 🚀 Native scrolling container replacing AutoSizer */}
+        <div className={`flex-1 overflow-y-auto p-4 ${scrollbarStyles}`}>
           {dlqItems.length === 0 ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-600 font-mono text-xs uppercase tracking-widest gap-3">
+            <div className="h-full flex flex-col items-center justify-center text-gray-600 font-mono text-xs uppercase tracking-widest gap-3">
               <AlertCircle className="w-8 h-8 opacity-20" />
               Queue is healthy & empty
             </div>
           ) : (
-            // @ts-ignore - AutoSizer type issues with react-window
-            <AutoSizer>
-              {({ height, width }: { height: number; width: number }) => (
-                <List
-                  ref={listRef}
-                  height={height}
-                  width={width}
-                  itemCount={dlqItems.length}
-                  itemSize={getItemSize}
-                  itemData={itemData}
-                  className={scrollbarStyles}
-                  overscanCount={3}
-                >
-                  {DLQRow}
-                </List>
-              )}
-            </AutoSizer>
+            dlqItems.map((item: any) => (
+              <DLQRow
+                key={item.id}
+                item={item}
+                expandedRow={expandedRow}
+                isReplaying={isReplaying}
+                toggleRow={toggleRow}
+                handleReplay={handleReplay}
+              />
+            ))
           )}
         </div>
 

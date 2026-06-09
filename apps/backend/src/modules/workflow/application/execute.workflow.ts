@@ -16,13 +16,12 @@ export class ExecuteWorkflowUseCase {
         current = current[key];
       }
       
-      // FIX: Safely escape strings so they don't break JSON payloads!
       if (typeof current === 'string') {
         return current
-          .replace(/\\/g, '\\\\') // Escape backslashes
-          .replace(/"/g, '\\"')   // Escape double quotes
-          .replace(/\n/g, '\\n')  // Escape newlines
-          .replace(/\r/g, '\\r'); // Escape carriage returns
+          .replace(/\\/g, '\\\\') 
+          .replace(/"/g, '\\"')   
+          .replace(/\n/g, '\\n')  
+          .replace(/\r/g, '\\r'); 
       }
       
       return String(current);
@@ -75,7 +74,7 @@ export class ExecuteWorkflowUseCase {
           }
         }
       } catch (err) {
-        // console.warn("⚠️ Could not fetch secrets from database. Make sure your schema includes TenantSecret.", err);
+        // Silently ignore if tenant secrets aren't set up
       }
 
       const context: ExecutionContext = {
@@ -146,7 +145,24 @@ export class ExecuteWorkflowUseCase {
               }
             } else {
               stepStatus = 'FAILED';
-              stepLogs += `\n> CRITICAL ERROR: ${error.message} (Failed after ${maxRetries} retries)`;
+              let errorMessage = "Unknown network failure";
+              if (error?.cause?.code) {
+                errorMessage = error.cause.code; // Will grab 'ECONNRESET'
+              } else if (error?.cause?.message) {
+                errorMessage = error.cause.message;
+              } else if (error?.message) {
+                errorMessage = error.message; 
+              } else {
+                errorMessage = String(error);
+              }
+              stepLogs += `\n> CRITICAL ERROR: ${errorMessage} (Failed after ${maxRetries} retries)`;
+              
+              // 🚀 THE FIX: Populate stepOutput with a readable error object so the frontend UI can display it
+              stepOutput = {
+                error: error.message || "Unknown error",
+                status: error.response?.status || 500,
+                data: error.response?.data || null
+              };
             }
           }
         }
@@ -164,7 +180,7 @@ export class ExecuteWorkflowUseCase {
 
         if (node.data?.actionType === 'ai_generate') {
             executionState['groq'] = stepOutput;
-          }
+        }
 
         await publishEvent('execution-events', `${executionId}-${node.id}-${stepStatus.toLowerCase()}`, {
           tenantId,
@@ -176,7 +192,8 @@ export class ExecuteWorkflowUseCase {
         });
 
         if (stepStatus === 'FAILED') {
-          break; 
+          // 🚀 THE FIX: Throw an error instead of breaking, triggering the overarching DLQ fallback in server.ts
+          throw new Error(`Node [${node.id}] failed completely: ${stepLogs.trim()}`);
         }
       }
       
