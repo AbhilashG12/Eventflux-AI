@@ -4,7 +4,8 @@ import { useWorkflowStore } from '../../../core/store/workflow.store';
 
 export const useWorkflowDragDrop = (wrapperRef: RefObject<HTMLDivElement>) => {
   const { project } = useReactFlow();
-  const { nodes, setNodes } = useWorkflowStore();
+  const { nodes} = useWorkflowStore();
+  const setNodes = useWorkflowStore((state) => state.setNodes);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();

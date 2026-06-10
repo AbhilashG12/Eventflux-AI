@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useWorkflowStore } from '../../../core/store/workflow.store';
 
 export const useNodeConfig = (selectedNodeId: string | null) => {
-  const { nodes, updateNodeData } = useWorkflowStore();
+  const { nodes } = useWorkflowStore();
+  const updateNodeData = useWorkflowStore((state) => state.updateNodeData);
+
   
   const [pickerTarget, setPickerTarget] = useState<string | null>(null);
   const [activeInput, setActiveInput] = useState<{ field: string, cursorIndex: number } | null>(null);

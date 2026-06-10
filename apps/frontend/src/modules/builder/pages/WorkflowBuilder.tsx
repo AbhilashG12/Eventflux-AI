@@ -2,7 +2,7 @@ import { useRef, useState, useMemo } from 'react';
 import ReactFlow, { Background, Controls, ReactFlowProvider, BackgroundVariant } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-
+import { useShallow } from 'zustand/react/shallow';
 import { useWorkflowStore } from '../../../core/store/workflow.store';
 import { useAuthStore } from "../../../core/store/auth.store";
 import { useWorkflowActions } from '../hooks/useWorkflowActions';
@@ -21,12 +21,21 @@ const BuilderCore = () => {
   
   const { 
     nodes, edges, onNodesChange, onEdgesChange, onConnect, setSelectedNodeId 
-  } = useWorkflowStore();
+  } = useWorkflowStore(
+    useShallow((state) => ({
+      nodes: state.nodes,
+      edges: state.edges,
+      onNodesChange: state.onNodesChange,
+      onEdgesChange: state.onEdgesChange,
+      onConnect: state.onConnect,
+      setSelectedNodeId: state.setSelectedNodeId,
+    }))
+  );
 
   const token = useAuthStore((state: any) => state.token);
   useTelemetry(token); 
 
-  const { isSaving, isPublishing, workflowStatus, onSave, onPublish, onTestRun } = useWorkflowActions(()=>setIsLogsOpen(true));
+  const { isSaving, isPublishing, workflowStatus, onSave, onPublish, onTestRun } = useWorkflowActions(() => setIsLogsOpen(true));
   
   const { onDragOver, onDrop } = useWorkflowDragDrop(
     reactFlowWrapper as React.RefObject<HTMLDivElement>
@@ -40,14 +49,8 @@ const BuilderCore = () => {
     slack: SlackNode, 
   }), []);
 
-  // FIX 2: Edge sanitizer to prevent the "missing key in EdgeRenderer" crash
-  const sanitizedEdges = useMemo(() => {
-    return edges.map((edge, index) => ({
-      ...edge,
-      // Fallback ID generation if your onConnect or onDrop forgets to add one
-      id: edge.id || `fallback-edge-${edge.source}-${edge.target}-${index}`
-    }));
-  }, [edges]);
+  // 🚀 THE FIX: Edge sanitization completely removed. 
+  // React Flow now natively reads the stable IDs from the Zustand store, unlocking massive performance gains.
 
   return (
     <div className="w-full h-full flex flex-col relative z-10 overflow-hidden bg-[#050505]">
@@ -70,7 +73,7 @@ const BuilderCore = () => {
           
           <ReactFlow
             nodes={nodes}
-            edges={sanitizedEdges} // <-- Using the sanitized edges here
+            edges={edges} // <-- Passed directly from Zustand, zero render-time manipulation
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}

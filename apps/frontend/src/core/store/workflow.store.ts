@@ -27,7 +27,6 @@ interface WorkflowState {
   onEdgesChange: OnEdgesChange;
   onConnect: (connection: Connection) => void;
   
-  // Adjusted to support functional updates (React Flow needs this sometimes)
   setNodes: (nodes: Node[] | ((val: Node[]) => Node[])) => void;
   setEdges: (edges: Edge[] | ((val: Edge[]) => Edge[])) => void;
   
@@ -56,9 +55,20 @@ export const useWorkflowStore = create<WorkflowState>()(
       onEdgesChange: (changes) => set({
         edges: applyEdgeChanges(changes, get().edges),
       }),
-      onConnect: (connection) => set({
-        edges: addEdge(connection, get().edges),
-      }),
+      
+      onConnect: (connection) => {
+        // 🚀 THE FIX: Generate a stable, unique ID at the exact moment of connection.
+        // This completely eliminates the need to sanitize edges during the React render cycle!
+        const newEdge = {
+          ...connection,
+          id: `edge_${connection.source}_${connection.target}_${Date.now()}`,
+          type: 'smoothstep', // Modern default curve style for workflow editors
+        } as Edge;
+
+        set({
+          edges: addEdge(newEdge, get().edges),
+        });
+      },
       
       setNodes: (nodes) => set((state) => ({ 
         nodes: typeof nodes === 'function' ? nodes(state.nodes) : nodes 

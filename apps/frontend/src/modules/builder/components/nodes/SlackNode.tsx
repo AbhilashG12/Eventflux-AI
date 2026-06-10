@@ -1,7 +1,9 @@
-import { Handle, Position } from 'reactflow';
+import { Handle, Position, type NodeProps } from 'reactflow';
 import { MessageSquare } from 'lucide-react';
+import { memo } from "react";
 
-export const SlackNode = ({ data, selected }: any) => {
+
+export const SlackNode = memo(({ data, selected }: NodeProps) => {
   return (
     <div className={`w-70 bg-[#0a0a0a]/90 backdrop-blur-xl border-2 rounded-2xl shadow-2xl transition-all ${
       selected ? 'border-pink-500 shadow-[0_0_20px_rgba(236,72,153,0.3)]' : 'border-white/10'
@@ -33,4 +35,6 @@ export const SlackNode = ({ data, selected }: any) => {
       />
     </div>
   );
-};
+});
+
+SlackNode.displayName = 'SlackNode';

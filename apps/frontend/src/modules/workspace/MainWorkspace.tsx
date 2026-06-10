@@ -1,5 +1,5 @@
 import { useState, lazy, Suspense } from 'react';
-import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import { motion, AnimatePresence, type Variants, useReducedMotion } from 'framer-motion';
 import { LayoutGrid, Activity, BarChart2, Settings, Database } from 'lucide-react';
 
 const WorkflowBuilder = lazy(() => import('../builder/pages/WorkflowBuilder').then(m => ({ default: m.WorkflowBuilder })));
@@ -9,11 +9,11 @@ const TenantDashboard = lazy(() => import('../builder/pages/TenantDashboard').th
 const DLQDashboard = lazy(() => import('../dashboard/components/DLQDashboard').then(m => ({ default: m.DLQDashboard })));
 
 const TABS = [
-  { id: 'BUILDER', label: 'Canvas', icon: LayoutGrid,dot:false },
+  { id: 'BUILDER', label: 'Canvas', icon: LayoutGrid, dot: false },
   { id: 'DASHBOARD', label: 'Telemetry', icon: Activity, dot: true },
-  { id: 'ANALYTICS', label: 'Analytics', icon: BarChart2,dot:false },
-  { id: 'TENANT', label: 'Settings', icon: Settings,dot:false },
-  { id: 'DLQ', label: 'Operations', icon: Database,dot:false }
+  { id: 'ANALYTICS', label: 'Analytics', icon: BarChart2, dot: false },
+  { id: 'TENANT', label: 'Settings', icon: Settings, dot: false },
+  { id: 'DLQ', label: 'Operations', icon: Database, dot: false }
 ] as const;
 
 export const GlobalLoader = () => (
@@ -74,6 +74,9 @@ const LocalLoader = () => (
 export const MainWorkspace = () => {
   const [activeView, setActiveView] = useState<typeof TABS[number]['id']>('BUILDER');
   
+  // Respect user OS settings for reduced motion
+  const shouldReduceMotion = useReducedMotion();
+  
   // Premium Blur-Fade Transitions
   const pageVariants: Variants = {
     initial: { opacity: 0, y: 10, filter: 'blur(8px)' },
@@ -84,17 +87,20 @@ export const MainWorkspace = () => {
   return (
     <div className="relative w-full h-screen bg-[#050505] overflow-hidden font-sans text-gray-100 flex flex-col">
       
-      {/* Ambient Background Orbs */}
+      {/* 🚀 THE FIX: Ambient Background Orbs using zero-cost radial gradients instead of blur utilities */}
       <motion.div 
-        animate={{ x: [0, 30, -30, 0], y: [0, -30, 30, 0] }}
+        animate={shouldReduceMotion ? { x: 0, y: 0 } : { x: [0, 30, -30, 0], y: [0, -30, 30, 0] }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none z-0" 
+        className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full pointer-events-none z-0" 
+        style={{ background: 'radial-gradient(circle, rgba(79,70,229,0.15) 0%, rgba(0,0,0,0) 70%)' }}
       />
       <motion.div 
-        animate={{ x: [0, -40, 40, 0], y: [0, 40, -40, 0] }}
+        animate={shouldReduceMotion ? { x: 0, y: 0 } : { x: [0, -40, 40, 0], y: [0, 40, -40, 0] }}
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none z-0" 
+        className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] rounded-full pointer-events-none z-0" 
+        style={{ background: 'radial-gradient(circle, rgba(147,51,234,0.12) 0%, rgba(0,0,0,0) 70%)' }}
       />
+      
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjA1KSIvPjwvc3ZnPg==')] opacity-10 pointer-events-none z-0" />
 
       {/* Main Content Area */}

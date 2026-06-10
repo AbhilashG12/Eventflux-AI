@@ -47,11 +47,12 @@ export const useWorkflowActions = (onOpenLogs?: () => void) => {
     const currentWorkflowId = freshState.workflowId;
     const workflowName = freshState.name || "Untitled Workflow";
 
+    // 🚀 THE FIX: Pass edges directly to preserve IDs, types, and connection handles.
     const payload = {
       name: workflowName,
       definition: {
         nodes: freshNodes.map(n => ({ id: n.id, type: n.type, data: n.data, position: n.position })),
-        edges: freshEdges.map(e => ({ source: e.source, target: e.target }))
+        edges: freshEdges 
       }
     };
 

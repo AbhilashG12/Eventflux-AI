@@ -9,7 +9,8 @@ import { useErrorStore } from '../../../core/store/error.store';
 import { useSuccessStore } from '../../../core/store/success.store';
 
 export const ConfigPanel = () => {
-  const { selectedNodeId, workflowId } = useWorkflowStore();
+  const { workflowId } = useWorkflowStore();
+  const selectedNodeId = useWorkflowStore((state) => state.selectedNodeId);
   const showError = useErrorStore((state: any) => state.showError);
   const showSuccess = useSuccessStore((state: any) => state.showSuccess);
   
