@@ -1,10 +1,8 @@
 import { Resend } from 'resend';
-import { ExecutionContext } from './nodes.interface.js';
+import { NodeExecutor, ExecutionContext } from './nodes.interface.js';
 import { logger } from '@eventflux/logger';
-import { db } from '@eventflux/database';
-import { decryptSecret } from '../../../core/utils/crypto.utils.js';
 
-export class EmailExecutor {
+export class EmailExecutor implements NodeExecutor {
   async execute(node: any, context: ExecutionContext): Promise<any> {
     try {
       // Safely grab config whether it's nested or flat
@@ -17,20 +15,13 @@ export class EmailExecutor {
         throw new Error("Missing 'to' email address in node configuration.");
       }
       
-      if (!context.tenantId) {
-        throw new Error("Execution context is missing a valid tenantId.");
-      }
+      // 🚀 THE FIX: Grab Resend key directly from context. Zero database lookups required!
+      const userResendKey = context.secrets['RESEND_API_KEY'] || config.apiKey;
 
-      // 🚀 THE FIX: Fetch the secret directly from the database, exactly like AiNode!
-      const secretRecord = await db.secret.findFirst({
-        where: { tenantId: context.tenantId, name: 'RESEND_API_KEY' }
-      });
-
-      if (!secretRecord) {
+      if (!userResendKey) {
         throw new Error("Missing RESEND_API_KEY. Please add this to your workspace secrets.");
       }
 
-      const userResendKey = decryptSecret(secretRecord.value);
       const resend = new Resend(userResendKey);
 
       logger.info(`📧 Attempting to send email to ${to}...`);
@@ -56,11 +47,8 @@ export class EmailExecutor {
     } catch (error: any) {
       logger.error(error, "🚨 EMAIL EXECUTION FAILED");
       
-      // Force standard error object format so the UI shows the real error instead of {}
-      throw {
-        message: error.message || "Unknown Email Node Error",
-        stack: error.stack
-      };
+      // 🚀 THE FIX: Throw standard Error object
+      throw new Error(`Email Execution Failed: ${error.message || String(error)}`);
     }
   }
 }

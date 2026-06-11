@@ -14,6 +14,7 @@ import { NodePalette } from '../components/NodePalette';
 import { ConfigPanel } from '../components/ConfigPanel';
 import { BuilderHeader } from '../components/BuilderHeader';
 import { ExecutionLogsDrawer } from '../../../components/ExecutionLogsDrawer';
+import {ApprovalNode} from "../components/nodes/ApprovalNode";
 
 const BuilderCore = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
@@ -47,6 +48,7 @@ const BuilderCore = () => {
     TRIGGER: ActionNode,
     CONDITION: ActionNode,
     slack: SlackNode, 
+    APPROVAL : ApprovalNode
   }), []);
 
   // 🚀 THE FIX: Edge sanitization completely removed. 

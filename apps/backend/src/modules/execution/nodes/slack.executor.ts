@@ -1,12 +1,14 @@
 import axios from 'axios';
-import { ExecutionContext } from "./nodes.interface.js";
+import { NodeExecutor, ExecutionContext } from './nodes.interface.js';
 
-export class SlackExecutor {
-  async execute(node: any, context: ExecutionContext) {
+export class SlackExecutor implements NodeExecutor {
+  async execute(node: any, context: ExecutionContext): Promise<any> {
     try {
       // FIX 1: Safely grab config whether it's nested or flat
       const config = node.data?.config || node.data || {};
-      const webhookUrl = config.webhookUrl;
+      
+      // 🚀 NEW: Check the secrets vault first, fallback to node config
+      const webhookUrl = context.secrets['SLACK_WEBHOOK_URL'] || config.webhookUrl;
       const finalMessage = config.message;
 
       if (!webhookUrl || !finalMessage) {
@@ -29,10 +31,8 @@ export class SlackExecutor {
         ? (typeof error.response.data === 'string' ? error.response.data : JSON.stringify(error.response.data)) 
         : error.message;
 
-      throw {
-        message: `Slack API Error: ${errorMessage}`,
-        stack: error.stack
-      };
+      // 🚀 THE FIX: Throw a standard error object
+      throw new Error(`Slack API Error: ${errorMessage}`);
     }
   }
 }

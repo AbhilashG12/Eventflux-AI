@@ -21,6 +21,7 @@ enum WorkflowStatus {
 enum ExecutionStatus {
   PENDING
   RUNNING
+  PAUSED
   COMPLETED
   FAILED
   CANCELLED
@@ -30,6 +31,12 @@ enum TriggerType {
   MANUAL
   WEBHOOK
   CRON
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Tenant {
@@ -90,15 +97,16 @@ model WorkflowVersion {
 }
 
 model Execution {
-  id                String          @id @default(uuid())
+  id                String            @id @default(uuid())
   workflowVersionId String
-  workflowVersion   WorkflowVersion @relation(fields: [workflowVersionId], references: [id])
-  status            ExecutionStatus @default(PENDING)
+  workflowVersion   WorkflowVersion   @relation(fields: [workflowVersionId], references: [id])
+  status            ExecutionStatus   @default(PENDING)
   steps             ExecutionStep[]
   startedAt         DateTime?
   completedAt       DateTime?
-  createdAt         DateTime        @default(now())
+  createdAt         DateTime          @default(now())
   logs              ExecutionLog[]
+  approvalRequests  ApprovalRequest[]
 
   @@index([workflowVersionId])
   @@index([status])
@@ -204,4 +212,17 @@ model Secret {
   updatedAt DateTime @updatedAt
 
   @@unique([tenantId, name])
+}
+
+model ApprovalRequest {
+  id          String         @id @default(uuid())
+  executionId String         @unique
+  workflowId  String
+  nodeId      String
+  status      ApprovalStatus @default(PENDING)
+  requestedAt DateTime       @default(now())
+  resolvedAt  DateTime?
+  resolvedBy  String?
+  contextData Json?
+  execution   Execution      @relation(fields: [executionId], references: [id])
 }

@@ -32,6 +32,7 @@
     "node-cron": "^4.2.1",
     "resend": "^6.12.4",
     "socket.io": "^4.8.3",
+    "uuid": "^14.0.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {

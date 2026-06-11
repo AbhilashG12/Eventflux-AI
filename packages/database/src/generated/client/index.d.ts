@@ -78,6 +78,11 @@ export type ApiKey = $Result.DefaultSelection<Prisma.$ApiKeyPayload>
  * 
  */
 export type Secret = $Result.DefaultSelection<Prisma.$SecretPayload>
+/**
+ * Model ApprovalRequest
+ * 
+ */
+export type ApprovalRequest = $Result.DefaultSelection<Prisma.$ApprovalRequestPayload>
 
 /**
  * Enums
@@ -103,6 +108,7 @@ export type WorkflowStatus = (typeof WorkflowStatus)[keyof typeof WorkflowStatus
 export const ExecutionStatus: {
   PENDING: 'PENDING',
   RUNNING: 'RUNNING',
+  PAUSED: 'PAUSED',
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED',
   CANCELLED: 'CANCELLED'
@@ -118,6 +124,15 @@ export const TriggerType: {
 };
 
 export type TriggerType = (typeof TriggerType)[keyof typeof TriggerType]
+
+
+export const ApprovalStatus: {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+export type ApprovalStatus = (typeof ApprovalStatus)[keyof typeof ApprovalStatus]
 
 }
 
@@ -136,6 +151,10 @@ export const ExecutionStatus: typeof $Enums.ExecutionStatus
 export type TriggerType = $Enums.TriggerType
 
 export const TriggerType: typeof $Enums.TriggerType
+
+export type ApprovalStatus = $Enums.ApprovalStatus
+
+export const ApprovalStatus: typeof $Enums.ApprovalStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -387,6 +406,16 @@ export class PrismaClient<
     * ```
     */
   get secret(): Prisma.SecretDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.approvalRequest`: Exposes CRUD operations for the **ApprovalRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ApprovalRequests
+    * const approvalRequests = await prisma.approvalRequest.findMany()
+    * ```
+    */
+  get approvalRequest(): Prisma.ApprovalRequestDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -833,7 +862,8 @@ export namespace Prisma {
     ExecutionLog: 'ExecutionLog',
     ReplayHistory: 'ReplayHistory',
     ApiKey: 'ApiKey',
-    Secret: 'Secret'
+    Secret: 'Secret',
+    ApprovalRequest: 'ApprovalRequest'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -849,7 +879,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "tenant" | "user" | "workflow" | "workflowVersion" | "execution" | "executionStep" | "processedEvent" | "deadLetterQueue" | "invitation" | "executionLog" | "replayHistory" | "apiKey" | "secret"
+      modelProps: "tenant" | "user" | "workflow" | "workflowVersion" | "execution" | "executionStep" | "processedEvent" | "deadLetterQueue" | "invitation" | "executionLog" | "replayHistory" | "apiKey" | "secret" | "approvalRequest"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1815,6 +1845,80 @@ export namespace Prisma {
           }
         }
       }
+      ApprovalRequest: {
+        payload: Prisma.$ApprovalRequestPayload<ExtArgs>
+        fields: Prisma.ApprovalRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApprovalRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApprovalRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApprovalRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.ApprovalRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApprovalRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApprovalRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+          }
+          findMany: {
+            args: Prisma.ApprovalRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>[]
+          }
+          create: {
+            args: Prisma.ApprovalRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+          }
+          createMany: {
+            args: Prisma.ApprovalRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApprovalRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.ApprovalRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+          }
+          update: {
+            args: Prisma.ApprovalRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApprovalRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApprovalRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ApprovalRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.ApprovalRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.ApprovalRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApprovalRequest>
+          }
+          groupBy: {
+            args: Prisma.ApprovalRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApprovalRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApprovalRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<ApprovalRequestCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1936,6 +2040,7 @@ export namespace Prisma {
     replayHistory?: ReplayHistoryOmit
     apiKey?: ApiKeyOmit
     secret?: SecretOmit
+    approvalRequest?: ApprovalRequestOmit
   }
 
   /* Types for Logging */
@@ -2129,11 +2234,13 @@ export namespace Prisma {
   export type ExecutionCountOutputType = {
     steps: number
     logs: number
+    approvalRequests: number
   }
 
   export type ExecutionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     steps?: boolean | ExecutionCountOutputTypeCountStepsArgs
     logs?: boolean | ExecutionCountOutputTypeCountLogsArgs
+    approvalRequests?: boolean | ExecutionCountOutputTypeCountApprovalRequestsArgs
   }
 
   // Custom InputTypes
@@ -2159,6 +2266,13 @@ export namespace Prisma {
    */
   export type ExecutionCountOutputTypeCountLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExecutionLogWhereInput
+  }
+
+  /**
+   * ExecutionCountOutputType without action
+   */
+  export type ExecutionCountOutputTypeCountApprovalRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApprovalRequestWhereInput
   }
 
 
@@ -6908,6 +7022,7 @@ export namespace Prisma {
     workflowVersion?: boolean | WorkflowVersionDefaultArgs<ExtArgs>
     steps?: boolean | Execution$stepsArgs<ExtArgs>
     logs?: boolean | Execution$logsArgs<ExtArgs>
+    approvalRequests?: boolean | Execution$approvalRequestsArgs<ExtArgs>
     _count?: boolean | ExecutionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["execution"]>
 
@@ -6945,6 +7060,7 @@ export namespace Prisma {
     workflowVersion?: boolean | WorkflowVersionDefaultArgs<ExtArgs>
     steps?: boolean | Execution$stepsArgs<ExtArgs>
     logs?: boolean | Execution$logsArgs<ExtArgs>
+    approvalRequests?: boolean | Execution$approvalRequestsArgs<ExtArgs>
     _count?: boolean | ExecutionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ExecutionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6960,6 +7076,7 @@ export namespace Prisma {
       workflowVersion: Prisma.$WorkflowVersionPayload<ExtArgs>
       steps: Prisma.$ExecutionStepPayload<ExtArgs>[]
       logs: Prisma.$ExecutionLogPayload<ExtArgs>[]
+      approvalRequests: Prisma.$ApprovalRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7365,6 +7482,7 @@ export namespace Prisma {
     workflowVersion<T extends WorkflowVersionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkflowVersionDefaultArgs<ExtArgs>>): Prisma__WorkflowVersionClient<$Result.GetResult<Prisma.$WorkflowVersionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     steps<T extends Execution$stepsArgs<ExtArgs> = {}>(args?: Subset<T, Execution$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     logs<T extends Execution$logsArgs<ExtArgs> = {}>(args?: Subset<T, Execution$logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    approvalRequests<T extends Execution$approvalRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Execution$approvalRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7846,6 +7964,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExecutionLogScalarFieldEnum | ExecutionLogScalarFieldEnum[]
+  }
+
+  /**
+   * Execution.approvalRequests
+   */
+  export type Execution$approvalRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestInclude<ExtArgs> | null
+    where?: ApprovalRequestWhereInput
+    orderBy?: ApprovalRequestOrderByWithRelationInput | ApprovalRequestOrderByWithRelationInput[]
+    cursor?: ApprovalRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApprovalRequestScalarFieldEnum | ApprovalRequestScalarFieldEnum[]
   }
 
   /**
@@ -16519,6 +16661,1117 @@ export namespace Prisma {
 
 
   /**
+   * Model ApprovalRequest
+   */
+
+  export type AggregateApprovalRequest = {
+    _count: ApprovalRequestCountAggregateOutputType | null
+    _min: ApprovalRequestMinAggregateOutputType | null
+    _max: ApprovalRequestMaxAggregateOutputType | null
+  }
+
+  export type ApprovalRequestMinAggregateOutputType = {
+    id: string | null
+    executionId: string | null
+    workflowId: string | null
+    nodeId: string | null
+    status: $Enums.ApprovalStatus | null
+    requestedAt: Date | null
+    resolvedAt: Date | null
+    resolvedBy: string | null
+  }
+
+  export type ApprovalRequestMaxAggregateOutputType = {
+    id: string | null
+    executionId: string | null
+    workflowId: string | null
+    nodeId: string | null
+    status: $Enums.ApprovalStatus | null
+    requestedAt: Date | null
+    resolvedAt: Date | null
+    resolvedBy: string | null
+  }
+
+  export type ApprovalRequestCountAggregateOutputType = {
+    id: number
+    executionId: number
+    workflowId: number
+    nodeId: number
+    status: number
+    requestedAt: number
+    resolvedAt: number
+    resolvedBy: number
+    contextData: number
+    _all: number
+  }
+
+
+  export type ApprovalRequestMinAggregateInputType = {
+    id?: true
+    executionId?: true
+    workflowId?: true
+    nodeId?: true
+    status?: true
+    requestedAt?: true
+    resolvedAt?: true
+    resolvedBy?: true
+  }
+
+  export type ApprovalRequestMaxAggregateInputType = {
+    id?: true
+    executionId?: true
+    workflowId?: true
+    nodeId?: true
+    status?: true
+    requestedAt?: true
+    resolvedAt?: true
+    resolvedBy?: true
+  }
+
+  export type ApprovalRequestCountAggregateInputType = {
+    id?: true
+    executionId?: true
+    workflowId?: true
+    nodeId?: true
+    status?: true
+    requestedAt?: true
+    resolvedAt?: true
+    resolvedBy?: true
+    contextData?: true
+    _all?: true
+  }
+
+  export type ApprovalRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApprovalRequest to aggregate.
+     */
+    where?: ApprovalRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApprovalRequests to fetch.
+     */
+    orderBy?: ApprovalRequestOrderByWithRelationInput | ApprovalRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApprovalRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApprovalRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApprovalRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ApprovalRequests
+    **/
+    _count?: true | ApprovalRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApprovalRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApprovalRequestMaxAggregateInputType
+  }
+
+  export type GetApprovalRequestAggregateType<T extends ApprovalRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateApprovalRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApprovalRequest[P]>
+      : GetScalarType<T[P], AggregateApprovalRequest[P]>
+  }
+
+
+
+
+  export type ApprovalRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApprovalRequestWhereInput
+    orderBy?: ApprovalRequestOrderByWithAggregationInput | ApprovalRequestOrderByWithAggregationInput[]
+    by: ApprovalRequestScalarFieldEnum[] | ApprovalRequestScalarFieldEnum
+    having?: ApprovalRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApprovalRequestCountAggregateInputType | true
+    _min?: ApprovalRequestMinAggregateInputType
+    _max?: ApprovalRequestMaxAggregateInputType
+  }
+
+  export type ApprovalRequestGroupByOutputType = {
+    id: string
+    executionId: string
+    workflowId: string
+    nodeId: string
+    status: $Enums.ApprovalStatus
+    requestedAt: Date
+    resolvedAt: Date | null
+    resolvedBy: string | null
+    contextData: JsonValue | null
+    _count: ApprovalRequestCountAggregateOutputType | null
+    _min: ApprovalRequestMinAggregateOutputType | null
+    _max: ApprovalRequestMaxAggregateOutputType | null
+  }
+
+  type GetApprovalRequestGroupByPayload<T extends ApprovalRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApprovalRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApprovalRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApprovalRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], ApprovalRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApprovalRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    executionId?: boolean
+    workflowId?: boolean
+    nodeId?: boolean
+    status?: boolean
+    requestedAt?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+    contextData?: boolean
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["approvalRequest"]>
+
+  export type ApprovalRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    executionId?: boolean
+    workflowId?: boolean
+    nodeId?: boolean
+    status?: boolean
+    requestedAt?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+    contextData?: boolean
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["approvalRequest"]>
+
+  export type ApprovalRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    executionId?: boolean
+    workflowId?: boolean
+    nodeId?: boolean
+    status?: boolean
+    requestedAt?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+    contextData?: boolean
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["approvalRequest"]>
+
+  export type ApprovalRequestSelectScalar = {
+    id?: boolean
+    executionId?: boolean
+    workflowId?: boolean
+    nodeId?: boolean
+    status?: boolean
+    requestedAt?: boolean
+    resolvedAt?: boolean
+    resolvedBy?: boolean
+    contextData?: boolean
+  }
+
+  export type ApprovalRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "executionId" | "workflowId" | "nodeId" | "status" | "requestedAt" | "resolvedAt" | "resolvedBy" | "contextData", ExtArgs["result"]["approvalRequest"]>
+  export type ApprovalRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }
+  export type ApprovalRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }
+  export type ApprovalRequestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    execution?: boolean | ExecutionDefaultArgs<ExtArgs>
+  }
+
+  export type $ApprovalRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ApprovalRequest"
+    objects: {
+      execution: Prisma.$ExecutionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      executionId: string
+      workflowId: string
+      nodeId: string
+      status: $Enums.ApprovalStatus
+      requestedAt: Date
+      resolvedAt: Date | null
+      resolvedBy: string | null
+      contextData: Prisma.JsonValue | null
+    }, ExtArgs["result"]["approvalRequest"]>
+    composites: {}
+  }
+
+  type ApprovalRequestGetPayload<S extends boolean | null | undefined | ApprovalRequestDefaultArgs> = $Result.GetResult<Prisma.$ApprovalRequestPayload, S>
+
+  type ApprovalRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ApprovalRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ApprovalRequestCountAggregateInputType | true
+    }
+
+  export interface ApprovalRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ApprovalRequest'], meta: { name: 'ApprovalRequest' } }
+    /**
+     * Find zero or one ApprovalRequest that matches the filter.
+     * @param {ApprovalRequestFindUniqueArgs} args - Arguments to find a ApprovalRequest
+     * @example
+     * // Get one ApprovalRequest
+     * const approvalRequest = await prisma.approvalRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApprovalRequestFindUniqueArgs>(args: SelectSubset<T, ApprovalRequestFindUniqueArgs<ExtArgs>>): Prisma__ApprovalRequestClient<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ApprovalRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ApprovalRequestFindUniqueOrThrowArgs} args - Arguments to find a ApprovalRequest
+     * @example
+     * // Get one ApprovalRequest
+     * const approvalRequest = await prisma.approvalRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApprovalRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, ApprovalRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApprovalRequestClient<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApprovalRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApprovalRequestFindFirstArgs} args - Arguments to find a ApprovalRequest
+     * @example
+     * // Get one ApprovalRequest
+     * const approvalRequest = await prisma.approvalRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApprovalRequestFindFirstArgs>(args?: SelectSubset<T, ApprovalRequestFindFirstArgs<ExtArgs>>): Prisma__ApprovalRequestClient<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApprovalRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApprovalRequestFindFirstOrThrowArgs} args - Arguments to find a ApprovalRequest
+     * @example
+     * // Get one ApprovalRequest
+     * const approvalRequest = await prisma.approvalRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApprovalRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, ApprovalRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApprovalRequestClient<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ApprovalRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApprovalRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ApprovalRequests
+     * const approvalRequests = await prisma.approvalRequest.findMany()
+     * 
+     * // Get first 10 ApprovalRequests
+     * const approvalRequests = await prisma.approvalRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const approvalRequestWithIdOnly = await prisma.approvalRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ApprovalRequestFindManyArgs>(args?: SelectSubset<T, ApprovalRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ApprovalRequest.
+     * @param {ApprovalRequestCreateArgs} args - Arguments to create a ApprovalRequest.
+     * @example
+     * // Create one ApprovalRequest
+     * const ApprovalRequest = await prisma.approvalRequest.create({
+     *   data: {
+     *     // ... data to create a ApprovalRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApprovalRequestCreateArgs>(args: SelectSubset<T, ApprovalRequestCreateArgs<ExtArgs>>): Prisma__ApprovalRequestClient<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ApprovalRequests.
+     * @param {ApprovalRequestCreateManyArgs} args - Arguments to create many ApprovalRequests.
+     * @example
+     * // Create many ApprovalRequests
+     * const approvalRequest = await prisma.approvalRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApprovalRequestCreateManyArgs>(args?: SelectSubset<T, ApprovalRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ApprovalRequests and returns the data saved in the database.
+     * @param {ApprovalRequestCreateManyAndReturnArgs} args - Arguments to create many ApprovalRequests.
+     * @example
+     * // Create many ApprovalRequests
+     * const approvalRequest = await prisma.approvalRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ApprovalRequests and only return the `id`
+     * const approvalRequestWithIdOnly = await prisma.approvalRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApprovalRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, ApprovalRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ApprovalRequest.
+     * @param {ApprovalRequestDeleteArgs} args - Arguments to delete one ApprovalRequest.
+     * @example
+     * // Delete one ApprovalRequest
+     * const ApprovalRequest = await prisma.approvalRequest.delete({
+     *   where: {
+     *     // ... filter to delete one ApprovalRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApprovalRequestDeleteArgs>(args: SelectSubset<T, ApprovalRequestDeleteArgs<ExtArgs>>): Prisma__ApprovalRequestClient<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ApprovalRequest.
+     * @param {ApprovalRequestUpdateArgs} args - Arguments to update one ApprovalRequest.
+     * @example
+     * // Update one ApprovalRequest
+     * const approvalRequest = await prisma.approvalRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApprovalRequestUpdateArgs>(args: SelectSubset<T, ApprovalRequestUpdateArgs<ExtArgs>>): Prisma__ApprovalRequestClient<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ApprovalRequests.
+     * @param {ApprovalRequestDeleteManyArgs} args - Arguments to filter ApprovalRequests to delete.
+     * @example
+     * // Delete a few ApprovalRequests
+     * const { count } = await prisma.approvalRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApprovalRequestDeleteManyArgs>(args?: SelectSubset<T, ApprovalRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApprovalRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApprovalRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ApprovalRequests
+     * const approvalRequest = await prisma.approvalRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApprovalRequestUpdateManyArgs>(args: SelectSubset<T, ApprovalRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApprovalRequests and returns the data updated in the database.
+     * @param {ApprovalRequestUpdateManyAndReturnArgs} args - Arguments to update many ApprovalRequests.
+     * @example
+     * // Update many ApprovalRequests
+     * const approvalRequest = await prisma.approvalRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ApprovalRequests and only return the `id`
+     * const approvalRequestWithIdOnly = await prisma.approvalRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ApprovalRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, ApprovalRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ApprovalRequest.
+     * @param {ApprovalRequestUpsertArgs} args - Arguments to update or create a ApprovalRequest.
+     * @example
+     * // Update or create a ApprovalRequest
+     * const approvalRequest = await prisma.approvalRequest.upsert({
+     *   create: {
+     *     // ... data to create a ApprovalRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ApprovalRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApprovalRequestUpsertArgs>(args: SelectSubset<T, ApprovalRequestUpsertArgs<ExtArgs>>): Prisma__ApprovalRequestClient<$Result.GetResult<Prisma.$ApprovalRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ApprovalRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApprovalRequestCountArgs} args - Arguments to filter ApprovalRequests to count.
+     * @example
+     * // Count the number of ApprovalRequests
+     * const count = await prisma.approvalRequest.count({
+     *   where: {
+     *     // ... the filter for the ApprovalRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApprovalRequestCountArgs>(
+      args?: Subset<T, ApprovalRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApprovalRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ApprovalRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApprovalRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApprovalRequestAggregateArgs>(args: Subset<T, ApprovalRequestAggregateArgs>): Prisma.PrismaPromise<GetApprovalRequestAggregateType<T>>
+
+    /**
+     * Group by ApprovalRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApprovalRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApprovalRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApprovalRequestGroupByArgs['orderBy'] }
+        : { orderBy?: ApprovalRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApprovalRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApprovalRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ApprovalRequest model
+   */
+  readonly fields: ApprovalRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ApprovalRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApprovalRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    execution<T extends ExecutionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExecutionDefaultArgs<ExtArgs>>): Prisma__ExecutionClient<$Result.GetResult<Prisma.$ExecutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ApprovalRequest model
+   */
+  interface ApprovalRequestFieldRefs {
+    readonly id: FieldRef<"ApprovalRequest", 'String'>
+    readonly executionId: FieldRef<"ApprovalRequest", 'String'>
+    readonly workflowId: FieldRef<"ApprovalRequest", 'String'>
+    readonly nodeId: FieldRef<"ApprovalRequest", 'String'>
+    readonly status: FieldRef<"ApprovalRequest", 'ApprovalStatus'>
+    readonly requestedAt: FieldRef<"ApprovalRequest", 'DateTime'>
+    readonly resolvedAt: FieldRef<"ApprovalRequest", 'DateTime'>
+    readonly resolvedBy: FieldRef<"ApprovalRequest", 'String'>
+    readonly contextData: FieldRef<"ApprovalRequest", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ApprovalRequest findUnique
+   */
+  export type ApprovalRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ApprovalRequest to fetch.
+     */
+    where: ApprovalRequestWhereUniqueInput
+  }
+
+  /**
+   * ApprovalRequest findUniqueOrThrow
+   */
+  export type ApprovalRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ApprovalRequest to fetch.
+     */
+    where: ApprovalRequestWhereUniqueInput
+  }
+
+  /**
+   * ApprovalRequest findFirst
+   */
+  export type ApprovalRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ApprovalRequest to fetch.
+     */
+    where?: ApprovalRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApprovalRequests to fetch.
+     */
+    orderBy?: ApprovalRequestOrderByWithRelationInput | ApprovalRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApprovalRequests.
+     */
+    cursor?: ApprovalRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApprovalRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApprovalRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApprovalRequests.
+     */
+    distinct?: ApprovalRequestScalarFieldEnum | ApprovalRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ApprovalRequest findFirstOrThrow
+   */
+  export type ApprovalRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ApprovalRequest to fetch.
+     */
+    where?: ApprovalRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApprovalRequests to fetch.
+     */
+    orderBy?: ApprovalRequestOrderByWithRelationInput | ApprovalRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApprovalRequests.
+     */
+    cursor?: ApprovalRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApprovalRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApprovalRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApprovalRequests.
+     */
+    distinct?: ApprovalRequestScalarFieldEnum | ApprovalRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ApprovalRequest findMany
+   */
+  export type ApprovalRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ApprovalRequests to fetch.
+     */
+    where?: ApprovalRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApprovalRequests to fetch.
+     */
+    orderBy?: ApprovalRequestOrderByWithRelationInput | ApprovalRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ApprovalRequests.
+     */
+    cursor?: ApprovalRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApprovalRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApprovalRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApprovalRequests.
+     */
+    distinct?: ApprovalRequestScalarFieldEnum | ApprovalRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ApprovalRequest create
+   */
+  export type ApprovalRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ApprovalRequest.
+     */
+    data: XOR<ApprovalRequestCreateInput, ApprovalRequestUncheckedCreateInput>
+  }
+
+  /**
+   * ApprovalRequest createMany
+   */
+  export type ApprovalRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ApprovalRequests.
+     */
+    data: ApprovalRequestCreateManyInput | ApprovalRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApprovalRequest createManyAndReturn
+   */
+  export type ApprovalRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many ApprovalRequests.
+     */
+    data: ApprovalRequestCreateManyInput | ApprovalRequestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ApprovalRequest update
+   */
+  export type ApprovalRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ApprovalRequest.
+     */
+    data: XOR<ApprovalRequestUpdateInput, ApprovalRequestUncheckedUpdateInput>
+    /**
+     * Choose, which ApprovalRequest to update.
+     */
+    where: ApprovalRequestWhereUniqueInput
+  }
+
+  /**
+   * ApprovalRequest updateMany
+   */
+  export type ApprovalRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ApprovalRequests.
+     */
+    data: XOR<ApprovalRequestUpdateManyMutationInput, ApprovalRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which ApprovalRequests to update
+     */
+    where?: ApprovalRequestWhereInput
+    /**
+     * Limit how many ApprovalRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApprovalRequest updateManyAndReturn
+   */
+  export type ApprovalRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update ApprovalRequests.
+     */
+    data: XOR<ApprovalRequestUpdateManyMutationInput, ApprovalRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which ApprovalRequests to update
+     */
+    where?: ApprovalRequestWhereInput
+    /**
+     * Limit how many ApprovalRequests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ApprovalRequest upsert
+   */
+  export type ApprovalRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ApprovalRequest to update in case it exists.
+     */
+    where: ApprovalRequestWhereUniqueInput
+    /**
+     * In case the ApprovalRequest found by the `where` argument doesn't exist, create a new ApprovalRequest with this data.
+     */
+    create: XOR<ApprovalRequestCreateInput, ApprovalRequestUncheckedCreateInput>
+    /**
+     * In case the ApprovalRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApprovalRequestUpdateInput, ApprovalRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * ApprovalRequest delete
+   */
+  export type ApprovalRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestInclude<ExtArgs> | null
+    /**
+     * Filter which ApprovalRequest to delete.
+     */
+    where: ApprovalRequestWhereUniqueInput
+  }
+
+  /**
+   * ApprovalRequest deleteMany
+   */
+  export type ApprovalRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApprovalRequests to delete
+     */
+    where?: ApprovalRequestWhereInput
+    /**
+     * Limit how many ApprovalRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApprovalRequest without action
+   */
+  export type ApprovalRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApprovalRequest
+     */
+    select?: ApprovalRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApprovalRequest
+     */
+    omit?: ApprovalRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApprovalRequestInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -16704,6 +17957,21 @@ export namespace Prisma {
   export type SecretScalarFieldEnum = (typeof SecretScalarFieldEnum)[keyof typeof SecretScalarFieldEnum]
 
 
+  export const ApprovalRequestScalarFieldEnum: {
+    id: 'id',
+    executionId: 'executionId',
+    workflowId: 'workflowId',
+    nodeId: 'nodeId',
+    status: 'status',
+    requestedAt: 'requestedAt',
+    resolvedAt: 'resolvedAt',
+    resolvedBy: 'resolvedBy',
+    contextData: 'contextData'
+  };
+
+  export type ApprovalRequestScalarFieldEnum = (typeof ApprovalRequestScalarFieldEnum)[keyof typeof ApprovalRequestScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -16873,6 +18141,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'ApprovalStatus'
+   */
+  export type EnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ApprovalStatus[]'
+   */
+  export type ListEnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus[]'>
     
 
 
@@ -17191,6 +18473,7 @@ export namespace Prisma {
     workflowVersion?: XOR<WorkflowVersionScalarRelationFilter, WorkflowVersionWhereInput>
     steps?: ExecutionStepListRelationFilter
     logs?: ExecutionLogListRelationFilter
+    approvalRequests?: ApprovalRequestListRelationFilter
   }
 
   export type ExecutionOrderByWithRelationInput = {
@@ -17203,6 +18486,7 @@ export namespace Prisma {
     workflowVersion?: WorkflowVersionOrderByWithRelationInput
     steps?: ExecutionStepOrderByRelationAggregateInput
     logs?: ExecutionLogOrderByRelationAggregateInput
+    approvalRequests?: ApprovalRequestOrderByRelationAggregateInput
   }
 
   export type ExecutionWhereUniqueInput = Prisma.AtLeast<{
@@ -17218,6 +18502,7 @@ export namespace Prisma {
     workflowVersion?: XOR<WorkflowVersionScalarRelationFilter, WorkflowVersionWhereInput>
     steps?: ExecutionStepListRelationFilter
     logs?: ExecutionLogListRelationFilter
+    approvalRequests?: ApprovalRequestListRelationFilter
   }, "id">
 
   export type ExecutionOrderByWithAggregationInput = {
@@ -17773,6 +19058,81 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Secret"> | Date | string
   }
 
+  export type ApprovalRequestWhereInput = {
+    AND?: ApprovalRequestWhereInput | ApprovalRequestWhereInput[]
+    OR?: ApprovalRequestWhereInput[]
+    NOT?: ApprovalRequestWhereInput | ApprovalRequestWhereInput[]
+    id?: StringFilter<"ApprovalRequest"> | string
+    executionId?: StringFilter<"ApprovalRequest"> | string
+    workflowId?: StringFilter<"ApprovalRequest"> | string
+    nodeId?: StringFilter<"ApprovalRequest"> | string
+    status?: EnumApprovalStatusFilter<"ApprovalRequest"> | $Enums.ApprovalStatus
+    requestedAt?: DateTimeFilter<"ApprovalRequest"> | Date | string
+    resolvedAt?: DateTimeNullableFilter<"ApprovalRequest"> | Date | string | null
+    resolvedBy?: StringNullableFilter<"ApprovalRequest"> | string | null
+    contextData?: JsonNullableFilter<"ApprovalRequest">
+    execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
+  }
+
+  export type ApprovalRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    executionId?: SortOrder
+    workflowId?: SortOrder
+    nodeId?: SortOrder
+    status?: SortOrder
+    requestedAt?: SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    resolvedBy?: SortOrderInput | SortOrder
+    contextData?: SortOrderInput | SortOrder
+    execution?: ExecutionOrderByWithRelationInput
+  }
+
+  export type ApprovalRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    executionId?: string
+    AND?: ApprovalRequestWhereInput | ApprovalRequestWhereInput[]
+    OR?: ApprovalRequestWhereInput[]
+    NOT?: ApprovalRequestWhereInput | ApprovalRequestWhereInput[]
+    workflowId?: StringFilter<"ApprovalRequest"> | string
+    nodeId?: StringFilter<"ApprovalRequest"> | string
+    status?: EnumApprovalStatusFilter<"ApprovalRequest"> | $Enums.ApprovalStatus
+    requestedAt?: DateTimeFilter<"ApprovalRequest"> | Date | string
+    resolvedAt?: DateTimeNullableFilter<"ApprovalRequest"> | Date | string | null
+    resolvedBy?: StringNullableFilter<"ApprovalRequest"> | string | null
+    contextData?: JsonNullableFilter<"ApprovalRequest">
+    execution?: XOR<ExecutionScalarRelationFilter, ExecutionWhereInput>
+  }, "id" | "executionId">
+
+  export type ApprovalRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    executionId?: SortOrder
+    workflowId?: SortOrder
+    nodeId?: SortOrder
+    status?: SortOrder
+    requestedAt?: SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    resolvedBy?: SortOrderInput | SortOrder
+    contextData?: SortOrderInput | SortOrder
+    _count?: ApprovalRequestCountOrderByAggregateInput
+    _max?: ApprovalRequestMaxOrderByAggregateInput
+    _min?: ApprovalRequestMinOrderByAggregateInput
+  }
+
+  export type ApprovalRequestScalarWhereWithAggregatesInput = {
+    AND?: ApprovalRequestScalarWhereWithAggregatesInput | ApprovalRequestScalarWhereWithAggregatesInput[]
+    OR?: ApprovalRequestScalarWhereWithAggregatesInput[]
+    NOT?: ApprovalRequestScalarWhereWithAggregatesInput | ApprovalRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ApprovalRequest"> | string
+    executionId?: StringWithAggregatesFilter<"ApprovalRequest"> | string
+    workflowId?: StringWithAggregatesFilter<"ApprovalRequest"> | string
+    nodeId?: StringWithAggregatesFilter<"ApprovalRequest"> | string
+    status?: EnumApprovalStatusWithAggregatesFilter<"ApprovalRequest"> | $Enums.ApprovalStatus
+    requestedAt?: DateTimeWithAggregatesFilter<"ApprovalRequest"> | Date | string
+    resolvedAt?: DateTimeNullableWithAggregatesFilter<"ApprovalRequest"> | Date | string | null
+    resolvedBy?: StringNullableWithAggregatesFilter<"ApprovalRequest"> | string | null
+    contextData?: JsonNullableWithAggregatesFilter<"ApprovalRequest">
+  }
+
   export type TenantCreateInput = {
     id?: string
     name: string
@@ -18093,6 +19453,7 @@ export namespace Prisma {
     workflowVersion: WorkflowVersionCreateNestedOneWithoutExecutionsInput
     steps?: ExecutionStepCreateNestedManyWithoutExecutionInput
     logs?: ExecutionLogCreateNestedManyWithoutExecutionInput
+    approvalRequests?: ApprovalRequestCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUncheckedCreateInput = {
@@ -18104,6 +19465,7 @@ export namespace Prisma {
     createdAt?: Date | string
     steps?: ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput
     logs?: ExecutionLogUncheckedCreateNestedManyWithoutExecutionInput
+    approvalRequests?: ApprovalRequestUncheckedCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUpdateInput = {
@@ -18115,6 +19477,7 @@ export namespace Prisma {
     workflowVersion?: WorkflowVersionUpdateOneRequiredWithoutExecutionsNestedInput
     steps?: ExecutionStepUpdateManyWithoutExecutionNestedInput
     logs?: ExecutionLogUpdateManyWithoutExecutionNestedInput
+    approvalRequests?: ApprovalRequestUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionUncheckedUpdateInput = {
@@ -18126,6 +19489,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
     logs?: ExecutionLogUncheckedUpdateManyWithoutExecutionNestedInput
+    approvalRequests?: ApprovalRequestUncheckedUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionCreateManyInput = {
@@ -18728,6 +20092,89 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ApprovalRequestCreateInput = {
+    id?: string
+    workflowId: string
+    nodeId: string
+    status?: $Enums.ApprovalStatus
+    requestedAt?: Date | string
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
+    execution: ExecutionCreateNestedOneWithoutApprovalRequestsInput
+  }
+
+  export type ApprovalRequestUncheckedCreateInput = {
+    id?: string
+    executionId: string
+    workflowId: string
+    nodeId: string
+    status?: $Enums.ApprovalStatus
+    requestedAt?: Date | string
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ApprovalRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workflowId?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
+    execution?: ExecutionUpdateOneRequiredWithoutApprovalRequestsNestedInput
+  }
+
+  export type ApprovalRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    executionId?: StringFieldUpdateOperationsInput | string
+    workflowId?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ApprovalRequestCreateManyInput = {
+    id?: string
+    executionId: string
+    workflowId: string
+    nodeId: string
+    status?: $Enums.ApprovalStatus
+    requestedAt?: Date | string
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ApprovalRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workflowId?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ApprovalRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    executionId?: StringFieldUpdateOperationsInput | string
+    workflowId?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -19230,11 +20677,21 @@ export namespace Prisma {
     none?: ExecutionLogWhereInput
   }
 
+  export type ApprovalRequestListRelationFilter = {
+    every?: ApprovalRequestWhereInput
+    some?: ApprovalRequestWhereInput
+    none?: ApprovalRequestWhereInput
+  }
+
   export type ExecutionStepOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type ExecutionLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ApprovalRequestOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19596,6 +21053,57 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type EnumApprovalStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApprovalStatusFilter<$PrismaModel> | $Enums.ApprovalStatus
+  }
+
+  export type ApprovalRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    executionId?: SortOrder
+    workflowId?: SortOrder
+    nodeId?: SortOrder
+    status?: SortOrder
+    requestedAt?: SortOrder
+    resolvedAt?: SortOrder
+    resolvedBy?: SortOrder
+    contextData?: SortOrder
+  }
+
+  export type ApprovalRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    executionId?: SortOrder
+    workflowId?: SortOrder
+    nodeId?: SortOrder
+    status?: SortOrder
+    requestedAt?: SortOrder
+    resolvedAt?: SortOrder
+    resolvedBy?: SortOrder
+  }
+
+  export type ApprovalRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    executionId?: SortOrder
+    workflowId?: SortOrder
+    nodeId?: SortOrder
+    status?: SortOrder
+    requestedAt?: SortOrder
+    resolvedAt?: SortOrder
+    resolvedBy?: SortOrder
+  }
+
+  export type EnumApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApprovalStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApprovalStatusFilter<$PrismaModel>
+    _max?: NestedEnumApprovalStatusFilter<$PrismaModel>
+  }
+
   export type UserCreateNestedManyWithoutTenantInput = {
     create?: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput> | UserCreateWithoutTenantInput[] | UserUncheckedCreateWithoutTenantInput[]
     connectOrCreate?: UserCreateOrConnectWithoutTenantInput | UserCreateOrConnectWithoutTenantInput[]
@@ -19900,6 +21408,13 @@ export namespace Prisma {
     connect?: ExecutionLogWhereUniqueInput | ExecutionLogWhereUniqueInput[]
   }
 
+  export type ApprovalRequestCreateNestedManyWithoutExecutionInput = {
+    create?: XOR<ApprovalRequestCreateWithoutExecutionInput, ApprovalRequestUncheckedCreateWithoutExecutionInput> | ApprovalRequestCreateWithoutExecutionInput[] | ApprovalRequestUncheckedCreateWithoutExecutionInput[]
+    connectOrCreate?: ApprovalRequestCreateOrConnectWithoutExecutionInput | ApprovalRequestCreateOrConnectWithoutExecutionInput[]
+    createMany?: ApprovalRequestCreateManyExecutionInputEnvelope
+    connect?: ApprovalRequestWhereUniqueInput | ApprovalRequestWhereUniqueInput[]
+  }
+
   export type ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput = {
     create?: XOR<ExecutionStepCreateWithoutExecutionInput, ExecutionStepUncheckedCreateWithoutExecutionInput> | ExecutionStepCreateWithoutExecutionInput[] | ExecutionStepUncheckedCreateWithoutExecutionInput[]
     connectOrCreate?: ExecutionStepCreateOrConnectWithoutExecutionInput | ExecutionStepCreateOrConnectWithoutExecutionInput[]
@@ -19912,6 +21427,13 @@ export namespace Prisma {
     connectOrCreate?: ExecutionLogCreateOrConnectWithoutExecutionInput | ExecutionLogCreateOrConnectWithoutExecutionInput[]
     createMany?: ExecutionLogCreateManyExecutionInputEnvelope
     connect?: ExecutionLogWhereUniqueInput | ExecutionLogWhereUniqueInput[]
+  }
+
+  export type ApprovalRequestUncheckedCreateNestedManyWithoutExecutionInput = {
+    create?: XOR<ApprovalRequestCreateWithoutExecutionInput, ApprovalRequestUncheckedCreateWithoutExecutionInput> | ApprovalRequestCreateWithoutExecutionInput[] | ApprovalRequestUncheckedCreateWithoutExecutionInput[]
+    connectOrCreate?: ApprovalRequestCreateOrConnectWithoutExecutionInput | ApprovalRequestCreateOrConnectWithoutExecutionInput[]
+    createMany?: ApprovalRequestCreateManyExecutionInputEnvelope
+    connect?: ApprovalRequestWhereUniqueInput | ApprovalRequestWhereUniqueInput[]
   }
 
   export type EnumExecutionStatusFieldUpdateOperationsInput = {
@@ -19958,6 +21480,20 @@ export namespace Prisma {
     deleteMany?: ExecutionLogScalarWhereInput | ExecutionLogScalarWhereInput[]
   }
 
+  export type ApprovalRequestUpdateManyWithoutExecutionNestedInput = {
+    create?: XOR<ApprovalRequestCreateWithoutExecutionInput, ApprovalRequestUncheckedCreateWithoutExecutionInput> | ApprovalRequestCreateWithoutExecutionInput[] | ApprovalRequestUncheckedCreateWithoutExecutionInput[]
+    connectOrCreate?: ApprovalRequestCreateOrConnectWithoutExecutionInput | ApprovalRequestCreateOrConnectWithoutExecutionInput[]
+    upsert?: ApprovalRequestUpsertWithWhereUniqueWithoutExecutionInput | ApprovalRequestUpsertWithWhereUniqueWithoutExecutionInput[]
+    createMany?: ApprovalRequestCreateManyExecutionInputEnvelope
+    set?: ApprovalRequestWhereUniqueInput | ApprovalRequestWhereUniqueInput[]
+    disconnect?: ApprovalRequestWhereUniqueInput | ApprovalRequestWhereUniqueInput[]
+    delete?: ApprovalRequestWhereUniqueInput | ApprovalRequestWhereUniqueInput[]
+    connect?: ApprovalRequestWhereUniqueInput | ApprovalRequestWhereUniqueInput[]
+    update?: ApprovalRequestUpdateWithWhereUniqueWithoutExecutionInput | ApprovalRequestUpdateWithWhereUniqueWithoutExecutionInput[]
+    updateMany?: ApprovalRequestUpdateManyWithWhereWithoutExecutionInput | ApprovalRequestUpdateManyWithWhereWithoutExecutionInput[]
+    deleteMany?: ApprovalRequestScalarWhereInput | ApprovalRequestScalarWhereInput[]
+  }
+
   export type ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput = {
     create?: XOR<ExecutionStepCreateWithoutExecutionInput, ExecutionStepUncheckedCreateWithoutExecutionInput> | ExecutionStepCreateWithoutExecutionInput[] | ExecutionStepUncheckedCreateWithoutExecutionInput[]
     connectOrCreate?: ExecutionStepCreateOrConnectWithoutExecutionInput | ExecutionStepCreateOrConnectWithoutExecutionInput[]
@@ -19984,6 +21520,20 @@ export namespace Prisma {
     update?: ExecutionLogUpdateWithWhereUniqueWithoutExecutionInput | ExecutionLogUpdateWithWhereUniqueWithoutExecutionInput[]
     updateMany?: ExecutionLogUpdateManyWithWhereWithoutExecutionInput | ExecutionLogUpdateManyWithWhereWithoutExecutionInput[]
     deleteMany?: ExecutionLogScalarWhereInput | ExecutionLogScalarWhereInput[]
+  }
+
+  export type ApprovalRequestUncheckedUpdateManyWithoutExecutionNestedInput = {
+    create?: XOR<ApprovalRequestCreateWithoutExecutionInput, ApprovalRequestUncheckedCreateWithoutExecutionInput> | ApprovalRequestCreateWithoutExecutionInput[] | ApprovalRequestUncheckedCreateWithoutExecutionInput[]
+    connectOrCreate?: ApprovalRequestCreateOrConnectWithoutExecutionInput | ApprovalRequestCreateOrConnectWithoutExecutionInput[]
+    upsert?: ApprovalRequestUpsertWithWhereUniqueWithoutExecutionInput | ApprovalRequestUpsertWithWhereUniqueWithoutExecutionInput[]
+    createMany?: ApprovalRequestCreateManyExecutionInputEnvelope
+    set?: ApprovalRequestWhereUniqueInput | ApprovalRequestWhereUniqueInput[]
+    disconnect?: ApprovalRequestWhereUniqueInput | ApprovalRequestWhereUniqueInput[]
+    delete?: ApprovalRequestWhereUniqueInput | ApprovalRequestWhereUniqueInput[]
+    connect?: ApprovalRequestWhereUniqueInput | ApprovalRequestWhereUniqueInput[]
+    update?: ApprovalRequestUpdateWithWhereUniqueWithoutExecutionInput | ApprovalRequestUpdateWithWhereUniqueWithoutExecutionInput[]
+    updateMany?: ApprovalRequestUpdateManyWithWhereWithoutExecutionInput | ApprovalRequestUpdateManyWithWhereWithoutExecutionInput[]
+    deleteMany?: ApprovalRequestScalarWhereInput | ApprovalRequestScalarWhereInput[]
   }
 
   export type ExecutionCreateNestedOneWithoutStepsInput = {
@@ -20086,6 +21636,24 @@ export namespace Prisma {
     upsert?: DeadLetterQueueUpsertWithoutHistoryInput
     connect?: DeadLetterQueueWhereUniqueInput
     update?: XOR<XOR<DeadLetterQueueUpdateToOneWithWhereWithoutHistoryInput, DeadLetterQueueUpdateWithoutHistoryInput>, DeadLetterQueueUncheckedUpdateWithoutHistoryInput>
+  }
+
+  export type ExecutionCreateNestedOneWithoutApprovalRequestsInput = {
+    create?: XOR<ExecutionCreateWithoutApprovalRequestsInput, ExecutionUncheckedCreateWithoutApprovalRequestsInput>
+    connectOrCreate?: ExecutionCreateOrConnectWithoutApprovalRequestsInput
+    connect?: ExecutionWhereUniqueInput
+  }
+
+  export type EnumApprovalStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ApprovalStatus
+  }
+
+  export type ExecutionUpdateOneRequiredWithoutApprovalRequestsNestedInput = {
+    create?: XOR<ExecutionCreateWithoutApprovalRequestsInput, ExecutionUncheckedCreateWithoutApprovalRequestsInput>
+    connectOrCreate?: ExecutionCreateOrConnectWithoutApprovalRequestsInput
+    upsert?: ExecutionUpsertWithoutApprovalRequestsInput
+    connect?: ExecutionWhereUniqueInput
+    update?: XOR<XOR<ExecutionUpdateToOneWithWhereWithoutApprovalRequestsInput, ExecutionUpdateWithoutApprovalRequestsInput>, ExecutionUncheckedUpdateWithoutApprovalRequestsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -20374,6 +21942,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedEnumApprovalStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApprovalStatusFilter<$PrismaModel> | $Enums.ApprovalStatus
+  }
+
+  export type NestedEnumApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApprovalStatus | EnumApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApprovalStatus[] | ListEnumApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApprovalStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApprovalStatusFilter<$PrismaModel>
+    _max?: NestedEnumApprovalStatusFilter<$PrismaModel>
   }
 
   export type UserCreateWithoutTenantInput = {
@@ -20778,6 +22363,7 @@ export namespace Prisma {
     createdAt?: Date | string
     steps?: ExecutionStepCreateNestedManyWithoutExecutionInput
     logs?: ExecutionLogCreateNestedManyWithoutExecutionInput
+    approvalRequests?: ApprovalRequestCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUncheckedCreateWithoutWorkflowVersionInput = {
@@ -20788,6 +22374,7 @@ export namespace Prisma {
     createdAt?: Date | string
     steps?: ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput
     logs?: ExecutionLogUncheckedCreateNestedManyWithoutExecutionInput
+    approvalRequests?: ApprovalRequestUncheckedCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionCreateOrConnectWithoutWorkflowVersionInput = {
@@ -20954,6 +22541,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ApprovalRequestCreateWithoutExecutionInput = {
+    id?: string
+    workflowId: string
+    nodeId: string
+    status?: $Enums.ApprovalStatus
+    requestedAt?: Date | string
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ApprovalRequestUncheckedCreateWithoutExecutionInput = {
+    id?: string
+    workflowId: string
+    nodeId: string
+    status?: $Enums.ApprovalStatus
+    requestedAt?: Date | string
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ApprovalRequestCreateOrConnectWithoutExecutionInput = {
+    where: ApprovalRequestWhereUniqueInput
+    create: XOR<ApprovalRequestCreateWithoutExecutionInput, ApprovalRequestUncheckedCreateWithoutExecutionInput>
+  }
+
+  export type ApprovalRequestCreateManyExecutionInputEnvelope = {
+    data: ApprovalRequestCreateManyExecutionInput | ApprovalRequestCreateManyExecutionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkflowVersionUpsertWithoutExecutionsInput = {
     update: XOR<WorkflowVersionUpdateWithoutExecutionsInput, WorkflowVersionUncheckedUpdateWithoutExecutionsInput>
     create: XOR<WorkflowVersionCreateWithoutExecutionsInput, WorkflowVersionUncheckedCreateWithoutExecutionsInput>
@@ -21045,6 +22664,37 @@ export namespace Prisma {
     output?: JsonNullableFilter<"ExecutionLog">
   }
 
+  export type ApprovalRequestUpsertWithWhereUniqueWithoutExecutionInput = {
+    where: ApprovalRequestWhereUniqueInput
+    update: XOR<ApprovalRequestUpdateWithoutExecutionInput, ApprovalRequestUncheckedUpdateWithoutExecutionInput>
+    create: XOR<ApprovalRequestCreateWithoutExecutionInput, ApprovalRequestUncheckedCreateWithoutExecutionInput>
+  }
+
+  export type ApprovalRequestUpdateWithWhereUniqueWithoutExecutionInput = {
+    where: ApprovalRequestWhereUniqueInput
+    data: XOR<ApprovalRequestUpdateWithoutExecutionInput, ApprovalRequestUncheckedUpdateWithoutExecutionInput>
+  }
+
+  export type ApprovalRequestUpdateManyWithWhereWithoutExecutionInput = {
+    where: ApprovalRequestScalarWhereInput
+    data: XOR<ApprovalRequestUpdateManyMutationInput, ApprovalRequestUncheckedUpdateManyWithoutExecutionInput>
+  }
+
+  export type ApprovalRequestScalarWhereInput = {
+    AND?: ApprovalRequestScalarWhereInput | ApprovalRequestScalarWhereInput[]
+    OR?: ApprovalRequestScalarWhereInput[]
+    NOT?: ApprovalRequestScalarWhereInput | ApprovalRequestScalarWhereInput[]
+    id?: StringFilter<"ApprovalRequest"> | string
+    executionId?: StringFilter<"ApprovalRequest"> | string
+    workflowId?: StringFilter<"ApprovalRequest"> | string
+    nodeId?: StringFilter<"ApprovalRequest"> | string
+    status?: EnumApprovalStatusFilter<"ApprovalRequest"> | $Enums.ApprovalStatus
+    requestedAt?: DateTimeFilter<"ApprovalRequest"> | Date | string
+    resolvedAt?: DateTimeNullableFilter<"ApprovalRequest"> | Date | string | null
+    resolvedBy?: StringNullableFilter<"ApprovalRequest"> | string | null
+    contextData?: JsonNullableFilter<"ApprovalRequest">
+  }
+
   export type ExecutionCreateWithoutStepsInput = {
     id?: string
     status?: $Enums.ExecutionStatus
@@ -21053,6 +22703,7 @@ export namespace Prisma {
     createdAt?: Date | string
     workflowVersion: WorkflowVersionCreateNestedOneWithoutExecutionsInput
     logs?: ExecutionLogCreateNestedManyWithoutExecutionInput
+    approvalRequests?: ApprovalRequestCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUncheckedCreateWithoutStepsInput = {
@@ -21063,6 +22714,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     logs?: ExecutionLogUncheckedCreateNestedManyWithoutExecutionInput
+    approvalRequests?: ApprovalRequestUncheckedCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionCreateOrConnectWithoutStepsInput = {
@@ -21089,6 +22741,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflowVersion?: WorkflowVersionUpdateOneRequiredWithoutExecutionsNestedInput
     logs?: ExecutionLogUpdateManyWithoutExecutionNestedInput
+    approvalRequests?: ApprovalRequestUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionUncheckedUpdateWithoutStepsInput = {
@@ -21099,6 +22752,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     logs?: ExecutionLogUncheckedUpdateManyWithoutExecutionNestedInput
+    approvalRequests?: ApprovalRequestUncheckedUpdateManyWithoutExecutionNestedInput
   }
 
   export type ReplayHistoryCreateWithoutDlqInput = {
@@ -21223,6 +22877,7 @@ export namespace Prisma {
     createdAt?: Date | string
     workflowVersion: WorkflowVersionCreateNestedOneWithoutExecutionsInput
     steps?: ExecutionStepCreateNestedManyWithoutExecutionInput
+    approvalRequests?: ApprovalRequestCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionUncheckedCreateWithoutLogsInput = {
@@ -21233,6 +22888,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     steps?: ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput
+    approvalRequests?: ApprovalRequestUncheckedCreateNestedManyWithoutExecutionInput
   }
 
   export type ExecutionCreateOrConnectWithoutLogsInput = {
@@ -21259,6 +22915,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflowVersion?: WorkflowVersionUpdateOneRequiredWithoutExecutionsNestedInput
     steps?: ExecutionStepUpdateManyWithoutExecutionNestedInput
+    approvalRequests?: ApprovalRequestUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionUncheckedUpdateWithoutLogsInput = {
@@ -21269,6 +22926,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
+    approvalRequests?: ApprovalRequestUncheckedUpdateManyWithoutExecutionNestedInput
   }
 
   export type DeadLetterQueueCreateWithoutHistoryInput = {
@@ -21329,6 +22987,66 @@ export namespace Prisma {
     replayed?: BoolFieldUpdateOperationsInput | boolean
     replayedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     retryCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ExecutionCreateWithoutApprovalRequestsInput = {
+    id?: string
+    status?: $Enums.ExecutionStatus
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    workflowVersion: WorkflowVersionCreateNestedOneWithoutExecutionsInput
+    steps?: ExecutionStepCreateNestedManyWithoutExecutionInput
+    logs?: ExecutionLogCreateNestedManyWithoutExecutionInput
+  }
+
+  export type ExecutionUncheckedCreateWithoutApprovalRequestsInput = {
+    id?: string
+    workflowVersionId: string
+    status?: $Enums.ExecutionStatus
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    steps?: ExecutionStepUncheckedCreateNestedManyWithoutExecutionInput
+    logs?: ExecutionLogUncheckedCreateNestedManyWithoutExecutionInput
+  }
+
+  export type ExecutionCreateOrConnectWithoutApprovalRequestsInput = {
+    where: ExecutionWhereUniqueInput
+    create: XOR<ExecutionCreateWithoutApprovalRequestsInput, ExecutionUncheckedCreateWithoutApprovalRequestsInput>
+  }
+
+  export type ExecutionUpsertWithoutApprovalRequestsInput = {
+    update: XOR<ExecutionUpdateWithoutApprovalRequestsInput, ExecutionUncheckedUpdateWithoutApprovalRequestsInput>
+    create: XOR<ExecutionCreateWithoutApprovalRequestsInput, ExecutionUncheckedCreateWithoutApprovalRequestsInput>
+    where?: ExecutionWhereInput
+  }
+
+  export type ExecutionUpdateToOneWithWhereWithoutApprovalRequestsInput = {
+    where?: ExecutionWhereInput
+    data: XOR<ExecutionUpdateWithoutApprovalRequestsInput, ExecutionUncheckedUpdateWithoutApprovalRequestsInput>
+  }
+
+  export type ExecutionUpdateWithoutApprovalRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workflowVersion?: WorkflowVersionUpdateOneRequiredWithoutExecutionsNestedInput
+    steps?: ExecutionStepUpdateManyWithoutExecutionNestedInput
+    logs?: ExecutionLogUpdateManyWithoutExecutionNestedInput
+  }
+
+  export type ExecutionUncheckedUpdateWithoutApprovalRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workflowVersionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumExecutionStatusFieldUpdateOperationsInput | $Enums.ExecutionStatus
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    steps?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
+    logs?: ExecutionLogUncheckedUpdateManyWithoutExecutionNestedInput
   }
 
   export type UserCreateManyTenantInput = {
@@ -21507,6 +23225,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ExecutionStepUpdateManyWithoutExecutionNestedInput
     logs?: ExecutionLogUpdateManyWithoutExecutionNestedInput
+    approvalRequests?: ApprovalRequestUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionUncheckedUpdateWithoutWorkflowVersionInput = {
@@ -21517,6 +23236,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     steps?: ExecutionStepUncheckedUpdateManyWithoutExecutionNestedInput
     logs?: ExecutionLogUncheckedUpdateManyWithoutExecutionNestedInput
+    approvalRequests?: ApprovalRequestUncheckedUpdateManyWithoutExecutionNestedInput
   }
 
   export type ExecutionUncheckedUpdateManyWithoutWorkflowVersionInput = {
@@ -21547,6 +23267,17 @@ export namespace Prisma {
     retryCount?: number
     timestamp?: Date | string
     output?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ApprovalRequestCreateManyExecutionInput = {
+    id?: string
+    workflowId: string
+    nodeId: string
+    status?: $Enums.ApprovalStatus
+    requestedAt?: Date | string
+    resolvedAt?: Date | string | null
+    resolvedBy?: string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ExecutionStepUpdateWithoutExecutionInput = {
@@ -21613,6 +23344,39 @@ export namespace Prisma {
     retryCount?: IntFieldUpdateOperationsInput | number
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     output?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ApprovalRequestUpdateWithoutExecutionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workflowId?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ApprovalRequestUncheckedUpdateWithoutExecutionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workflowId?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ApprovalRequestUncheckedUpdateManyWithoutExecutionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workflowId?: StringFieldUpdateOperationsInput | string
+    nodeId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    requestedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    contextData?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ReplayHistoryCreateManyDlqInput = {

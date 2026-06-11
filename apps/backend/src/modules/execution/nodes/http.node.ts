@@ -1,6 +1,6 @@
 import { NodeExecutor, ExecutionContext } from './nodes.interface.js';
 
-export class HttpNode implements NodeExecutor {
+export class HttpExecutor implements NodeExecutor {
   async execute(node: any, context: ExecutionContext): Promise<any> {
     try {
       console.log(`\n=======================================`);
@@ -86,8 +86,8 @@ export class HttpNode implements NodeExecutor {
       console.error(error);
       console.log(`=======================================\n`);
       
-      // Force the orchestrator to save a readable string instead of {}
-      throw `HTTP Execution Failed: ${error.message || String(error)}`;
+      // 🚀 THE FIX: Throwing a standard Error object so the retry engine catches it cleanly
+      throw new Error(`HTTP Execution Failed: ${error.message || String(error)}`);
     }
   }
 }

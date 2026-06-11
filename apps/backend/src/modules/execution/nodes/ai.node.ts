@@ -1,11 +1,9 @@
 import { NodeExecutor, ExecutionContext } from './nodes.interface.js';
-import { db } from '@eventflux/database';
-import { decryptSecret } from '../../../core/utils/crypto.utils.js';
 
 export class AiNode implements NodeExecutor {
   async execute(node: any, context: ExecutionContext): Promise<any> {
     try {
-      // FIX 1: Read directly from node.data to match frontend ConfigPanel
+      // Read directly from node.data to match frontend ConfigPanel
       const prompt = node.data?.prompt || node.data?.config?.prompt;
       const provider = node.data?.provider || node.data?.config?.provider || 'groq';
       const model = node.data?.model || node.data?.config?.model || 'llama-3.1-8b-instant';
@@ -19,20 +17,12 @@ export class AiNode implements NodeExecutor {
         ? 'https://api.openai.com/v1/chat/completions'
         : 'https://api.groq.com/openai/v1/chat/completions';
 
-      if (!context.tenantId) {
-        throw new Error("Execution context is missing a valid tenantId.");
-      }
+      // 🚀 THE FIX: Instantly grab the decrypted key from the execution context memory!
+      const apiKey = context.secrets[secretName] || node.data?.config?.apiKey;
 
-      // Fetch the API Key from the DB Vault
-      const secretRecord = await db.secret.findFirst({
-        where: { tenantId: context.tenantId, name: secretName }
-      });
-
-      if (!secretRecord) {
+      if (!apiKey) {
         throw new Error(`${secretName} not found in Workspace Secrets Vault. Please add it to your settings.`);
       }
-
-      const apiKey = decryptSecret(secretRecord.value);
 
       const response = await fetch(baseUrl, {
         method: 'POST',
@@ -65,11 +55,8 @@ export class AiNode implements NodeExecutor {
       };
 
     } catch (error: any) {
-      // FIX 2: Format the error so it survives JSON.stringify and displays in the UI!
-      throw {
-        message: error.message || "Unknown AI Node Error",
-        stack: error.stack
-      };
+      // 🚀 THE FIX: Throw standard Error object so the Retry Engine logs it perfectly
+      throw new Error(`AI Execution Failed: ${error.message || String(error)}`);
     }
   }
 }

@@ -253,6 +253,18 @@ exports.Prisma.SecretScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ApprovalRequestScalarFieldEnum = {
+  id: 'id',
+  executionId: 'executionId',
+  workflowId: 'workflowId',
+  nodeId: 'nodeId',
+  status: 'status',
+  requestedAt: 'requestedAt',
+  resolvedAt: 'resolvedAt',
+  resolvedBy: 'resolvedBy',
+  contextData: 'contextData'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -302,9 +314,16 @@ exports.TriggerType = exports.$Enums.TriggerType = {
 exports.ExecutionStatus = exports.$Enums.ExecutionStatus = {
   PENDING: 'PENDING',
   RUNNING: 'RUNNING',
+  PAUSED: 'PAUSED',
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED',
   CANCELLED: 'CANCELLED'
+};
+
+exports.ApprovalStatus = exports.$Enums.ApprovalStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
 };
 
 exports.Prisma.ModelName = {
@@ -320,7 +339,8 @@ exports.Prisma.ModelName = {
   ExecutionLog: 'ExecutionLog',
   ReplayHistory: 'ReplayHistory',
   ApiKey: 'ApiKey',
-  Secret: 'Secret'
+  Secret: 'Secret',
+  ApprovalRequest: 'ApprovalRequest'
 };
 
 /**

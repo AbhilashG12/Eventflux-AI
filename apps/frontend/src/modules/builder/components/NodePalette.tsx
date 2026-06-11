@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, type Variants } from 'framer-motion';
-import { Webhook, Sparkles, Globe, MessageSquare, Mail, GripVertical } from 'lucide-react';
+import { Webhook, Sparkles, Globe, MessageSquare, Mail, GripVertical, UserCheck } from 'lucide-react';
 
 const NODE_ITEMS = {
   triggers: [
@@ -65,6 +65,19 @@ const NODE_ITEMS = {
       glow: 'group-hover:shadow-[0_0_20px_rgba(249,115,22,0.2)]',
       border: 'group-hover:border-orange-500/40',
       bg: 'group-hover:bg-orange-500/10',
+    },
+    // 🚀 NEW: The Human Approval Node
+    {
+      id: 'human_approval',
+      nodeType: 'APPROVAL',
+      actionType: 'human_approval',
+      label: 'Human Approval',
+      description: 'Pause for manager review',
+      icon: UserCheck,
+      color: 'text-amber-400',
+      glow: 'group-hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]',
+      border: 'group-hover:border-amber-500/40',
+      bg: 'group-hover:bg-amber-500/10',
     }
   ]
 };
@@ -125,10 +138,12 @@ export const NodePalette = () => {
   return (
     <div className="w-72 bg-[#0a0a0a]/40 backdrop-blur-2xl border-r border-white/8 h-full flex flex-col z-10 shadow-[4px_0_24px_rgba(0,0,0,0.2)] relative overflow-hidden">
       
+      {/* 🚀 THE FIX: Replaced expensive blur-[50px] with zero-cost radial gradient */}
       <motion.div 
         animate={{ opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-indigo-500/20 rounded-full blur-[50px] pointer-events-none"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(0,0,0,0) 70%)' }}
       />
 
       <div className="p-5 border-b border-white/10 bg-linear-to-b from-white/2 to-transparent relative z-10">

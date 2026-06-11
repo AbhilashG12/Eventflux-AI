@@ -10,7 +10,7 @@ export class ExecuteWorkflowUseCase {
     
     return text.replace(/\{\{([^}]+)\}\}/g, (_, path) => {
       const keys = path.split('.');
-      let current : any = state;
+      let current: any = state;
       for (const key of keys) {
         if (current[key] === undefined) return '';
         current = current[key];
@@ -60,7 +60,9 @@ export class ExecuteWorkflowUseCase {
       const executionState: Record<string, any> = {
         trigger: initialPayload || {}
       };
+      
       let decryptedSecrets: Record<string, string> = {};
+      
       try {
         const encryptedSecrets = await (db as any).tenantSecret.findMany({
           where: { tenantId }
@@ -74,7 +76,6 @@ export class ExecuteWorkflowUseCase {
           }
         }
       } catch (err) {
-        // Silently ignore if tenant secrets aren't set up
       }
 
       const context: ExecutionContext = {
@@ -90,6 +91,31 @@ export class ExecuteWorkflowUseCase {
         const preCheck = await db.execution.findUnique({ where: { id: executionId }, select: { status: true } });
         if (preCheck?.status === 'CANCELLED') {
           break;
+        }
+
+        if (node.type === 'APPROVAL') {
+          await db.execution.update({
+            where: { id: executionId },
+            data: { status: 'PAUSED' }
+          });
+
+          await (db as any).approvalRequest.create({
+            data: {
+              executionId: executionId,
+              workflowId: workflowId,
+              nodeId: node.id,
+              contextData: executionState
+            }
+          });
+
+          await publishEvent('execution-events', `${executionId}-${node.id}-paused`, {
+            tenantId,
+            executionId,
+            nodeId: node.id,
+            status: 'PAUSED'
+          });
+
+          return { status: 'PAUSED', reason: 'Awaiting human approval' };
         }
 
         await publishEvent('execution-events', `${executionId}-${node.id}-running`, {
@@ -147,7 +173,7 @@ export class ExecuteWorkflowUseCase {
               stepStatus = 'FAILED';
               let errorMessage = "Unknown network failure";
               if (error?.cause?.code) {
-                errorMessage = error.cause.code; // Will grab 'ECONNRESET'
+                errorMessage = error.cause.code;
               } else if (error?.cause?.message) {
                 errorMessage = error.cause.message;
               } else if (error?.message) {
@@ -157,7 +183,6 @@ export class ExecuteWorkflowUseCase {
               }
               stepLogs += `\n> CRITICAL ERROR: ${errorMessage} (Failed after ${maxRetries} retries)`;
               
-              // 🚀 THE FIX: Populate stepOutput with a readable error object so the frontend UI can display it
               stepOutput = {
                 error: error.message || "Unknown error",
                 status: error.response?.status || 500,
@@ -192,13 +217,12 @@ export class ExecuteWorkflowUseCase {
         });
 
         if (stepStatus === 'FAILED') {
-          // 🚀 THE FIX: Throw an error instead of breaking, triggering the overarching DLQ fallback in server.ts
           throw new Error(`Node [${node.id}] failed completely: ${stepLogs.trim()}`);
         }
       }
       
       const finalCheck = await db.execution.findUnique({ where: { id: executionId }, select: { status: true } });
-      if (finalCheck?.status !== 'CANCELLED' && finalCheck?.status !== 'FAILED') {
+      if (finalCheck?.status !== 'CANCELLED' && finalCheck?.status !== 'FAILED' && finalCheck?.status !== 'PAUSED') {
         await db.execution.update({
           where: { id: executionId },
           data: { status: 'COMPLETED', completedAt: new Date() }

@@ -1,16 +1,20 @@
 import { useState, lazy, Suspense } from 'react';
 import { motion, AnimatePresence, type Variants, useReducedMotion } from 'framer-motion';
-import { LayoutGrid, Activity, BarChart2, Settings, Database } from 'lucide-react';
+import { LayoutGrid, Activity, BarChart2, Settings, Database, Library, UserCheck } from 'lucide-react';
 
 const WorkflowBuilder = lazy(() => import('../builder/pages/WorkflowBuilder').then(m => ({ default: m.WorkflowBuilder })));
 const ObservabilityDashboard = lazy(() => import('../dashboard/components/ObservabilityDashboard').then(m => ({ default: m.ObservabilityDashboard })));
 const AnalyticsDashboard = lazy(() => import('../dashboard/components/AnalyticsDashboard').then(m => ({ default: m.AnalyticsDashboard })));
 const TenantDashboard = lazy(() => import('../builder/pages/TenantDashboard').then(m => ({ default: m.TenantDashboard })));
 const DLQDashboard = lazy(() => import('../dashboard/components/DLQDashboard').then(m => ({ default: m.DLQDashboard })));
+const TemplateGallery = lazy(() => import('../dashboard/components/TemplateGallery').then(m => ({ default: m.TemplateGallery })));
+const ApprovalsDashboard = lazy(() => import('../dashboard/components/ApprovalsDashboard').then(m => ({ default: m.ApprovalsDashboard })));
 
 const TABS = [
   { id: 'BUILDER', label: 'Canvas', icon: LayoutGrid, dot: false },
-  { id: 'DASHBOARD', label: 'Telemetry', icon: Activity, dot: true },
+  { id: 'TEMPLATES', label: 'Templates', icon: Library, dot: false },
+  { id: 'APPROVALS', label: 'Approvals', icon: UserCheck, dot: true },
+  { id: 'DASHBOARD', label: 'Telemetry', icon: Activity, dot: false },
   { id: 'ANALYTICS', label: 'Analytics', icon: BarChart2, dot: false },
   { id: 'TENANT', label: 'Settings', icon: Settings, dot: false },
   { id: 'DLQ', label: 'Operations', icon: Database, dot: false }
@@ -74,10 +78,8 @@ const LocalLoader = () => (
 export const MainWorkspace = () => {
   const [activeView, setActiveView] = useState<typeof TABS[number]['id']>('BUILDER');
   
-  // Respect user OS settings for reduced motion
   const shouldReduceMotion = useReducedMotion();
   
-  // Premium Blur-Fade Transitions
   const pageVariants: Variants = {
     initial: { opacity: 0, y: 10, filter: 'blur(8px)' },
     animate: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1] } },
@@ -87,7 +89,6 @@ export const MainWorkspace = () => {
   return (
     <div className="relative w-full h-screen bg-[#050505] overflow-hidden font-sans text-gray-100 flex flex-col">
       
-      {/* 🚀 THE FIX: Ambient Background Orbs using zero-cost radial gradients instead of blur utilities */}
       <motion.div 
         animate={shouldReduceMotion ? { x: 0, y: 0 } : { x: [0, 30, -30, 0], y: [0, -30, 30, 0] }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
@@ -103,7 +104,6 @@ export const MainWorkspace = () => {
       
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjA1KSIvPjwvc3ZnPg==')] opacity-10 pointer-events-none z-0" />
 
-      {/* Main Content Area */}
       <div className="relative grow w-full h-full z-10 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -120,6 +120,8 @@ export const MainWorkspace = () => {
                   <WorkflowBuilder />
                 </div>
               )}
+              {activeView === 'TEMPLATES' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><TemplateGallery setActiveView={setActiveView} /></div>}
+              {activeView === 'APPROVALS' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><ApprovalsDashboard /></div>}
               {activeView === 'DASHBOARD' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><ObservabilityDashboard /></div>}
               {activeView === 'ANALYTICS' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><AnalyticsDashboard /></div>}
               {activeView === 'TENANT' && <div className="pt-10 px-6 h-full overflow-y-auto pb-32"><TenantDashboard /></div>}
@@ -129,7 +131,6 @@ export const MainWorkspace = () => {
         </AnimatePresence>
       </div>
 
-      {/* The Floating Dock */}
       <motion.div 
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -146,7 +147,6 @@ export const MainWorkspace = () => {
               onClick={() => setActiveView(tab.id)}
               className="relative px-5 py-2.5 cursor-pointer rounded-full text-xs font-semibold transition-colors duration-300 flex items-center gap-2 whitespace-nowrap shrink-0 group focus:outline-none"
             >
-              {/* Sliding Active Background (The Magic) */}
               {isActive && (
                 <motion.div
                   layoutId="activeTabIndicator"
@@ -156,12 +156,10 @@ export const MainWorkspace = () => {
                 />
               )}
 
-              {/* Text & Icon Content */}
               <div className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'}`}>
                 <Icon size={14} className={isActive ? "text-indigo-400" : "opacity-70"} />
                 {tab.label}
                 
-                {/* Optional Pulse Dot */}
                 {tab.dot && (
                   <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'bg-emerald-500/50'} transition-all duration-300`} />
                 )}

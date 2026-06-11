@@ -67,6 +67,9 @@ importers:
       socket.io:
         specifier: ^4.8.3
         version: 4.8.3
+      uuid:
+        specifier: ^14.0.0
+        version: 14.0.0
       zod:
         specifier: ^4.4.3
         version: 4.4.3

@@ -21,6 +21,8 @@ import { secretsRoutes } from "./modules/secrets/secrets.routes.js";
 import {webhookRoutes} from "./modules/webhooks/webhooks.routes.js";
 import {CronService} from "./core/cron/cron.service.js"
 import {tenantRoutes} from "./modules/tenant/interface/tenant.routes.js";
+import {approvalRoutes} from "./core/api/approval.routes.js";
+import {templateRoutes} from "./core/api/template.routes.js";
 
 const executeUseCase = new ExecuteWorkflowUseCase();
 const app = express();
@@ -46,6 +48,8 @@ app.use('/api/dlq', dlqRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use("/api/workflows", workflowRoutes);
 app.use('/api/secrets', secretsRoutes);
+app.use('/api/approvals', approvalRoutes);
+app.use('/api/templates', requireAuth, templateRoutes);
 
 app.get('/api/health', async (req, res) => {
   const workflowCount = await db.workflow.count({
