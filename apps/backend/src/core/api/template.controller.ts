@@ -13,7 +13,7 @@ const TEMPLATES = [
       nodes: [
         { id: 'trigger_1', type: 'TRIGGER', position: { x: 100, y: 200 }, data: { label: 'Lead Webhook', actionType: 'webhook_trigger' } },
         { id: 'ai_1', type: 'ACTION', position: { x: 400, y: 200 }, data: { label: 'Analyze Lead', actionType: 'ai_generate', config: { prompt: 'Score this lead from 1-100: {{trigger.payload}}' } } },
-        { id: 'slack_1', type: 'ACTION', position: { x: 700, y: 200 }, data: { label: 'Notify Sales', actionType: 'slack_message', config: { message: 'High value lead detected! Score: {{ai_1.score}}' } } }
+        { id: 'slack_1', type: 'ACTION', position: { x: 700, y: 200 }, data: { label: 'Notify Sales', actionType: 'slack_message', config: { message: 'High value lead detected! Score: {{ai_1.reply}}' } } }
       ],
       edges: [
         { id: 'e1', source: 'trigger_1', target: 'ai_1', type: 'smoothstep' },
@@ -31,7 +31,8 @@ const TEMPLATES = [
         { id: 'trigger_2', type: 'TRIGGER', position: { x: 100, y: 200 }, data: { label: 'Support Ticket', actionType: 'webhook_trigger' } },
         { id: 'ai_2', type: 'ACTION', position: { x: 400, y: 200 }, data: { label: 'Draft Response', actionType: 'ai_generate', config: { prompt: 'Draft a polite response to: {{trigger.message}}' } } },
         { id: 'approval_1', type: 'APPROVAL', position: { x: 700, y: 200 }, data: { label: 'Manager Review', actionType: 'human_approval' } },
-        { id: 'http_1', type: 'ACTION', position: { x: 1000, y: 200 }, data: { label: 'Send Reply', actionType: 'http_request', config: { method: 'POST', url: 'https://api.acme.com/reply', body: '{"text": "{{ai_2.response}}"}' } } }
+        // 🚀 THE FIX: Updated to {{ai_2.reply}} to match the AI Executor's output key
+        { id: 'http_1', type: 'ACTION', position: { x: 1000, y: 200 }, data: { label: 'Send Reply', actionType: 'http_request', config: { method: 'POST', url: 'https://webhook.site/YOUR-WEBHOOK-URL', body: '{"text": "{{ai_2.reply}}"}' } } }
       ],
       edges: [
         { id: 'e3', source: 'trigger_2', target: 'ai_2', type: 'smoothstep' },
@@ -67,7 +68,11 @@ export const cloneTemplate = async (req: Request, res: Response): Promise<void> 
       }
     });
 
-    res.status(200).json({ success: true, workflowId: workflow.id });
+    res.status(200).json({ 
+      success: true, 
+      workflowId: workflow.id,
+      definition: template.definition
+    });
   } catch (error: any) {
     res.status(500).json({ error: 'Failed to clone template' });
   }

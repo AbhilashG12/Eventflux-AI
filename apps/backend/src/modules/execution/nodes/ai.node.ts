@@ -1,4 +1,6 @@
 import { NodeExecutor, ExecutionContext } from './nodes.interface.js';
+import { db } from '@eventflux/database';
+import { decryptSecret } from '../../../core/utils/crypto.utils.js';
 
 export class AiNode implements NodeExecutor {
   async execute(node: any, context: ExecutionContext): Promise<any> {
@@ -17,8 +19,19 @@ export class AiNode implements NodeExecutor {
         ? 'https://api.openai.com/v1/chat/completions'
         : 'https://api.groq.com/openai/v1/chat/completions';
 
-      // 🚀 THE FIX: Instantly grab the decrypted key from the execution context memory!
-      const apiKey = context.secrets[secretName] || node.data?.config?.apiKey;
+      // 1. Try to grab the decrypted key from the execution context memory or node config
+      let apiKey = context.secrets?.[secretName] || node.data?.config?.apiKey;
+
+      // 2. 🚀 THE FIX: Fallback to database lookup if it's not in the context yet
+      if (!apiKey && context.tenantId) {
+        const secretRecord = await db.secret.findFirst({
+          where: { tenantId: context.tenantId, name: secretName }
+        });
+
+        if (secretRecord) {
+          apiKey = decryptSecret(secretRecord.value);
+        }
+      }
 
       if (!apiKey) {
         throw new Error(`${secretName} not found in Workspace Secrets Vault. Please add it to your settings.`);
@@ -45,7 +58,7 @@ export class AiNode implements NodeExecutor {
         throw new Error(`${provider} API failed: ${data.error?.message || response.statusText}`);
       }
 
-      // NOTE: Ensure your Workflow B HTTP node expects this exact key `reply` 
+      // NOTE: Ensure your downstream HTTP/Slack nodes expect this exact key `reply` 
       // Example: {{ai_generate.reply}}
       return {
         provider,
@@ -55,7 +68,7 @@ export class AiNode implements NodeExecutor {
       };
 
     } catch (error: any) {
-      // 🚀 THE FIX: Throw standard Error object so the Retry Engine logs it perfectly
+      // Throw standard Error object so the Retry Engine logs it perfectly and routes to DLQ if needed
       throw new Error(`AI Execution Failed: ${error.message || String(error)}`);
     }
   }

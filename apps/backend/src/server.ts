@@ -49,7 +49,7 @@ app.use('/api/analytics', analyticsRoutes);
 app.use("/api/workflows", workflowRoutes);
 app.use('/api/secrets', secretsRoutes);
 app.use('/api/approvals', approvalRoutes);
-app.use('/api/templates', requireAuth, templateRoutes);
+app.use('/api/templates', templateRoutes);
 
 app.get('/api/health', async (req, res) => {
   const workflowCount = await db.workflow.count({

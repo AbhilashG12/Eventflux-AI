@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from 'react';
+import { useRef, useState } from 'react';
 import ReactFlow, { Background, Controls, ReactFlowProvider, BackgroundVariant } from 'reactflow';
 
 import 'reactflow/dist/style.css';
@@ -14,7 +14,15 @@ import { NodePalette } from '../components/NodePalette';
 import { ConfigPanel } from '../components/ConfigPanel';
 import { BuilderHeader } from '../components/BuilderHeader';
 import { ExecutionLogsDrawer } from '../../../components/ExecutionLogsDrawer';
-import {ApprovalNode} from "../components/nodes/ApprovalNode";
+import { ApprovalNode } from "../components/nodes/ApprovalNode";
+
+const nodeTypes = { 
+  ACTION: ActionNode,
+  TRIGGER: ActionNode,
+  CONDITION: ActionNode,
+  slack: SlackNode, 
+  APPROVAL: ApprovalNode
+};
 
 const BuilderCore = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
@@ -41,18 +49,6 @@ const BuilderCore = () => {
   const { onDragOver, onDrop } = useWorkflowDragDrop(
     reactFlowWrapper as React.RefObject<HTMLDivElement>
   );
-
-  // FIX 1: Bulletproof nodeTypes to prevent React Flow re-render warnings during HMR
-  const nodeTypes = useMemo(() => ({ 
-    ACTION: ActionNode,
-    TRIGGER: ActionNode,
-    CONDITION: ActionNode,
-    slack: SlackNode, 
-    APPROVAL : ApprovalNode
-  }), []);
-
-  // 🚀 THE FIX: Edge sanitization completely removed. 
-  // React Flow now natively reads the stable IDs from the Zustand store, unlocking massive performance gains.
 
   return (
     <div className="w-full h-full flex flex-col relative z-10 overflow-hidden bg-[#050505]">
@@ -84,6 +80,8 @@ const BuilderCore = () => {
             onNodeClick={(_, node) => setSelectedNodeId(node.id)}
             onPaneClick={() => setSelectedNodeId(null)}
             nodeTypes={nodeTypes}
+            fitView // 🚀 THE FIX 2: Forces the camera to snap to the injected template nodes instantly
+            fitViewOptions={{ padding: 0.2, maxZoom: 1.5 }}
             style={{ background: 'transparent' }}
             proOptions={{ hideAttribution: true }}
           >

@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { db } from '@eventflux/database';
-import { publishEvent } from '@eventflux/kafka';
+// 🚀 THE FIX: Import the engine directly
+import { ExecuteWorkflowUseCase } from '../../modules/workflow/application/execute.workflow.js'; 
+
+// Initialize the engine
+const engine = new ExecuteWorkflowUseCase();
 
 export const getPendingApprovals = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -33,12 +37,9 @@ export const resolveApproval = async (req: Request, res: Response): Promise<void
     });
 
     if (action === 'APPROVE') {
-      // 🚀 Inject the event BACK into Kafka to resume the DAG!
-      await publishEvent('workflow-events', `resume-${approval.executionId}`, {
-        type: 'RESUME_EXECUTION',
-        executionId: approval.executionId,
-        resumeFromNodeId: approval.nodeId
-      });
+      // 🚀 THE FIX: Instantly resume the engine directly! No Kafka routing bugs!
+      // We don't await this so the UI gets an instant 200 OK response while the engine crunches in the background
+      engine.resume(approval.executionId, { action: 'APPROVED' }).catch(console.error);
     } else {
       // If rejected, mark the overall execution as FAILED
       await db.execution.update({

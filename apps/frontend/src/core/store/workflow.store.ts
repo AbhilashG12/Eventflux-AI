@@ -35,6 +35,9 @@ interface WorkflowState {
   
   setName: (name: string) => void;
   createNewWorkflow: () => void;
+  
+  // 🚀 NEW: The hydration method for loading templates
+  setWorkflow: (nodes: Node[], edges: Edge[]) => void;
 }
 
 export const useWorkflowStore = create<WorkflowState>()(
@@ -58,7 +61,6 @@ export const useWorkflowStore = create<WorkflowState>()(
       
       onConnect: (connection) => {
         // 🚀 THE FIX: Generate a stable, unique ID at the exact moment of connection.
-        // This completely eliminates the need to sanitize edges during the React render cycle!
         const newEdge = {
           ...connection,
           id: `edge_${connection.source}_${connection.target}_${Date.now()}`,
@@ -99,7 +101,10 @@ export const useWorkflowStore = create<WorkflowState>()(
         nodes: [],
         edges: [],
         selectedNodeId: null
-      })
+      }),
+
+      // 🚀 NEW: Implement the hydration method
+      setWorkflow: (nodes, edges) => set({ nodes, edges }),
     }),
     {
       name: 'eventflux-workflow-storage', 
